@@ -10,26 +10,27 @@ export default function LoginPage() {
   const [error, setError] = useState<string>("");
 
   const handleLogin = async (formData: { email: string; password: string }) => {
-    try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+    // try {
+    //   const response = await fetch("/api/auth/login", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(formData),
+    //   });
 
-      const data = await response.json();
+    //   const data = await response.json();
 
-      if (data.success) {
-        localStorage.setItem("token", data.token);
-        router.push("/dashboard");
-      } else {
-        setError(data.message);
-      }
-    } catch (error) {
-      setError("An error occurred during login");
-    }
+    //   if (data.success) {
+    //     localStorage.setItem("token", data.token);
+    //     router.push("/dashboard");
+    //   } else {
+    //     setError(data.message);
+    //   }
+    // } catch (error) {
+    //   setError("An error occurred during login");
+    // }
+    router.push("/dashboard");
   };
 
   return (
