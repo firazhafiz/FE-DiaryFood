@@ -1,15 +1,15 @@
 import React from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "social";
   fullWidth?: boolean;
 }
 
 export const Button: React.FC<ButtonProps> = ({ children, variant = "primary", fullWidth = false, className = "", ...props }) => {
-  const baseStyles = "px-4 py-2 rounded-md font-medium transition-colors";
+  const baseStyles = "py-2 rounded-md font-medium transition-colors";
   const variantStyles = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700",
-    secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
+    primary: "bg-orange-600 text-white hover:bg-orange-700",
+    social: "bg-white border border-gray-300 text-gray-500 hover:bg-gray-100",
   };
   const widthStyles = fullWidth ? "w-full" : "";
 
