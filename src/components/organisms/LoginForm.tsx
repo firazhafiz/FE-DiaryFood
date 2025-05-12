@@ -24,8 +24,22 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <FormField label="Email" name="email" type="email" required value={formData.email} onChange={handleChange} />
-      <FormField label="Password" name="password" type="password" required value={formData.password} onChange={handleChange} />
+      <FormField
+        label="Email"
+        name="email"
+        type="email"
+        required
+        value={formData.email}
+        onChange={handleChange}
+      />
+      <FormField
+        label="Password"
+        name="password"
+        type="password"
+        required
+        value={formData.password}
+        onChange={handleChange}
+      />
       <Button type="submit" fullWidth>
         Login
       </Button>

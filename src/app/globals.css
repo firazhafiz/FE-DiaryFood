@@ -3,6 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --custom-orange: #ff725e;
 }
 
 @theme inline {
@@ -10,13 +11,19 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --custom-orange: var(--custom-orange);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --custom-orange: #ff725e;
   }
+}
+
+@theme {
+  --custom-orange: #ff725e;
 }
 
 body {
