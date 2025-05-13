@@ -23,6 +23,11 @@ function formatTime(time: string | number) {
   return `${t} min`;
 }
 
+function formatRupiah(price?: number) {
+  if (!price) return "";
+  return "Rp. " + price.toLocaleString("id-ID", { minimumFractionDigits: 0 });
+}
+
 const Card: React.FC<CardProps> = ({
   title,
   image,
@@ -52,7 +57,7 @@ const Card: React.FC<CardProps> = ({
           </span>
           {!isFree && (
             <span className="text-red-500 font-semibold text-xs">
-              {price} IDR
+              {formatRupiah(price)}
             </span>
           )}
           <div className="flex items-center gap-1 text-yellow-500 text-sm">

@@ -2,23 +2,75 @@
 
 import React from "react";
 import CategoryCircle from "../molecules/CategoryCircle";
+import {
+  CatDaerah,
+  CatBreakfast,
+  CatDessert,
+  CatCamilan,
+  CatDinner,
+  CatCleanFood,
+  CatCleanDrink,
+  CatChild,
+} from "../../../public/assets";
 
 const categories = [
-  { image: "/cat1.jpg", label: "Makanan Daerah" },
-  { image: "/cat2.jpg", label: "Resep Sarapan" },
-  { image: "/cat3.jpg", label: "Makanan Penutup" },
-  { image: "/cat4.jpg", label: "Camilan & Kudapan" },
-  { image: "/cat5.jpg", label: "Resep Makan Malam" },
-  { image: "/cat6.jpg", label: "Resep Sehat" },
-  { image: "/cat7.jpg", label: "Minuman Segar" },
-  { image: "/cat8.jpg", label: "Resep Anak" },
+  {
+    image: CatDaerah,
+    label: "Makanan Daerah",
+    description: "Resep masakan khas daerah Indonesia",
+  },
+  {
+    image: CatBreakfast,
+    label: "Resep Sarapan",
+    description: "Menu sarapan sehat dan bergizi",
+  },
+  {
+    image: CatDessert,
+    label: "Makanan Penutup",
+    description: "Hidangan penutup manis dan lezat",
+  },
+  {
+    image: CatCamilan,
+    label: "Camilan & Kudapan",
+    description: "Snack dan kudapan untuk berbagai acara",
+  },
+  {
+    image: CatDinner,
+    label: "Resep Makan Malam",
+    description: "Menu makan malam keluarga",
+  },
+  {
+    image: CatCleanFood,
+    label: "Resep Sehat",
+    description: "Masakan sehat dan bergizi",
+  },
+  {
+    image: CatCleanDrink,
+    label: "Minuman Segar",
+    description: "Minuman sehat dan menyegarkan",
+  },
+  {
+    image: CatChild,
+    label: "Resep Anak",
+    description: "Menu khusus untuk anak-anak",
+  },
 ];
 
 const CategoryList = () => (
-  <div className="flex flex-wrap justify-center gap-6 my-8">
-    {categories.map((cat, idx) => (
-      <CategoryCircle key={idx} image={cat.image} label={cat.label} />
-    ))}
+  <div className="container mx-auto px-4">
+    <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-8">
+      Kategori Resep
+    </h2>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+      {categories.map((cat, idx) => (
+        <CategoryCircle
+          key={idx}
+          image={cat.image}
+          label={cat.label}
+          description={cat.description}
+        />
+      ))}
+    </div>
   </div>
 );
 

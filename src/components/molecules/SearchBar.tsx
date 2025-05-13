@@ -21,8 +21,6 @@ const SearchBar: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Handle click outside dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -43,7 +41,6 @@ const SearchBar: React.FC = () => {
 
     setIsLoading(true);
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       console.log("Searching:", {
         query: searchQuery,
@@ -57,7 +54,6 @@ const SearchBar: React.FC = () => {
   return (
     <form onSubmit={handleSearch} className="w-full max-w-2xl">
       <div className="flex items-stretch w-full h-10 bg-gray-50 rounded-sm overflow-visible shadow-sm hover:shadow-md transition-shadow duration-200">
-        {/* Category Dropdown */}
         <div className="relative flex items-center h-full" ref={dropdownRef}>
           <button
             type="button"
