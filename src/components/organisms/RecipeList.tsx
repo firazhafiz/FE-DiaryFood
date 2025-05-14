@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import RecipeCard from "../molecules/RecipeCard";
+import Card from "../atoms/Card";
 
 interface Recipe {
   title: string;
@@ -67,7 +67,7 @@ const RecipeList: React.FC<RecipeListProps> = ({ recipes }) => {
       >
         {recipes.map((recipe, index) => (
           <div key={index} className="flex-shrink-0">
-            <RecipeCard {...recipe} />
+            <Card {...recipe} />
           </div>
         ))}
       </div>

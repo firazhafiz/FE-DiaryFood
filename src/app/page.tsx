@@ -29,7 +29,7 @@ const sampleRecipes = [
     },
   },
   {
-    title: "Beef Steak",
+    title: "Beef Steak American",
     image: "/assets/images/image_steak.jpg",
     time: "25",
     category: "American",

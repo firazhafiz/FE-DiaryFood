@@ -42,36 +42,40 @@ const Card: React.FC<CardProps> = ({
   price,
 }) => {
   return (
-    <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 w-full max-w-[270px] min-w-[220px] flex flex-col">
+    <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 w-[250px] h-[320px] flex flex-col">
       <img src={image} alt={title} className="w-full h-36 object-cover" />
-      <div className="flex-1 flex flex-col p-4 pb-2">
-        <div className="flex items-center justify-between mb-1">
-          <span
-            className={
-              isFree
-                ? "text-green-500 font-semibold text-xs"
-                : "text-red-500 font-semibold text-xs"
-            }
-          >
-            {isFree ? "Free" : "Paid"}
-          </span>
-          {!isFree && (
-            <span className="text-red-500 font-semibold text-xs">
-              {formatRupiah(price)}
+      <div className="flex-1 flex flex-col justify-between p-4 pb-2 h-full">
+        <div>
+          <div className="flex items-center justify-between mb-1">
+            <span
+              className={
+                isFree
+                  ? "text-green-500 font-semibold text-xs"
+                  : "text-red-500 font-semibold text-xs"
+              }
+            >
+              {isFree ? "Free" : "Paid"}
             </span>
-          )}
-          <div className="flex items-center gap-1 text-yellow-500 text-sm">
-            <FiStar className="inline" fill="#FFD700" />
-            <span className="text-gray-700 font-medium text-xs">{rating}</span>
+            {!isFree && (
+              <span className="text-red-500 font-semibold text-xs">
+                {formatRupiah(price)}
+              </span>
+            )}
+            <div className="flex items-center gap-1 text-yellow-500 text-sm">
+              <FiStar className="inline" fill="#FFD700" />
+              <span className="text-gray-700 font-medium text-xs">
+                {rating}
+              </span>
+            </div>
           </div>
-        </div>
-        <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-2">
-          {title}
-        </h3>
-        <div className="flex items-center mb-5">
-          <span className="font-bold text-[color:var(--custom-orange)] text-base">
-            {formatTime(time)}
-          </span>
+          <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-3">
+            {title}
+          </h3>
+          <div className="flex items-center mb-5">
+            <span className="font-bold text-[color:var(--custom-orange)] text-base">
+              {formatTime(time)}
+            </span>
+          </div>
         </div>
         <div className="flex items-center pt-2 border-t gap-2">
           <img

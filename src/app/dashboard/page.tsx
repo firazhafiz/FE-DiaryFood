@@ -89,7 +89,8 @@ export default function DashboardPage() {
           "rgba(34, 197, 94, 0.8)", // Green
           "rgba(234, 179, 8, 0.8)", // Yellow
         ],
-        borderColor: ["rgb(0, 0, 0)", "rgb(34, 197, 94)", "rgb(234, 179, 8)"],
+
+        borderColor: ["rgb(255, 114, 94)", "rgb(34, 197, 94)", "rgb(234, 179, 8)"],
         borderWidth: 1,
       },
     ],
@@ -183,6 +184,7 @@ export default function DashboardPage() {
         {/* Pending Recipes Section */}
         <div className="bg-white/50 rounded-3xl p-6  border-white/60 border-2">
           <h2 className="text-lg text-center font-semibold text-slate-700 mb-8">Pending Recipe Approvals</h2>
+
           {pendingRecipes.length === 0 ? (
             <p className="text-slate-500">No pending recipes to approve</p>
           ) : (

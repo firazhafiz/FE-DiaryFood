@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 const ShareSection = () => (
   <div className="flex flex-col md:flex-row items-center justify-between bg-white rounded-2xl p-6 md:p-10 gap-8 md:gap-0">
-    <div className="absolute left-[150px] z-1  w-[320px] h-[320px] rounded-full bg-gradient-to-r from-orange-300 to-orange-400 blur-3xl opacity-50"></div>
+    <div className="absolute left-[255px] z-1  w-[320px] h-[320px] rounded-full bg-gradient-to-r from-orange-300 to-orange-400 blur-3xl opacity-50"></div>
     {/* Images */}
     <div className="flex z-2 flex-row md:flex-col gap-4 md:gap-0 md:mr-8 relative w-full md:w-auto md:min-w-[320px] md:max-w-[340px]">
       <TiltCard>
@@ -39,12 +39,12 @@ const ShareSection = () => (
         Bagikan <span className="text-[color:var(--custom-orange)]">Resep</span>{" "}
         Anda
       </h3>
-      <p className="mb-6 text-gray-600 max-w-md">
+      <p className="mb-6 text-sm text-gray-600 max-w-md">
         Tunjukkan kreasi masakan favoritmu dengan mengunggah resep lengkap
         beserta foto, langkah memasak, dan tips andalan, lalu berpeluang tampil
         di halaman utama dan jadi inspirasi jutaan orang!
       </p>
-      <button className="px-7 py-3 bg-[color:var(--custom-orange)] text-base text-white rounded-full font-semibold shadow hover:brightness-95 transition">
+      <button className="px-7 py-3 bg-[color:var(--custom-orange)] text-sm text-white rounded-full font-semibold shadow hover:brightness-95 transition">
         Buat Resep Sekarang
       </button>
     </div>

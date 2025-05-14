@@ -58,7 +58,7 @@ const categories = [
 
 const CategoryList = () => (
   <div className="container mx-auto px-4">
-    <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-8">
+    <h2 className="text-2xl font-bold text-gray-800 text-center mb-8">
       Kategori Resep
     </h2>
     <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">

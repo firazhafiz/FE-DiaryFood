@@ -20,6 +20,8 @@ import CatChild from "./images/cat_child.jpg";
 import IlustrasiUsers from "./icons/users.png";
 import IlustrasiRecipes from "./icons/recipes.png";
 import IlustrasiCategories from "./icons/category.png";
+import HeroImage from "./images/hero.jpg";
+import HeroImage2 from "./images/hero2.jpg";
 
 export {
   ImageLogin,
@@ -44,4 +46,6 @@ export {
   IlustrasiUsers,
   IlustrasiRecipes,
   IlustrasiCategories,
+  HeroImage,
+  HeroImage2,
 };

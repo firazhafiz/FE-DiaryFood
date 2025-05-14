@@ -20,7 +20,7 @@ const Footer = () => (
             Food
           </span>
         </div>
-        <p className="text-gray-700 text-base md:text-[16px] max-w-xs leading-relaxed">
+        <p className="text-gray-700 text-sm max-w-xs leading-relaxed">
           DiaryFood adalah website resep masakan dengan beragam pilihan menu
           lezat, fitur pencarian yang mudah digunakan, dan komunitas pecinta
           masak yang hangat. Temukan inspirasi, bagikan kreasi, dan mari masak
@@ -29,10 +29,10 @@ const Footer = () => (
       </div>
       {/* Tengah: Tentang DiaryFood */}
       <div>
-        <h4 className="font-bold text-base md:text-lg mb-3 text-gray-900">
+        <h4 className="font-bold text-md mb-3 text-gray-900">
           Tentang DiaryFood
         </h4>
-        <ul className="text-gray-700 text-base space-y-1">
+        <ul className="text-gray-700 text-sm space-y-3">
           <li>
             <Link href="/" className="hover:text-[color:var(--custom-orange)]">
               Home
@@ -74,10 +74,8 @@ const Footer = () => (
       </div>
       {/* Kanan: Bantuan */}
       <div>
-        <h4 className="font-bold text-base md:text-lg mb-3 text-gray-900">
-          Bantuan
-        </h4>
-        <ul className="text-gray-700 text-base space-y-1">
+        <h4 className="font-bold text-md mb-3 text-gray-900">Bantuan</h4>
+        <ul className="text-gray-700 text-sm space-y-3">
           <li>
             <Link
               href="/kontak"
@@ -107,35 +105,33 @@ const Footer = () => (
     </div>
     {/* Ikuti Kami */}
     <div className="mt-12 flex flex-col items-center">
-      <div className="font-bold text-base md:text-lg mb-3 text-gray-900">
-        Ikuti Kami
-      </div>
-      <div className="flex space-x-6">
+      <div className="font-bold text-md mb-3 text-gray-900">Ikuti Kami</div>
+      <div className="flex space-x-6 text-xl">
         <a
           href="#"
           aria-label="Instagram"
-          className="text-gray-700 hover:text-[color:var(--custom-orange)] transition-colors text-2xl"
+          className="text-gray-700 hover:text-[color:var(--custom-orange)] transition-colors"
         >
           <FaInstagram />
         </a>
         <a
           href="#"
           aria-label="Twitter"
-          className="text-gray-700 hover:text-[color:var(--custom-orange)] transition-colors text-2xl"
+          className="text-gray-700 hover:text-[color:var(--custom-orange)] transition-colors"
         >
           <FaTwitter />
         </a>
         <a
           href="#"
           aria-label="LinkedIn"
-          className="text-gray-700 hover:text-[color:var(--custom-orange)] transition-colors text-2xl"
+          className="text-gray-700 hover:text-[color:var(--custom-orange)] transition-colors"
         >
           <FaLinkedin />
         </a>
         <a
           href="#"
           aria-label="Facebook"
-          className="text-gray-700 hover:text-[color:var(--custom-orange)] transition-colors text-2xl"
+          className="text-gray-700 hover:text-[color:var(--custom-orange)] transition-colors"
         >
           <FaFacebook />
         </a>
