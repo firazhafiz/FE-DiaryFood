@@ -46,7 +46,6 @@ export const RecipeTable: React.FC<RecipeTableProps> = ({ recipes, onShow, onEdi
               <TableCell>
                 <div className="flex space-x-2">
                   <ActionButton type="show" onClick={() => onShow(recipe.id)} />
-                  <ActionButton type="edit" onClick={() => onEdit(recipe.id)} />
                   <ActionButton type="delete" onClick={() => onDelete(recipe.id)} />
                 </div>
               </TableCell>
