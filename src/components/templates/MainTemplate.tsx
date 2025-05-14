@@ -44,13 +44,12 @@ const MainTemplate: React.FC<MainTemplateProps> = ({ recipes }) => {
   return (
     <div className="min-h-screen bg-white" suppressHydrationWarning>
       <div suppressHydrationWarning>
-        <Header isSticky={isSticky} />
-        <main className="max-w-6xl mx-auto px-4">
-          <div suppressHydrationWarning>
-            <HeroBanner />
-          </div>
+        <div className="relative w-full bg-white">
+          <Header />
+        </div>
+        <main className="max-w-5xl mx-auto px-4">
           <section suppressHydrationWarning>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center mt-10">
               <h3 className="font-bold text-[color:var(--custom-orange)] text-xl">
                 Rekomendasi Terkini
               </h3>
@@ -78,7 +77,7 @@ const MainTemplate: React.FC<MainTemplateProps> = ({ recipes }) => {
         <div suppressHydrationWarning className="my-10">
           <InfoSection />
         </div>
-        <main className="max-w-6xl mx-auto px-4 mb-12">
+        <main className="max-w-5xl mx-auto px-4 mb-12">
           <section className="mb-10">
             <div className="flex justify-between items-center">
               <h3 className="font-bold text-[color:var(--custom-orange)] text-xl">

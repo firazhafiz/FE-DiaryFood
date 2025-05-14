@@ -5,13 +5,13 @@ import InfoFeature from "../molecules/InfoFeature";
 import { FaBlender, FaListAlt, FaSmile } from "react-icons/fa";
 
 const InfoSection = () => (
-  <section className="w-full py-16 px-4 md:px-8 bg-gradient-to-br from-orange-50 to-orange-100">
-    <div className="max-w-7xl mx-auto">
+  <section className="w-full py-12 px-4 md:px-8 bg-gradient-to-br from-orange-50 to-orange-100">
+    <div className="max-w-6xl mx-auto">
       <div className="text-center mb-12">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">
           Kenapa Memilih Kami?
         </h2>
-        <p className="text-gray-600 max-w-2xl mx-auto">
+        <p className="text-gray-600 max-w-2xl mx-auto text-md">
           Temukan pengalaman memasak yang menyenangkan dengan berbagai fitur
           unggulan kami
         </p>

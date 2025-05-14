@@ -56,10 +56,10 @@ const HeroBanner = () => {
     setCurrent((prev) => (prev === total - 1 ? 0 : prev + 1));
 
   return (
-    <div className="rounded-2xl overflow-hidden relative mb-8 min-h-[320px]">
+    <div className="rounded-2xl overflow-hidden relative mb-8 h-[50x]">
       <div
         ref={sliderRef}
-        className="w-full h-70 min-h-[320px] relative"
+        className="w-full h-50 mi-h-[50px] relative"
         style={{
           overflow: "hidden",
         }}
@@ -89,10 +89,10 @@ const HeroBanner = () => {
                 }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-start p-8">
-                <h2 className="text-4xl font-bold text-white mb-2">
+                <h2 className="text-3xl font-bold text-white mb-2">
                   {slide.title}
                 </h2>
-                <p className="text-md font-light text-white">{slide.author}</p>
+                <p className="text-sm font-light text-white">{slide.author}</p>
               </div>
             </div>
           ))}
@@ -103,17 +103,17 @@ const HeroBanner = () => {
         <div className="flex gap-4 mb-2">
           <button
             onClick={prevSlide}
-            className="w-9 h-9 rounded-full bg-white/70 hover:bg-white text-gray-800 flex items-center justify-center shadow transition"
+            className="w-7 h-7 rounded-full bg-white/70 hover:bg-white text-gray-800 flex items-center justify-center shadow transition"
             aria-label="Sebelumnya"
           >
-            <span className="text-xl">&#8592;</span>
+            <span className="text-md">&#8592;</span>
           </button>
           <button
             onClick={nextSlide}
-            className="w-9 h-9 rounded-full bg-white/70 hover:bg-white text-gray-800 flex items-center justify-center shadow transition"
+            className="w-7 h-7 rounded-full bg-white/70 hover:bg-white text-gray-800 flex items-center justify-center shadow transition"
             aria-label="Selanjutnya"
           >
-            <span className="text-xl">&#8594;</span>
+            <span className="text-md">&#8594;</span>
           </button>
         </div>
         <div className="flex gap-2">
@@ -121,7 +121,7 @@ const HeroBanner = () => {
             <span
               key={idx}
               onClick={() => goTo(idx)}
-              className={`w-2 h-2 rounded-full cursor-pointer ${
+              className={`w-1.5 h-1.5 rounded-full cursor-pointer ${
                 idx === current ? "bg-white" : "bg-white/40"
               } block`}
             />
