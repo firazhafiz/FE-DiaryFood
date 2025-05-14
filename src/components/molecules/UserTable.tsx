@@ -18,7 +18,7 @@ export const UserTable: React.FC<UserTableProps> = ({ users, onDelete }) => {
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
+        <thead className="">
           <tr>
             <TableHeader>No</TableHeader>
             <TableHeader>Email</TableHeader>
@@ -26,7 +26,7 @@ export const UserTable: React.FC<UserTableProps> = ({ users, onDelete }) => {
             <TableHeader>Actions</TableHeader>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody className=" divide-y divide-gray-200">
           {users.map((user) => (
             <tr key={user.id}>
               <TableCell>{user.id}</TableCell>
@@ -34,7 +34,7 @@ export const UserTable: React.FC<UserTableProps> = ({ users, onDelete }) => {
               <TableCell>{user.username}</TableCell>
               <TableCell>
                 <div className="flex space-x-2">
-                  <ActionButton type="delete" onClick={() => onDelete(user.id)} />
+                  <button className="bg-red-400 text-white px-3 py-1 rounded-md hover:bg-red-500 transition-colors">Delete</button>
                 </div>
               </TableCell>
             </tr>

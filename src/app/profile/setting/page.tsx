@@ -1,20 +1,33 @@
-import ProfileSidebar from "@/components/molecules/ProfileSIdebar";
+"use client";
 
 const SettingPage = () => {
   return (
-    <div className="flex bg-amber-50">
-      <ProfileSidebar />
-      <div className="w-4/5 ml-[20%] px-16 py-10">
-        <div className="bg-white rounded-xl p-10  w-full mx-auto  flex flex-col  gap-8">
-          <div className="  ">
-            <h4 className="text-black font-semibold mb-2 ">Delete Account</h4>
-            <div className="rounded-md bg-gray-500 p-3 flex justify-between items-center gap-8">
-              <p className="text-white text-sm">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maxime quaerat nihil porro corporis fuga soluta, culpa quod exercitationem, quidem quia voluptatibus expedita recusandae vero doloribus magni quo necessitatibus?
-                Error, reprehenderit?
-              </p>
-              <button className="bg-[var(--custom-orange)] text-white py-1 px-4 h-fit rounded-md">Delete</button>
+    <div>
+      <div className="mb-6">
+        <h1 className="text-2xl font-semibold text-gray-900">Settings</h1>
+       
+      </div>
+      <div className="flex flex-col gap-8">
+        <div className="mb-4">
+          <h4 className="text-black font-semibold mb-2">Delete Account</h4>
+          <div className="rounded-md bg-white/50 backdrop-blur-sm p-6 flex justify-between items-center gap-8">
+            <div className="max-w-3xl">
+              <p className="font-semibold text-black">Do you want to delete your account?</p>
+              <p className="text-black text-sm mt-2">Once you delete your account, things related to your personal information will be disabled, including:</p>
+              <ul className="text-decoration list-disc ml-4 text-sm mt-2 space-y-1">
+                <li>Personal data.</li>
+                <li>Engagement from promotional campaigns.</li>
+                <li>For event creators, your event history will be lost after account deletion.</li>
+              </ul>
             </div>
+            <button className="bg-[#FF7A5C] text-white py-2 px-6 rounded-md hover:bg-[#ff6b4a] transition-colors">Delete</button>
+          </div>
+        </div>
+        <div>
+          <h4 className="text-black font-semibold mb-2">Log Out Account</h4>
+          <div className="rounded-md bg-white/50 backdrop-blur-sm p-6 flex justify-between items-center gap-8">
+            <p className="font-semibold text-black">Do you want to log out from your account?</p>
+            <button className="bg-[#FF7A5C] text-white py-2 px-6 rounded-md hover:bg-[#ff6b4a] transition-colors">Logout</button>
           </div>
         </div>
       </div>

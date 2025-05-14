@@ -23,6 +23,14 @@ export default function ApproveRecipesPage() {
       status: "pending",
       submittedAt: "2024-03-20",
     },
+    {
+      id: "2",
+      title: "Spaghetti Carbonara",
+      author: "John Doe",
+      category: "Italian",
+      status: "pending",
+      submittedAt: "2024-03-20",
+    },
     // Add more sample data as needed
   ]);
 
@@ -106,26 +114,26 @@ export default function ApproveRecipesPage() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow">
-      <div className="px-6 py-4 border-b border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-800">Recipe Approvals</h2>
+    <div className="bg-white/60 rounded-3xl shadow overflow-hidden">
+      <div className="px-6 py-4 mb-6 ">
+        <h2 className="text-lg  font-semibold text-gray-800">Recipe Approvals</h2>
         <p className="mt-1 text-sm text-gray-600">Review and manage pending recipe submissions</p>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+        <table className="min-w-full ">
+          <thead className=" border-0">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recipe</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Author</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Submitted</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">Recipe</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">Author</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">Category</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">Submitted</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className=" ">
             {recipes.map((recipe) => (
-              <tr key={recipe.id} className="hover:bg-gray-50">
+              <tr key={recipe.id} className="divide-y divide-gray-200">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">{recipe.title}</div>
                 </td>

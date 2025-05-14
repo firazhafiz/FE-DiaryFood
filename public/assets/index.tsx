@@ -17,6 +17,9 @@ import CatDaerah from "./images/cat_daerah.png";
 import CatCamilan from "./images/cat_camilan.jpg";
 import CatCleanDrink from "./images/cat_cleandrink.jpg";
 import CatChild from "./images/cat_child.jpg";
+import IlustrasiUsers from "./icons/users.png";
+import IlustrasiRecipes from "./icons/recipes.png";
+import IlustrasiCategories from "./icons/category.png";
 
 export {
   ImageLogin,
@@ -38,4 +41,7 @@ export {
   CatChild,
   ImageBanner2,
   ImageBanner3,
+  IlustrasiUsers,
+  IlustrasiRecipes,
+  IlustrasiCategories,
 };
