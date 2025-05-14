@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { CatBreakfast } from "../../../public/assets";
 import { FaUser, FaBook, FaBookmark, FaCog } from "react-icons/fa";
+import ProfileSidebar from "@/components/molecules/ProfileSIdebar";
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -23,25 +24,7 @@ const ProfilePage = () => {
 
   return (
     <div className="flex bg-amber-50 min-h-screen">
-      <nav className="bg-white  w-1/5 px-6 h-screen fixed py-10">
-        <div className="mb-8">
-          <Title />
-        </div>
-        <div className="flex flex-col gap-4">
-          <Link href="/profile" className="flex items-center gap-3 px-4 py-2 rounded-lg bg-[#FF7A5C] text-white font-semibold">
-            <FaUser /> Profile
-          </Link>
-          <Link href="#" className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-500 hover:bg-gray-100">
-            <FaBook /> My Recipe
-          </Link>
-          <Link href="#" className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-500 hover:bg-gray-100">
-            <FaBookmark /> Saved
-          </Link>
-          <Link href="#" className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-500 hover:bg-gray-100">
-            <FaCog /> Settings
-          </Link>
-        </div>
-      </nav>
+      <ProfileSidebar />
       <div className=" w-4/5 ml-[20%] px-16 py-10">
         <div className="w-full max-w-5xl mb-6">
           <h1 className="text-2xl font-semibold text-gray-900">Your Profile</h1>

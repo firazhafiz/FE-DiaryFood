@@ -124,67 +124,13 @@ export default function DashboardPage() {
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
           <p className="text-gray-500">
-<<<<<<< HEAD
-            <span className="font-semibold">Monday</span>, 12 April 2025
-=======
             <span className="font-semibold">{new Date().toLocaleDateString("en-US", { weekday: "long" })}</span>, {new Date().toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}
->>>>>>> c7da30df65d62d63ebcd53057d3a42fbe3d20c3b
           </p>
         </div>
 
         {/* Welcome Section */}
         <div className="flex justify-center items-center gap-8 bg-white rounded-lg p-8 w-full">
           <div className="w-2/3">
-<<<<<<< HEAD
-            <h1 className="text-3xl font-semibold text-gray-900">
-              Hi, Admin !
-            </h1>
-            <p className="text-gray-500">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Reiciendis et dolor neque earum est mollitia aperiam, assumenda
-              repudiandae odit aspernatur.
-            </p>
-          </div>
-          <div className="w-1/3 ">
-            <Image
-              src={IlustrasiCooking}
-              alt="ilustrasi cooking"
-              className="w-[300px] object-cover"
-            />
-          </div>
-        </div>
-        <div className="flex justify-center items-center gap-6  rounded-lg w-full">
-          <div className="w-full bg-white rounded-lg p-8">
-            <h1 className="text-3xl font-semibold text-gray-900">
-              Hi, Admin !
-            </h1>
-            <p className="text-gray-500">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Reiciendis et dolor neque earum est mollitia aperiam, assumenda
-              repudiandae odit aspernatur.
-            </p>
-          </div>
-          <div className="w-full bg-white rounded-lg p-8">
-            <h1 className="text-3xl font-semibold text-gray-900">
-              Hi, Admin !
-            </h1>
-            <p className="text-gray-500">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Reiciendis et dolor neque earum est mollitia aperiam, assumenda
-              repudiandae odit aspernatur.
-            </p>
-          </div>
-          <div className="w-full bg-white rounded-lg p-8">
-            <h1 className="text-3xl font-semibold text-gray-900">
-              Hi, Admin !
-            </h1>
-            <p className="text-gray-500">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Reiciendis et dolor neque earum est mollitia aperiam, assumenda
-              repudiandae odit aspernatur.
-            </p>
-          </div>
-=======
             <h1 className="text-3xl font-semibold text-gray-900">Welcome, Admin!</h1>
             <p className="text-gray-500">Manage your recipes and users efficiently with our dashboard.</p>
           </div>
@@ -252,7 +198,6 @@ export default function DashboardPage() {
               </table>
             </div>
           )}
->>>>>>> c7da30df65d62d63ebcd53057d3a42fbe3d20c3b
         </div>
       </div>
     </DashboardTemplate>
