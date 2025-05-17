@@ -14,6 +14,7 @@ const sampleRecipes = [
       name: "Gadang Jatu Mahiswara",
       avatar: "/assets/images/image_login.png",
     },
+    slug: "spaghetti-carbonara",
   },
   {
     title: "Chicken Curry",
@@ -26,6 +27,7 @@ const sampleRecipes = [
       name: "Gadang Jatu Mahiswara",
       avatar: "/assets/images/image_login.png",
     },
+    slug: "chicken-curry",
   },
   {
     title: "Beef Steak",
@@ -38,6 +40,7 @@ const sampleRecipes = [
       name: "Gadang Jatu Mahiswara",
       avatar: "/assets/images/image_login.png",
     },
+    slug: "beef-steak",
   },
   {
     title: "Pizza Margherita",
@@ -51,6 +54,7 @@ const sampleRecipes = [
       name: "Gadang Jatu Mahiswara",
       avatar: "/assets/images/image_login.png",
     },
+    slug: "pizza-margherita",
   },
   {
     title: "Pizza Margherita",
@@ -64,6 +68,7 @@ const sampleRecipes = [
       name: "Gadang Jatu Mahiswara",
       avatar: "/assets/images/image_login.png",
     },
+    slug: "pizza-margherita-2",
   },
 ];
 
@@ -77,7 +82,12 @@ const SavedPage = () => {
       <div className=" mb-6">
         <h1 className="text-2xl font-semibold text-gray-900">Saved</h1>
         <p className="text-gray-500 text-sm mt-1 font-medium">
-          {new Date().toLocaleDateString("en-US", { weekday: "long" })}, {new Date().toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}
+          {new Date().toLocaleDateString("en-US", { weekday: "long" })},{" "}
+          {new Date().toLocaleDateString("en-US", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })}
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 bg-white p-6 rounded-lg">
