@@ -17,26 +17,32 @@ const CategoryManagement = () => {
     {
       id: "1",
       name: "Breakfast",
+      recipeCount: 10,
     },
     {
       id: "2",
       name: "Lunch",
+      recipeCount: 10,
     },
     {
       id: "3",
       name: "Dinner",
+      recipeCount: 10,
     },
     {
       id: "4",
       name: "Dessert",
+      recipeCount: 10,
     },
     {
       id: "5",
       name: "Snacks",
+      recipeCount: 10,
     },
     {
       id: "6",
       name: "Drinks",
+      recipeCount: 10,
     },
   ]);
 
@@ -56,12 +62,11 @@ const CategoryManagement = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm">
+    <div className="bg-white/60 rounded-3xl shadow-sm border-2 border-white/60">
       <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-gray-900">Categories</h2>
-          <button onClick={() => setIsModalOpen(true)} className="bg-[#FF7A5C] text-white px-4 py-2 rounded-md hover:bg-[#ff6b4a] transition-colors flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <button onClick={() => setIsModalOpen(true)} className="bg-[#FF7A5C] text-white text-sm cursor-pointer px-4 py-2 rounded-xl hover:bg-[#ff6b4a] transition-colors flex items-center gap-2 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
             </svg>
             Add Category
@@ -70,25 +75,23 @@ const CategoryManagement = () => {
 
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">Recipe Count</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className=" divide-y divide-gray-200">
               {categories.map((category) => (
                 <tr key={category.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{category.name}</div>
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-500">{category.description}</div>
-                  </td>
+
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">{category.recipeCount} recipes</span>
+                    <span className="px-2 py-1 text-xs font-medium text-slate-900">{category.recipeCount} recipes</span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(category.createdAt).toLocaleDateString()}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-3">
                       <button className="text-blue-600 hover:text-blue-800 transition-colors">

@@ -47,7 +47,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       <div className="flex relative z-10">
         {/* Sidebar with improved glassmorphism effect */}
-        <nav className="w-1/5 px-6 h-screen  fixed bg-white/40 backdrop-blur-lg rounded-3xl m-4 border-2 border-white/60 shadow">
+        <nav className="w-1/6 px-6 h-screen  fixed bg-white/40 backdrop-blur-lg rounded-3xl m-4 border-2 border-white/60 shadow">
           <div className="flex flex-col h-full gap-8 py-6 justify-center items-center">
             <div className="flex-shrink-0 flex items-center">
               <Title />
@@ -87,7 +87,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </nav>
 
         {/* Main Content - 4/5 width */}
-        <div className="w-4/5 ml-[20%]">
+        <div className="w-5/6 ml-[17%]">
           <div className="my-4">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
               {/* Content container with subtle glass effect */}

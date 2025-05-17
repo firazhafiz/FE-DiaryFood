@@ -15,7 +15,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
         <ProfileSidebar />
 
         {/* Main Content - 4/5 width */}
-        <div className="w-4/5 ml-[20%]">
+        <div className="w-5/6 ml-[17%]">
           <div className="my-4">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
               {/* Content container with subtle glass effect */}

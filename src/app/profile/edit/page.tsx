@@ -2,12 +2,13 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { CatBreakfast } from "../../../public/assets";
+import { CatBreakfast } from "../../../../public/assets";
 import { ProfileTemplate } from "@/components/templates/ProfileTemplate";
 import { useRouter } from "next/navigation";
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const router = useRouter();
   const [form, setForm] = useState({
     name: "Gadang Jatu Mahiswara",
@@ -23,13 +24,16 @@ const ProfilePage = () => {
 
   const handleSave = () => {
     setIsEditing(false);
-    router.push("/profile");
+    setIsSuccessModalOpen(true);
+    setTimeout(() => {
+      router.push("/profile");
+    }, 3000);
   };
 
   return (
     <ProfileTemplate>
       <div className="flex justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-slate-700">Dashboard</h1>
+        <h1 className="text-2xl font-semibold text-slate-700">Edit Profile</h1>
         <div className=" text-xs text-right">
           <span className="font-medium text-sm text-slate-700">{new Date().toLocaleDateString("en-US", { weekday: "long" })}</span>
           <p className="text-slate-500">{new Date().toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}</p>
@@ -44,10 +48,8 @@ const ProfilePage = () => {
               <p className="text-gray-400 text-sm">Gadang@gmail.com</p>
             </div>
           </div>
-          <div className="pr-8">
-            <button className="bg-[#FF7A5C] text-white px-6 py-2 rounded-md text-sm font-medium hover:bg-[#ff6b4a] transition-colors cursor-pointer" onClick={() => router.push("/profile/edit")}>
-              Edit
-            </button>
+          <div className={`${isEditing ? "pr-8" : "hidden"}`}>
+            <button className="bg-[#FF7A5C] text-white px-6 py-2 rounded-md text-sm font-medium hover:bg-[#ff6b4a] transition-colors">Edit</button>
           </div>
         </div>
         <form className="flex flex-col gap-6 w-full">
@@ -100,17 +102,29 @@ const ProfilePage = () => {
               placeholder="Your Address"
             />
           </div>
-          <button
-            type="button"
-            className={`${isEditing ? "mt-4 bg-[#FF7A5C] text-sm text-white px-6 py-2 rounded-md self-start disabled:opacity-60 hover:bg-[#ff6b4a] transition-colors cursor-pointer" : "hidden"}`}
-            disabled={!isEditing}
-            onClick={handleSave}>
+          <button type="button" className="mt-4 bg-[#FF7A5C] text-sm text-white px-6 py-2 rounded-md self-start disabled:opacity-60 hover:bg-[#ff6b4a] transition-colors cursor-pointer" onClick={() => handleSave()}>
             Save Changes
           </button>
         </form>
+        {isSuccessModalOpen && <SuccessModal />}
       </div>
     </ProfileTemplate>
   );
 };
 
 export default ProfilePage;
+
+const SuccessModal = () => {
+  return (
+    <div className="fixed inset-0 flex items-center justify-center  animate-fadeIn">
+      <div className="bg-white p-8 rounded-lg shadow-md text-center max-w-58 w-full mx-4 transform transition-all duration-300 animate-slideIn">
+        <div className="w-16 h-16 bg-green-100 rounded-full mx-auto flex items-center justify-center mb-4 animate-bounceIn">
+          <svg className="w-8 h-8 text-green-500 animate-checkmark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h1 className="text-xl font-semibold text-gray-700 mb-2 animate-fadeInUp">Profile Updated!</h1>
+      </div>
+    </div>
+  );
+};

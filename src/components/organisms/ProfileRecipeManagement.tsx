@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { RecipeTable } from "../molecules/RecipeTable";
 import { DashboardCard } from "../molecules/DashboardCard";
 import { useRouter } from "next/navigation";
+import { ProfileRecipeTable } from "../molecules/ProfileRecipeTable";
 
-export const RecipeManagement: React.FC = () => {
+export const ProfileRecipeManagement: React.FC = () => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -48,5 +48,5 @@ export const RecipeManagement: React.FC = () => {
     }
   };
 
-  return <DashboardCard title="Recipes List">{loading ? <div className="text-center py-4">Loading...</div> : <RecipeTable recipes={recipes} onShow={handleShow}  onDelete={handleDelete} />}</DashboardCard>;
+  return <DashboardCard title="Recipes List">{loading ? <div className="text-center py-4">Loading...</div> : <ProfileRecipeTable recipes={recipes} onShow={handleShow}  onDelete={handleDelete} />}</DashboardCard>;
 };

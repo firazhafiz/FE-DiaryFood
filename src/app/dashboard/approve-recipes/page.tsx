@@ -114,13 +114,13 @@ export default function ApproveRecipesPage() {
   };
 
   return (
-    <div className="bg-white/60 rounded-3xl shadow overflow-hidden">
-      <div className="px-6 py-4 mb-6 ">
-        <h2 className="text-lg  font-semibold text-gray-800">Recipe Approvals</h2>
-        <p className="mt-1 text-sm text-gray-600">Review and manage pending recipe submissions</p>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-semibold text-gray-900">Recipe Approvals</h1>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto bg-white/60 rounded-3xl">
+        
         <table className="min-w-full ">
           <thead className=" border-0">
             <tr>

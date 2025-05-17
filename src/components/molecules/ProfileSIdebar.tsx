@@ -6,7 +6,7 @@ import { FaBook, FaBookmark, FaCog, FaUser } from "react-icons/fa";
 
 const ProfileSidebar = () => {
   return (
-    <nav className="w-1/5 px-6 h-screen  fixed bg-white/40 backdrop-blur-lg rounded-3xl m-4 border-2 border-white/60 shadow">
+    <nav className="w-1/6 px-6 h-screen  fixed bg-white/40 backdrop-blur-lg rounded-3xl m-4 border-2 border-white/60 shadow">
       <div className="flex flex-col h-full gap-8 py-6 justify-center items-center">
         <div className="flex-shrink-0 flex items-center">
           <Title />
