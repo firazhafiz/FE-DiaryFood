@@ -1,5 +1,3 @@
-import ImageCurry from "@/assets/images/curry.png";
-
 export interface Comment {
   user: {
     name: string;

@@ -40,18 +40,18 @@ const Footer = () => (
           </li>
           <li>
             <Link
-              href="/tanya-ai"
-              className="hover:text-[color:var(--custom-orange)]"
-            >
-              Tanya AI
-            </Link>
-          </li>
-          <li>
-            <Link
               href="/resep"
               className="hover:text-[color:var(--custom-orange)]"
             >
               Resep
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/tanya-ai"
+              className="hover:text-[color:var(--custom-orange)]"
+            >
+              Tanya AI
             </Link>
           </li>
           <li>
@@ -78,7 +78,7 @@ const Footer = () => (
         <ul className="text-gray-700 text-sm space-y-3">
           <li>
             <Link
-              href="/kontak"
+              href="/contact"
               className="hover:text-[color:var(--custom-orange)]"
             >
               Kontak
