@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import Header from "../organisms/Header";
-import HeroBanner from "../organisms/HeroBanner";
 import RecipeList from "../organisms/RecipeList";
 import ShareSection from "../organisms/ShareSection";
 import InfoSection from "../organisms/InfoSection";
 import CategoryList from "../organisms/CategoryList";
 import Footer from "../organisms/Footer";
 import MoreButton from "../atoms/MoreButton";
+import Link from "next/link";
 
 interface Recipe {
   title: string;
@@ -53,9 +53,11 @@ const MainTemplate: React.FC<MainTemplateProps> = ({ recipes }) => {
               <h3 className="font-bold text-[color:var(--custom-orange)] text-xl">
                 Rekomendasi Terkini
               </h3>
-              <h2 className="text-sm text-gray-800 font-semibold hover:text-[color:var(--custom-orange)] cursor-pointer">
-                Liat Semua
-              </h2>
+              <Link href="/resep">
+                <h2 className="text-sm text-gray-800 font-semibold hover:text-[color:var(--custom-orange)] cursor-pointer">
+                  Liat Semua
+                </h2>
+              </Link>
             </div>
             <RecipeList recipes={recipes} />
           </section>
@@ -67,9 +69,11 @@ const MainTemplate: React.FC<MainTemplateProps> = ({ recipes }) => {
               <h3 className="font-bold text-[color:var(--custom-orange)] text-xl">
                 Cepat dan Praktis
               </h3>
-              <h2 className="text-sm text-gray-800 font-semibold hover:text-[color:var(--custom-orange)] cursor-pointer">
-                Liat Semua
-              </h2>
+              <Link href="/resep">
+                <h2 className="text-sm text-gray-800 font-semibold hover:text-[color:var(--custom-orange)] cursor-pointer">
+                  Liat Semua
+                </h2>
+              </Link>
             </div>
             <RecipeList recipes={recipes} />
           </section>
@@ -83,9 +87,11 @@ const MainTemplate: React.FC<MainTemplateProps> = ({ recipes }) => {
               <h3 className="font-bold text-[color:var(--custom-orange)] text-xl">
                 Resep Pilihan
               </h3>
-              <h2 className="text-sm text-gray-800 font-semibold hover:text-[color:var(--custom-orange)] cursor-pointer">
-                Liat Semua
-              </h2>
+              <Link href="/resep">
+                <h2 className="text-sm text-gray-800 font-semibold hover:text-[color:var(--custom-orange)] cursor-pointer">
+                  Liat Semua
+                </h2>
+              </Link>
             </div>
             <RecipeList recipes={recipes} />
           </section>

@@ -148,7 +148,7 @@ const Navbar: React.FC = () => {
             (category) => (
               <Link
                 key={category}
-                href={`/${category.toLowerCase()}`}
+                href={`/resep?category=${category.toLowerCase()}`}
                 onClick={() => setActiveCategory(category)}
                 className={`transition-all rounded text-sm flex items-center justify-center h-8 ${
                   activeCategory === category && !isSticky

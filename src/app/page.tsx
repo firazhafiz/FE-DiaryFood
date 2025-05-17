@@ -15,6 +15,7 @@ const sampleRecipes = [
       name: "Gadang Jatu Mahiswara",
       avatar: "/assets/images/image_login.png",
     },
+    slug: "spaghetti-carbonara",
   },
   {
     title: "Chicken Curry",
@@ -27,6 +28,7 @@ const sampleRecipes = [
       name: "Gadang Jatu Mahiswara",
       avatar: "/assets/images/image_login.png",
     },
+    slug: "chicken-curry",
   },
   {
     title: "Beef Steak American",
@@ -39,6 +41,7 @@ const sampleRecipes = [
       name: "Gadang Jatu Mahiswara",
       avatar: "/assets/images/image_login.png",
     },
+    slug: "beef-steak-american",
   },
   {
     title: "Pizza Margherita",
@@ -52,6 +55,7 @@ const sampleRecipes = [
       name: "Gadang Jatu Mahiswara",
       avatar: "/assets/images/image_login.png",
     },
+    slug: "pizza-margherita",
   },
   {
     title: "Pizza Margherita",
@@ -65,6 +69,7 @@ const sampleRecipes = [
       name: "Gadang Jatu Mahiswara",
       avatar: "/assets/images/image_login.png",
     },
+    slug: "pizza-margherita-2",
   },
 ];
 

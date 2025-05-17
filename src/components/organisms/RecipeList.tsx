@@ -15,6 +15,7 @@ interface Recipe {
     avatar: string;
   };
   price?: number;
+  slug?: string;
 }
 
 interface RecipeListProps {
