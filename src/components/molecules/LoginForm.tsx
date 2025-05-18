@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Input } from "../atoms/Input";
 import { Button } from "../atoms/Button";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { FormFieldWithIcon } from "./FormFieldIcon";
 
 interface LoginFormProps {
   onSubmit: (data: { email: string; password: string }) => void;
@@ -27,31 +27,41 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-y-3"
+      className="flex flex-col gap-y-4"
       transition={{ duration: 0.8 }}
     >
-      <h4 className="text-gray-500 text-center">or continue with email</h4>
-      <Input
+      <FormFieldWithIcon
         type="email"
         name="email"
         placeholder="Email"
         value={formData.email}
         onChange={handleChange}
+        required
       />
-      <Input
+
+      <FormFieldWithIcon
         type="password"
         name="password"
         placeholder="Password"
         value={formData.password}
         onChange={handleChange}
+        required
       />
-      <Link
-        href="/forgot-password"
-        className="text-sm text-right text-gray-500 hover:text-[color:var(--custom-orange)]"
+
+      <div className="flex justify-end">
+        <Link
+          href="/forgot-password"
+          className="text-sm text-gray-600 hover:text-[color:var(--custom-orange)] transition-colors"
+        >
+          Forgot Password?
+        </Link>
+      </div>
+
+      <Button
+        type="submit"
+        fullWidth
+        className="mt-2 bg-[color:var(--custom-orange)] hover:bg-[color:var(--custom-orange)]/90 text-white font-medium py-2.5 rounded-lg transition-colors"
       >
-        Forgot Password?
-      </Link>
-      <Button type="submit" fullWidth>
         Log In
       </Button>
     </motion.form>
