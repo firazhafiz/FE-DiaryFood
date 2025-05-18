@@ -1,6 +1,4 @@
 import React from "react";
-import Image from "next/image";
-import { ImageLogin, ImageRegister } from "../../../public/assets/index";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -11,10 +9,6 @@ interface AuthTemplateProps {
 export const AuthTemplate: React.FC<AuthTemplateProps> = ({ children }) => {
   const pathname = usePathname();
   const isLogin = pathname === "/login";
-
-  // Tentukan gambar berdasarkan path
-  const authImage = isLogin ? ImageLogin : ImageRegister;
-  const imageAlt = isLogin ? "Login" : "Register";
 
   // Variants untuk animasi
   const containerVariants = {
@@ -27,25 +21,9 @@ export const AuthTemplate: React.FC<AuthTemplateProps> = ({ children }) => {
     },
   };
 
-  const imageVariants = {
-    hidden: {
-      x: isLogin ? -100 : 100,
-      opacity: 0,
-    },
-    visible: {
-      x: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 30,
-      },
-    },
-  };
-
   const contentVariants = {
     hidden: {
-      x: isLogin ? 100 : -100,
+      x: -100, // Selalu mulai dari kiri
       opacity: 0,
     },
     visible: {
@@ -60,16 +38,35 @@ export const AuthTemplate: React.FC<AuthTemplateProps> = ({ children }) => {
   };
 
   return (
-    <motion.div className={`flex h-screen  bg-white ${!isLogin ? "flex-row-reverse" : ""}`} variants={containerVariants} initial="hidden" animate="visible">
-      <AnimatePresence mode="wait">
-        <motion.div key="content" variants={contentVariants} className="w-full max-w-md m-auto">
-          {children}
-        </motion.div>
-      </AnimatePresence>
-
-      <motion.div className="hidden lg:flex lg:w-1/2 bg-cover bg-center" variants={imageVariants}>
-        <Image src={authImage} alt={imageAlt} className="w-full h-full object-contain py-10" priority />
+    <div
+      className="fixed inset-0 bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: "url('/assets/images/image-login.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        height: "100vh",
+        width: "100vw",
+      }}
+    >
+      <motion.div
+        className="h-screen flex items-center px-4 sm:px-6 lg:px-8"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="w-full max-w-7xl mx-auto">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key="content"
+              variants={contentVariants}
+              className="w-full max-w-md ml-0 lg:ml-20"
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </motion.div>
-    </motion.div>
+    </div>
   );
 };
