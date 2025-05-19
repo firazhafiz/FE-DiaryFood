@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import { Input } from "../atoms/Input";
 import { Button } from "../atoms/Button";
 import { motion } from "framer-motion";
-import { FormFieldWithIcon } from "./FormFieldIcon";
 
 interface RegisterFormProps {
   onSubmit: (data: {
@@ -33,45 +33,41 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit }) => {
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-y-4"
+      className="flex flex-col gap-y-3 text-sm "
       transition={{ duration: 0.8 }}
     >
-      <FormFieldWithIcon
+      <Input
         type="text"
         name="name"
         placeholder="Full Name"
         value={formData.name}
         onChange={handleChange}
-        required
+        className="placeholder:text-gray-500"
       />
-
-      <FormFieldWithIcon
+      <Input
         type="email"
         name="email"
         placeholder="Email"
         value={formData.email}
         onChange={handleChange}
-        required
+        className="placeholder:text-gray-500"
       />
-
-      <FormFieldWithIcon
+      <Input
         type="password"
         name="password"
         placeholder="Password"
         value={formData.password}
         onChange={handleChange}
-        required
+        className="placeholder:text-gray-500"
       />
-
-      <FormFieldWithIcon
+      <Input
         type="password"
         name="confirmPassword"
         placeholder="Confirm Password"
         value={formData.confirmPassword}
         onChange={handleChange}
-        required
+        className="placeholder:text-gray-500"
       />
-
       <Button type="submit" fullWidth>
         Create Account
       </Button>

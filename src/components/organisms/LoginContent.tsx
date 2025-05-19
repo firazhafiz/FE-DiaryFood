@@ -13,13 +13,13 @@ export const LoginContent: React.FC<LoginContentProps> = ({ onSubmit }) => {
   return (
     <div className="w-full max-w-md" style={{ marginLeft: "100px" }}>
       <GlassmorphismCard className="mt-8">
-      <Title />
+        <Title />
         <div className="space-y-6">
           <div>
-            <h3 className="text-slate-800 font-bold text-3xl">
+            <h3 className="text-slate-800 font-bold text-2xl">
               Log in to your Account
             </h3>
-            <p className="mt-2 text-slate-400">
+            <p className="mt-2 text-sm text-slate-400">
               Welcome back! Please enter your details
             </p>
           </div>
@@ -32,7 +32,7 @@ export const LoginContent: React.FC<LoginContentProps> = ({ onSubmit }) => {
             <SocialLogin />
           </div>
 
-          <p className="text-center text-gray-500">
+          <p className="text-center text-gray-500 text-sm">
             Don't have an account?{" "}
             <Link
               href="/register"

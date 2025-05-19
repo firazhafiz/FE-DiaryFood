@@ -27,7 +27,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-y-4"
+      className="flex flex-col gap-y-4 text-sm"
       transition={{ duration: 0.8 }}
     >
       <FormFieldWithIcon
@@ -37,6 +37,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
         value={formData.email}
         onChange={handleChange}
         required
+        className="placeholder:text-gray-500"
       />
 
       <FormFieldWithIcon
@@ -46,12 +47,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
         value={formData.password}
         onChange={handleChange}
         required
+        className="placeholder:text-gray-500"
       />
 
       <div className="flex justify-end">
         <Link
           href="/forgot-password"
-          className="text-sm text-gray-600 hover:text-[color:var(--custom-orange)] transition-colors"
+          className="text-xs text-gray-600 hover:text-[color:var(--custom-orange)] transition-colors"
         >
           Forgot Password?
         </Link>
