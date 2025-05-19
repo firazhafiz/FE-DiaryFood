@@ -9,7 +9,7 @@ interface DashboardCardProps {
 export const DashboardCard: React.FC<DashboardCardProps> = ({ title, children, className = "" }) => {
   return (
     <div className={`  rounded-3xl  ${className}`}>
-      <div className="px-4 py-5 sm:p-6">{children}</div>
+      <div className="py-6">{children}</div>
     </div>
   );
 };

@@ -22,6 +22,7 @@ import IlustrasiRecipes from "./icons/recipes.png";
 import IlustrasiCategories from "./icons/category.png";
 import HeroImage from "./images/hero.jpg";
 import HeroImage2 from "./images/hero2.jpg";
+import ArrowLeft from "./images/arrow_left.png";
 
 export {
   ImageLogin,
@@ -48,4 +49,5 @@ export {
   IlustrasiCategories,
   HeroImage,
   HeroImage2,
+  ArrowLeft,
 };

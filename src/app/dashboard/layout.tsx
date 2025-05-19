@@ -91,7 +91,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="my-4">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
               {/* Content container with subtle glass effect */}
-              <div className="bg-white/30 backdrop-blur-sm p-6 rounded-2xl border-2 border-white/60 shadow">{children}</div>
+              <div className="bg-white/30 backdrop-blur-sm  overflow-hidden rounded-2xl border-2 border-white/60 shadow">{children}</div>
             </div>
           </div>
         </div>

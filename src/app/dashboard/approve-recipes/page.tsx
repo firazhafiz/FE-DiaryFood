@@ -114,9 +114,9 @@ export default function ApproveRecipesPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="p-8 space-y-8">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold text-gray-900">Recipe Approvals</h1>
+        <h1 className="text-xl font-semibold text-slate-900">Recipe Approvals</h1>
       </div>
 
       <div className="overflow-x-auto bg-white/60 rounded-3xl">

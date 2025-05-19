@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaEllipsisH, FaEye, FaTrash, FaPlus, FaEdit } from "react-icons/fa";
 import { CatDessert } from "../../../public/assets";
+import Link from "next/link";
 
 interface Recipe {
   id: string;
@@ -19,27 +20,14 @@ interface ProfileRecipeTableProps {
   onDelete?: (id: string) => void;
 }
 
-interface Ingredient {
-  id: number;
-  name: string;
-  amount: string;
-}
-
-interface Step {
-  id: number;
-  order: number;
-  description: string;
-}
-
 export const ProfileRecipeTable: React.FC<ProfileRecipeTableProps> = ({ recipes, onShow, onDelete }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   return (
-    <div className="w-full">
+    <div className="">
       <div className="flex justify-between mb-6">
-        <button className="bg-[var(--custom-orange)] text-white px-4 py-1 rounded-md text-xs cursor-pointer" onClick={() => setIsModalOpen(true)}>
-          + Add Recipe
-        </button>
+        <Link href={"/profile/my-recipe/add-recipe"} className="bg-[var(--custom-orange)] text-white px-4 py-1 rounded-md text-xs font-medium hover:bg-[var(--custom-orange)]/90 transition-colors flex items-center gap-2">
+          <FaPlus className="w-3 h-3" />
+          Add Recipe
+        </Link>
         <div className="flex items-center gap-4 ">
           <div className="relative">
             <input
@@ -75,8 +63,6 @@ export const ProfileRecipeTable: React.FC<ProfileRecipeTableProps> = ({ recipes,
           ))}
         </div>
       </div>
-
-      {isModalOpen && <AddRecipeModal onClose={() => setIsModalOpen(false)} />}
     </div>
   );
 };
@@ -162,10 +148,10 @@ const RecipeRow: React.FC<RecipeRowProps> = ({ id, title, author, category, stat
             <div className="bg-white shadow-lg rounded-xl py-1 min-w-32 border border-slate-100">
               {!isConfirmingDelete ? (
                 <>
-                  <button className="w-full flex items-center gap-2 px-4 py-2 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors" onClick={handleShow}>
+                  <Link href={"/detail_resep?recipe=chicken-curry"} className="w-full flex items-center gap-2 px-4 py-2 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors" onClick={handleShow}>
                     <FaEye className="text-slate-500" />
                     <span>Show</span>
-                  </button>
+                  </Link>
                   <button className="w-full flex items-center gap-2 px-4 py-2 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors" onClick={handleShow}>
                     <FaEdit className="text-slate-500" />
                     <span>Edit</span>
@@ -191,318 +177,6 @@ const RecipeRow: React.FC<RecipeRowProps> = ({ id, title, author, category, stat
             </div>
           </div>
         )}
-      </div>
-    </div>
-  );
-};
-
-interface AddRecipeModalProps {
-  onClose: () => void;
-}
-
-const AddRecipeModal: React.FC<AddRecipeModalProps> = ({ onClose }) => {
-  // State for the form
-  const [recipeName, setRecipeName] = useState("");
-  const [categoryId, setCategoryId] = useState("");
-  const [thumbnail, setThumbnail] = useState<File | null>(null);
-  const [showNote, setShowNote] = useState(false);
-  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
-
-  // Ingredients state
-  const [ingredients, setIngredients] = useState<Ingredient[]>([{ id: 1, name: "", amount: "" }]);
-
-  // Steps state
-  const [steps, setSteps] = useState<Step[]>([{ id: 1, order: 1, description: "" }]);
-
-  // Handle thumbnail upload
-  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setThumbnail(file);
-
-      // Create preview URL
-      const reader = new FileReader();
-      reader.onload = () => {
-        setThumbnailPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Handle adding new ingredient
-  const addIngredient = () => {
-    const newId = ingredients.length > 0 ? Math.max(...ingredients.map((i) => i.id)) + 1 : 1;
-    setIngredients([...ingredients, { id: newId, name: "", amount: "" }]);
-  };
-
-  // Handle removing ingredient
-  const removeIngredient = (id: number) => {
-    if (ingredients.length > 1) {
-      setIngredients(ingredients.filter((ingredient) => ingredient.id !== id));
-    }
-  };
-
-  // Handle ingredient change
-  const handleIngredientChange = (id: number, field: "name" | "amount", value: string) => {
-    setIngredients(ingredients.map((ingredient) => (ingredient.id === id ? { ...ingredient, [field]: value } : ingredient)));
-  };
-
-  // Handle adding new step
-  const addStep = () => {
-    const newOrder = steps.length > 0 ? Math.max(...steps.map((s) => s.order)) + 1 : 1;
-    const newId = steps.length > 0 ? Math.max(...steps.map((s) => s.id)) + 1 : 1;
-    setSteps([...steps, { id: newId, order: newOrder, description: "" }]);
-  };
-
-  // Handle removing step
-  const removeStep = (id: number) => {
-    if (steps.length > 1) {
-      const updatedSteps = steps.filter((step) => step.id !== id);
-      // Re-order steps
-      const reorderedSteps = updatedSteps.map((step, index) => ({
-        ...step,
-        order: index + 1,
-      }));
-      setSteps(reorderedSteps);
-    }
-  };
-
-  // Handle step change
-  const handleStepChange = (id: number, value: string) => {
-    setSteps(steps.map((step) => (step.id === id ? { ...step, description: value } : step)));
-  };
-
-  // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Prepare data for submission
-    const recipeData = {
-      name: recipeName,
-      category_id: parseInt(categoryId),
-      ingredients: ingredients.filter((ing) => ing.name.trim() !== ""),
-      steps: steps.filter((step) => step.description.trim() !== ""),
-    };
-
-    // Here you would normally submit the form to your API
-    console.log("Submitting recipe:", recipeData);
-
-    // Close the modal
-    onClose();
-  };
-
-  return (
-    <div className="absolute top-24 left-1/2 -translate-x-1/2  bg-opacity-30 flex items-center justify-center z-50 w-full h-full  ">
-      <div className="bg-white rounded-xl p-6 w-[900px] max-h-[90vh] overflow-y-auto ">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-slate-800">Add New Recipe</h2>
-          <button onClick={onClose} className="text-slate-500 hover:text-slate-700">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6  ">
-          {/* Basic Recipe Information */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Thumbnail Upload */}
-            <div>
-              <label className="block text-sm mb-4 font-medium text-slate-700">Recipe Thumbnail</label>
-              <label htmlFor="file-upload" className="cursor-pointer bg-white/80   rounded-full hover:bg-white transition-colors">
-                <div
-                  className="flex justify-center  items-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-lg h-64 relative"
-                  style={{ backgroundImage: thumbnailPreview ? `url(${thumbnailPreview})` : "none", backgroundSize: "cover", backgroundPosition: "center" }}>
-                  {!thumbnailPreview && (
-                    <div className="space-y-1 text-center">
-                      <input id="file-upload" name="file-upload" type="file" className="sr-only " accept="image/*" onChange={handleThumbnailChange} />
-                      <svg className="mx-auto h-12 w-12 text-slate-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                        <path
-                          d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                          strokeWidth={2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                      <div className="flex text-sm text-slate-600 justify-center">
-                        <label htmlFor="file-upload" className="relative cursor-pointer bg-white rounded-md font-medium text-[var(--custom-orange)] hover:text-orange-500">
-                          <span>Upload a file</span>
-                        </label>
-                        <p className="pl-1">or drag and drop</p>
-                      </div>
-                      <p className="text-xs text-slate-500">PNG, JPG, GIF up to 10MB</p>
-                    </div>
-                  )}
-                  {thumbnailPreview && (
-                    <div className="absolute bottom-2 right-2">
-                      <FaEdit className="text-slate-700" />
-                      <input id="file-upload" name="file-upload" type="file" className="sr-only" accept="image/*" onChange={handleThumbnailChange} />
-                    </div>
-                  )}
-                </div>
-              </label>
-            </div>
-
-            {/* Recipe Details */}
-            <div className="pt-7 md:col-span-1 space-y-7">
-              <div>
-                <label htmlFor="recipe-name" className="block text-sm font-medium text-slate-700 mb-1">
-                  Recipe Name
-                </label>
-                <input
-                  type="text"
-                  id="recipe-name"
-                  value={recipeName}
-                  onChange={(e) => setRecipeName(e.target.value)}
-                  className="w-full px-3 py-2 border text-slate-700 border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent text-sm"
-                  placeholder="Enter recipe name"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="category" className="block text-sm font-medium text-slate-700 mb-1">
-                  Category
-                </label>
-                <select
-                  id="category"
-                  value={categoryId}
-                  onChange={(e) => setCategoryId(e.target.value)}
-                  className="w-full px-3 text-sm py-2 border text-slate-700 border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent"
-                  required>
-                  <option value="">Select category</option>
-                  <option value="1">Appetizer</option>
-                  <option value="2">Main Course</option>
-                  <option value="3">Dessert</option>
-                  <option value="4">Beverage</option>
-                  <option value="5">Snack</option>
-                </select>
-              </div>
-              <div>
-                <label htmlFor="recipe-name" className="block text-sm font-medium text-slate-700 mb-1">
-                  Description
-                </label>
-
-                <textarea
-                  onChange={(e) => setRecipeName(e.target.value)}
-                  name="recipe-name"
-                  id="recipe-name"
-                  placeholder="Enter your recipe description"
-                  required
-                  className="w-full px-3 py-2 border text-slate-700 border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent text-sm"></textarea>
-              </div>
-            </div>
-          </div>
-
-          {/* Ingredients Section */}
-          <div className="pt-4 border-t border-slate-200">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-sm font-medium text-slate-800">Ingredients</h3>
-              <button type="button" onClick={addIngredient} className="inline-flex items-center px-3 py-1 text-sm font-medium text-[var(--custom-orange)] bg-orange-50 rounded-md hover:bg-orange-100 transition-colors">
-                <FaPlus className="mr-1" /> Add Ingredient
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              {ingredients.map((ingredient, index) => (
-                <div key={ingredient.id} className="flex items-center gap-3">
-                  <div className="flex-grow">
-                    <input
-                      type="text"
-                      value={ingredient.name}
-                      onChange={(e) => handleIngredientChange(ingredient.id, "name", e.target.value)}
-                      placeholder="Ingredient name"
-                      className="w-full px-3 py-2 border text-sm text-slate-700 border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent"
-                      required
-                    />
-                  </div>
-                  <div className="w-1/3">
-                    <input
-                      type="text"
-                      value={ingredient.amount}
-                      onChange={(e) => handleIngredientChange(ingredient.id, "amount", e.target.value)}
-                      placeholder="Amount (e.g., 2 tbsp, 300g)"
-                      className="w-full px-3 py-2 text-sm border text-slate-700 border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent"
-                      required
-                    />
-                  </div>
-                  <button type="button" onClick={() => removeIngredient(ingredient.id)} className="text-red-500 hover:text-red-700 p-2" disabled={ingredients.length === 1}>
-                    <FaTrash size={16} className={ingredients.length === 1 ? "text-red-300" : ""} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Steps Section */}
-          <div className="pt-4 border-t border-slate-200">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-sm font-medium text-slate-800">Preparation Steps</h3>
-              <button type="button" onClick={addStep} className="inline-flex items-center px-3 py-1 text-sm font-medium text-[var(--custom-orange)] bg-orange-50 rounded-md hover:bg-orange-100 transition-colors">
-                <FaPlus className="mr-1" /> Add Step
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              {steps.map((step) => (
-                <div key={step.id} className="flex gap-3">
-                  <div className="flex items-start pt-2">
-                    <span className="w-6 h-6 rounded-full bg-[var(--custom-orange)] text-white flex items-center justify-center text-sm font-medium">{step.order}</span>
-                  </div>
-                  <div className="flex-grow">
-                    <textarea
-                      value={step.description}
-                      onChange={(e) => handleStepChange(step.id, e.target.value)}
-                      placeholder={`Describe step ${step.order}...`}
-                      className="w-full px-3 py-2 border text-slate-700 border-slate-300 rounded-lg focus:outline-none focus:ring-2  text-sm focus:ring-[var(--custom-orange)] focus:border-transparent"
-                      rows={2}
-                      required
-                    />
-                  </div>
-                  <div className="flex items-start pt-2">
-                    <button type="button" onClick={() => removeStep(step.id)} className="text-red-500 hover:text-red-700 p-1" disabled={steps.length === 1}>
-                      <FaTrash size={16} className={steps.length === 1 ? "text-red-300" : ""} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="pt-4 border-t border-slate-200">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-sm font-medium text-slate-800">Note (Optional)</h3>
-
-              {showNote ? (
-                <button type="button" onClick={() => setShowNote(!showNote)} className="inline-flex items-center px-3 py-1 text-sm font-medium text-[var(--custom-orange)] bg-orange-50 rounded-md hover:bg-orange-100 transition-colors">
-                  <FaTrash className="mr-1" />
-                </button>
-              ) : (
-                <button type="button" onClick={() => setShowNote(!showNote)} className="inline-flex items-center px-3 py-1 text-sm font-medium text-[var(--custom-orange)] bg-orange-50 rounded-md hover:bg-orange-100 transition-colors">
-                  <FaPlus className="mr-1" />
-                </button>
-              )}
-            </div>
-
-            {showNote && (
-              <textarea
-                name="note"
-                id="note"
-                className="w-full px-3 py-2 border text-slate-700 border-slate-300 rounded-lg focus:outline-none focus:ring-2 text-sm focus:ring-[var(--custom-orange)] focus:border-transparent"
-                placeholder="Add your recipe notes here..."></textarea>
-            )}
-          </div>
-
-          {/* Form Actions */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
-            <button type="button" className="px-4 py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors" onClick={onClose}>
-              Cancel
-            </button>
-            <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-[var(--custom-orange)] rounded-lg hover:bg-orange-600 transition-colors">
-              Add Recipe
-            </button>
-          </div>
-        </form>
       </div>
     </div>
   );

@@ -123,7 +123,7 @@ export default function DashboardPage() {
     <DashboardTemplate>
       <div className="flex flex-col gap-4 ">
         <div className="flex justify-between">
-          <h1 className="text-2xl font-semibold text-slate-700">Dashboard</h1>
+          <h1 className="text-2xl font-semibold text-slate-900">Dashboard</h1>
           <div className=" text-xs text-right">
             <span className="font-medium text-sm text-slate-700">{new Date().toLocaleDateString("en-US", { weekday: "long" })}</span>
             <p className="text-slate-500">{new Date().toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}</p>

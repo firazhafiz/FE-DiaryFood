@@ -1,5 +1,6 @@
+"use client";
+
 import Card from "@/components/atoms/Card";
-import Head from "next/head";
 
 const sampleRecipes = [
   {
@@ -73,11 +74,7 @@ const sampleRecipes = [
 
 const SavedPage = () => {
   return (
-    <div>
-      <Head>
-        <title>Saved Recipes</title>
-        <meta name="description" content="Saved recipes" />
-      </Head>
+    <div className="p-8">
       <div className=" mb-6 flex justify-between">
         <h1 className="text-2xl font-semibold text-slate-700">Saved</h1>
         <div className="relative">
