@@ -7,30 +7,32 @@ import Link from "next/link";
 const Footer = () => (
   <footer className="bg-gradient-to-b from-gray-100 to-blue-100 py-8 px-4">
     <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 items-start justify-center text-center md:text-left place-items-center md:place-items-start justify-items-center md:justify-items-center transition-all duration-300">
-      {/* Kiri: Logo & Deskripsi */}
+      {/* Kiri: Logo & Description */}
       <div>
-        <div className="mb-2">
-          <span
-            className="font-bold text-2xl md:text-3xl"
-            style={{ color: "var(--custom-orange)" }}
-          >
-            Diary
-          </span>
-          <span className="font-bold text-2xl md:text-3xl text-gray-900">
-            Food
-          </span>
-        </div>
+        <Link href="/">
+          <div className="mb-2">
+            <span
+              className="font-bold text-2xl md:text-3xl"
+              style={{ color: "var(--custom-orange)" }}
+            >
+              Diary
+            </span>
+            <span className="font-bold text-2xl md:text-3xl text-gray-900">
+              Food
+            </span>
+          </div>
+        </Link>
         <p className="text-gray-700 text-sm max-w-xs leading-relaxed">
-          DiaryFood adalah website resep masakan dengan beragam pilihan menu
-          lezat, fitur pencarian yang mudah digunakan, dan komunitas pecinta
-          masak yang hangat. Temukan inspirasi, bagikan kreasi, dan mari masak
-          bersama!
+          DiaryFood is a recipe website with a wide selection of delicious
+          menus, easy-to-use search features, and a warm cooking enthusiast
+          community. Find inspiration, share your creations, and let's cook
+          together!
         </p>
       </div>
-      {/* Tengah: Tentang DiaryFood */}
+      {/* Tengah: About DiaryFood */}
       <div>
         <h4 className="font-bold text-md mb-3 text-gray-900">
-          Tentang DiaryFood
+          About DiaryFood
         </h4>
         <ul className="text-gray-700 text-sm space-y-3">
           <li>
@@ -43,7 +45,7 @@ const Footer = () => (
               href="/resep"
               className="hover:text-[color:var(--custom-orange)]"
             >
-              Resep
+              Recipes
             </Link>
           </li>
           <li>
@@ -51,7 +53,7 @@ const Footer = () => (
               href="/tanya-ai"
               className="hover:text-[color:var(--custom-orange)]"
             >
-              Tanya AI
+              Ask AI
             </Link>
           </li>
           <li>
@@ -59,7 +61,7 @@ const Footer = () => (
               href="/login"
               className="hover:text-[color:var(--custom-orange)]"
             >
-              Masuk
+              Login
             </Link>
           </li>
           <li>
@@ -67,21 +69,29 @@ const Footer = () => (
               href="/register"
               className="hover:text-[color:var(--custom-orange)]"
             >
-              Daftar
+              Register
             </Link>
           </li>
         </ul>
       </div>
-      {/* Kanan: Bantuan */}
+      {/* Kanan: Help */}
       <div>
-        <h4 className="font-bold text-md mb-3 text-gray-900">Bantuan</h4>
+        <h4 className="font-bold text-md mb-3 text-gray-900">Help</h4>
         <ul className="text-gray-700 text-sm space-y-3">
           <li>
             <Link
               href="/contact"
               className="hover:text-[color:var(--custom-orange)]"
             >
-              Kontak
+              Contact
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/about-us"
+              className="hover:text-[color:var(--custom-orange)]"
+            >
+              About Us
             </Link>
           </li>
           <li>
@@ -89,7 +99,7 @@ const Footer = () => (
               href="/syarat-ketentuan"
               className="hover:text-[color:var(--custom-orange)]"
             >
-              Syarat & Ketentuan
+              Terms & Conditions
             </Link>
           </li>
           <li>
@@ -97,15 +107,15 @@ const Footer = () => (
               href="/privasi"
               className="hover:text-[color:var(--custom-orange)]"
             >
-              Privasi & Keamanan
+              Privacy & Policy
             </Link>
           </li>
         </ul>
       </div>
     </div>
-    {/* Ikuti Kami */}
+    {/* Follow Us */}
     <div className="mt-12 flex flex-col items-center">
-      <div className="font-bold text-md mb-3 text-gray-900">Ikuti Kami</div>
+      <div className="font-bold text-md mb-3 text-gray-900">Follow Us</div>
       <div className="flex space-x-6 text-xl">
         <a
           href="#"

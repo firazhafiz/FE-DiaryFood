@@ -1,73 +1,77 @@
+import Link from "next/link";
+
 export const privacySections = [
   {
-    title: "1. Pendahuluan",
+    title: "1. Introduction",
     content: (
       <p>
-        Halaman ini menjelaskan bagaimana{" "}
-        <span className="text-[color:var(--custom-orange)]">DiaryFood</span>{" "}
-        mengelola, menggunakan, dan melindungi data pribadi pengguna website
-        penyedia resep makanan dan minuman ini.
+        This page explains how{" "}
+        <Link href="/about-us">
+          <span className="font-semibold text-[color:var(--custom-orange)] cursor-pointer">
+            DiaryFood
+          </span>
+        </Link>{" "}
+        manages, uses, and protects personal data of users on this food and
+        beverage recipe platform.
       </p>
     ),
   },
   {
-    title: "2. Data yang Dikumpulkan",
+    title: "2. Data We Collect",
     content: (
       <ul className="list-disc pl-5">
-        <li>Nama, email, dan data akun saat mendaftar atau login.</li>
+        <li>Name, email, and account data during registration or login.</li>
         <li>
-          Data aktivitas seperti resep yang disimpan, dikomentari, atau
-          dibagikan.
+          Activity data such as saved recipes, comments, or shared content.
         </li>
-        <li>Informasi perangkat dan log akses (IP, browser, waktu akses).</li>
+        <li>Device information and access logs (IP, browser, access time).</li>
       </ul>
     ),
   },
   {
-    title: "3. Penggunaan Data",
+    title: "3. How We Use Your Data",
     content: (
       <ul className="list-disc pl-5">
-        <li>Memproses pendaftaran, login, dan penggunaan fitur komunitas.</li>
+        <li>To process registration, login, and community feature usage.</li>
         <li>
-          Mengirim notifikasi, update, atau promosi terkait DiaryFood (dengan
-          persetujuan pengguna).
+          To send notifications, updates, or promotions related to DiaryFood
+          (with user consent).
         </li>
-        <li>Meningkatkan kualitas layanan dan pengalaman pengguna.</li>
-        <li>Mengelola keamanan dan mencegah penyalahgunaan.</li>
+        <li>To improve service quality and user experience.</li>
+        <li>To manage security and prevent misuse.</li>
       </ul>
     ),
   },
   {
-    title: "4. Perlindungan Data",
+    title: "4. Data Protection",
     content: (
       <ul className="list-disc pl-5">
         <li>
-          DiaryFood menggunakan protokol keamanan (HTTPS, enkripsi) untuk
-          melindungi data pengguna.
+          DiaryFood uses security protocols (HTTPS, encryption) to protect user
+          data.
         </li>
         <li>
-          Data tidak akan dijual atau dibagikan ke pihak ketiga tanpa izin,
-          kecuali diwajibkan hukum.
+          Data will not be sold or shared with third parties without permission,
+          except when legally required.
         </li>
-        <li>Hanya staf berwenang yang dapat mengakses data pengguna.</li>
+        <li>Only authorized staff can access user data.</li>
       </ul>
     ),
   },
   {
-    title: "5. Hak Pengguna",
+    title: "5. User Rights",
     content: (
       <ul className="list-disc pl-5">
         <li>
-          Berhak mengakses, memperbarui, atau menghapus data pribadi melalui
-          pengaturan akun.
+          Right to access, update, or delete personal data through account
+          settings.
         </li>
         <li>
-          Berhak menarik persetujuan penggunaan data untuk promosi atau
-          newsletter.
+          Right to withdraw consent for data usage in promotions or newsletters.
         </li>
         <li>
-          Berhak mengajukan pertanyaan atau keluhan terkait privasi ke tim
-          DiaryFood.
+          Right to submit questions or complaints regarding privacy to the
+          DiaryFood team.
         </li>
       </ul>
     ),
@@ -77,32 +81,38 @@ export const privacySections = [
     content: (
       <ul className="list-disc pl-5">
         <li>
-          DiaryFood menggunakan cookies untuk menyimpan preferensi dan
-          meningkatkan pengalaman pengguna.
+          DiaryFood uses cookies to store preferences and enhance user
+          experience.
         </li>
         <li>
-          Pengguna dapat mengatur browser untuk menolak cookies, namun beberapa
-          fitur mungkin tidak optimal.
+          Users can configure their browser to reject cookies, though some
+          features may not work optimally.
         </li>
       </ul>
     ),
   },
   {
-    title: "7. Perubahan Kebijakan",
+    title: "7. Policy Updates",
     content: (
       <p>
-        DiaryFood dapat memperbarui kebijakan privasi ini sewaktu-waktu.
-        Perubahan akan diinformasikan melalui website. Pengguna disarankan
-        memeriksa halaman ini secara berkala.
+        DiaryFood may update this privacy policy at any time. Changes will be
+        announced through the website. Users are advised to check this page
+        regularly.
       </p>
     ),
   },
   {
-    title: "8. Kontak",
+    title: "8. Contact",
     content: (
       <p>
-        Jika ada pertanyaan atau masukan terkait privasi dan keamanan, silakan
-        hubungi kami melalui halaman <b>Contact Us</b>.
+        If you have any questions or feedback regarding privacy and security,
+        please contact us through our{" "}
+        <Link href="/contact">
+          <span className="font-semibold text-[color:var(--custom-orange)] cursor-pointer">
+            Contact
+          </span>
+        </Link>{" "}
+        page.
       </p>
     ),
   },

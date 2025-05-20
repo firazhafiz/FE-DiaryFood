@@ -8,14 +8,13 @@ export default function PrivasiKeamanan() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
-      <main className="bg-white flex w-full pt-[115px] pb-16 px-2 mt-12">
-        <div className="w-full max-w-4xl mx-auto bg-white/50 backdrop-blur-sm rounded-lg shadow-sm p-8 border border-gray-100">
+      <main className="bg-gray-100 flex w-full pt-[115px] pb-16 px-2 mt-6">
+        <div className="w-full max-w-4xl mx-auto backdrop-blur-sm rounded-lg">
           <h1 className="text-2xl md:text-3xl font-bold text-center mb-2 text-[color:var(--custom-orange)]">
-            Privasi & Keamanan
+            Privacy & Policy
           </h1>
           <p className="text-center text-gray-500 mb-8 text-sm max-w-xl mx-auto">
-            Kebijakan privasi dan keamanan berikut berlaku untuk seluruh
-            layanan, fitur, dan konten yang tersedia di website DiaryFood.
+          The following privacy and security policies apply to all services, features, and content available on the DiaryFood website.
           </p>
           <div className="space-y-8">
             {privacySections.map((section, idx) => (
