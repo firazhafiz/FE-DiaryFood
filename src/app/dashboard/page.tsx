@@ -10,12 +10,15 @@ import { Bar, Line } from "react-chartjs-2";
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend);
 
 interface Recipe {
-  id: string;
+  id: number;
   title: string;
-  author: string;
+  author: {
+    name: string;
+    avatar: string;
+  };
   date: string;
   category: string;
-  status: "published" | "draft" | "pending";
+  status: "published" | "draft";
 }
 
 export default function DashboardPage() {
@@ -203,7 +206,7 @@ export default function DashboardPage() {
                   {pendingRecipes.map((recipe) => (
                     <tr key={recipe.id}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.title}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.author}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.author.name}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.date}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.category}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

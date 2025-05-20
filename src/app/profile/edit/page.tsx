@@ -13,9 +13,9 @@ const ProfilePage = () => {
   const [form, setForm] = useState({
     name: "Gadang Jatu Mahiswara",
     gender: "",
-    phone: "",
+    phone: "081615697675",
     dob: "",
-    address: "",
+    address: "jl majapahit ",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +60,7 @@ const ProfilePage = () => {
               name="name"
               value={form.name}
               onChange={handleChange}
-              disabled={!isEditing}
+              disabled={isEditing}
               className="block w-full rounded-md border-0 bg-white/50 backdrop-blur-sm py-2 px-3 text-gray-900 focus:ring-2 focus:ring-orange-200 disabled:opacity-70 placeholder-gray-400"
               placeholder="Your Name"
             />
@@ -73,7 +73,7 @@ const ProfilePage = () => {
               name="phone"
               value={form.phone}
               onChange={handleChange}
-              disabled={!isEditing}
+              disabled={isEditing}
               className="block w-full rounded-md border-0 bg-white/50 backdrop-blur-sm py-2 px-3 text-gray-900 focus:ring-2 focus:ring-orange-200 disabled:opacity-70 placeholder-gray-400"
               placeholder="Your Phone Number"
             />
@@ -85,7 +85,7 @@ const ProfilePage = () => {
               name="dob"
               value={form.dob}
               onChange={handleChange}
-              disabled={!isEditing}
+              disabled={isEditing}
               className="block w-full rounded-md border-0 bg-white/50 backdrop-blur-sm py-2 px-3 text-gray-900 focus:ring-2 focus:ring-orange-200 disabled:opacity-70 placeholder-gray-400"
               placeholder="Your Date of Birth"
             />
@@ -97,7 +97,7 @@ const ProfilePage = () => {
               name="address"
               value={form.address}
               onChange={handleChange}
-              disabled={!isEditing}
+              disabled={isEditing}
               className="block w-full rounded-md border-0 bg-white/50 backdrop-blur-sm py-2 px-3 text-gray-900 focus:ring-2 focus:ring-orange-200 disabled:opacity-70 placeholder-gray-400"
               placeholder="Your Address"
             />

@@ -2,13 +2,16 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { FaEllipsisH, FaEye, FaTrash, FaPlus, FaEdit } from "react-icons/fa";
-import { CatDessert } from "../../../public/assets";
+import Image from "next/image";
 import Link from "next/link";
 
 interface Recipe {
-  id: string;
+  id: number;
   title: string;
-  author: string;
+  author: {
+    name: string;
+    avatar: string;
+  };
   date: string;
   category: string;
   status: "published" | "draft";
@@ -16,8 +19,8 @@ interface Recipe {
 
 interface ProfileRecipeTableProps {
   recipes: Recipe[];
-  onShow?: (id: string) => void;
-  onDelete?: (id: string) => void;
+  onShow?: (id: number) => void;
+  onDelete?: (id: number) => void;
 }
 
 export const ProfileRecipeTable: React.FC<ProfileRecipeTableProps> = ({ recipes, onShow, onDelete }) => {
@@ -58,8 +61,8 @@ export const ProfileRecipeTable: React.FC<ProfileRecipeTableProps> = ({ recipes,
         </div>
 
         <div className="flex flex-col gap-4">
-          {recipes.map((recipe, index) => (
-            <RecipeRow key={recipe.id} {...recipe} index={index + 1} onDelete={onDelete} onShow={onShow} />
+          {recipes.map((recipe) => (
+            <RecipeRow key={recipe.id} {...recipe} onDelete={onDelete} onShow={onShow} />
           ))}
         </div>
       </div>
@@ -68,12 +71,11 @@ export const ProfileRecipeTable: React.FC<ProfileRecipeTableProps> = ({ recipes,
 };
 
 interface RecipeRowProps extends Recipe {
-  index: number;
-  onDelete?: (id: string) => void;
-  onShow?: (id: string) => void;
+  onDelete?: (id: number) => void;
+  onShow?: (id: number) => void;
 }
 
-const RecipeRow: React.FC<RecipeRowProps> = ({ id, title, author, category, status, onDelete, onShow }) => {
+const RecipeRow: React.FC<RecipeRowProps> = ({ id, title, author, category, image, status, onDelete, onShow }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -121,12 +123,14 @@ const RecipeRow: React.FC<RecipeRowProps> = ({ id, title, author, category, stat
   };
 
   return (
-    <div id={id} className="grid grid-cols-5 items-center py-4 px-6 border-b bg-white/60 rounded-xl border-white/60 hover:bg-gray-50">
+    <div className="grid grid-cols-5 items-center py-4 px-6 border-b bg-white/60 rounded-xl border-white/60 hover:bg-gray-50">
       <div className="flex items-center gap-3 col-span-2">
-        <img src={CatDessert} alt="thumbnail" className="w-10 h-10 rounded-lg object-cover" />
+        <div className="relative w-48 h-28 rounded-lg overflow-hidden">
+          <Image src={image} alt={title} fill className="object-cover" priority={false} sizes="100" />
+        </div>
         <div>
           <p className="text-slate-700 font-medium">{title}</p>
-          <p className="text-slate-500 text-xs">Chef {author}</p>
+          <p className="text-slate-500 text-xs">Chef {author.name}</p>
         </div>
       </div>
 
@@ -148,7 +152,7 @@ const RecipeRow: React.FC<RecipeRowProps> = ({ id, title, author, category, stat
             <div className="bg-white shadow-lg rounded-xl py-1 min-w-32 border border-slate-100">
               {!isConfirmingDelete ? (
                 <>
-                  <Link href={"/detail_resep?recipe=chicken-curry"} className="w-full flex items-center gap-2 px-4 py-2 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors" onClick={handleShow}>
+                  <Link href={`/profile/my-recipe/show?id=${id}`} className="w-full flex items-center gap-2 px-4 py-2 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors" onClick={handleShow}>
                     <FaEye className="text-slate-500" />
                     <span>Show</span>
                   </Link>

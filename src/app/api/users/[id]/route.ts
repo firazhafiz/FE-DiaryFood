@@ -4,7 +4,10 @@ import { users } from "@/data/users";
 // GET /api/users/[id] - Get user by ID
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
-    const userId = parseInt(params.id);
+    // Ensure params.id is properly awaited
+    const id = await Promise.resolve(params.id);
+    const userId = parseInt(id);
+
     const user = users.find((user) => user.id === userId);
 
     if (!user) {
@@ -15,7 +18,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const { password, ...userWithoutPassword } = user;
     return NextResponse.json(userWithoutPassword);
   } catch (error) {
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    console.error("Error fetching user:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 

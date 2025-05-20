@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Title } from "@/components/atoms/Title";
 import Swal from "sweetalert2";
 import { FaBook, FaCheckCircle, FaHome, FaTags, FaUsers } from "react-icons/fa";
+import { FaMessage } from "react-icons/fa6";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -73,6 +74,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <Link href="/dashboard/approve-recipes" className="border-transparent text-slate-700 font-semibold hover:text-slate-900  flex px-1 pt-1 border-b-2 text-md  items-center gap-3">
                   <FaCheckCircle className="text-lg" />
                   Approve Recipes
+                </Link>
+                <Link href="/dashboard/feedback" className="border-transparent text-slate-700 font-semibold hover:text-slate-900  flex px-1 pt-1 border-b-2 text-md  items-center gap-3">
+                  <FaMessage className="text-lg" />
+                  Feedback
                 </Link>
               </div>
               <div className="w-full mb-6 ">
