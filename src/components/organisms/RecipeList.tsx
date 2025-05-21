@@ -40,7 +40,7 @@ const RecipeList: React.FC<RecipeListProps> = ({ recipes }) => {
       {/* Arrow left */}
       {recipes.length > 4 && (
         <button
-          className="absolute -left-3 top-1/2 -translate-y-1/2 z-20 bg-white shadow rounded-full p-1 border border-gray-200 opacity-0 group-hover:opacity-100 group-hover:-translate-x-1 transition-all duration-300 ease-in-out flex items-center justify-center"
+          className="absolute -left-3 top-4/9 -translate-y-1/2 z-20 bg-white shadow rounded-full p-1 border border-gray-200 opacity-0 group-hover:opacity-100 group-hover:-translate-x-1 transition-all duration-300 ease-in-out flex items-center justify-center"
           onClick={() => scroll("left")}
           aria-label="Scroll left"
         >
@@ -63,11 +63,11 @@ const RecipeList: React.FC<RecipeListProps> = ({ recipes }) => {
       {/* Card slider */}
       <div
         ref={scrollRef}
-        className="flex overflow-x-auto gap-6 py-6 scrollbar-hide scroll-smooth"
+        className="flex overflow-x-auto gap-6 py-4 scrollbar-hide scroll-smooth"
         style={{ scrollBehavior: "smooth", scrollbarWidth: "none" }}
       >
         {recipes.map((recipe, index) => (
-          <div key={index} className="flex-shrink-0">
+          <div key={index} className="flex-shrink-0 ">
             <Card {...recipe} />
           </div>
         ))}
@@ -76,7 +76,7 @@ const RecipeList: React.FC<RecipeListProps> = ({ recipes }) => {
       {/* Arrow right */}
       {recipes.length > 4 && (
         <button
-          className="absolute -right-3 top-1/2 -translate-y-1/2 z-20 bg-white shadow rounded-full p-1 border border-gray-200 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 ease-in-out flex items-center justify-center"
+          className="absolute -right-3 top-4/9 -translate-y-1/2 z-20 bg-white shadow rounded-full p-1 border border-gray-200 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 ease-in-out flex items-center justify-center"
           onClick={() => scroll("right")}
           aria-label="Scroll right"
         >

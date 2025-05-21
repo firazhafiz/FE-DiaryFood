@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Input } from "../atoms/Input";
 import { MdOutlineEmail, MdLockOutline } from "react-icons/md";
@@ -45,7 +47,7 @@ export const FormFieldWithIcon: React.FC<FormFieldWithIconProps> = ({
         value={value}
         onChange={onChange}
         required={required}
-        className={`w-full pl-10 px-4 py-2 rounded-lg bg-white/30 backdrop-blur-sm border border-white/20 focus:ring-2 focus:ring-orange-200 focus:border-transparent text-gray-700 placeholder-gray-400 ${className}`}
+        className={`w-full pl-10 px-4 py-2 rounded-lg bg-white/30 border border-white/20 focus:ring-2 focus:ring-orange-200 focus:border-transparent text-gray-700 placeholder-gray-400 ${className}`}
       />
     </div>
   );
