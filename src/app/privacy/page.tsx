@@ -4,7 +4,7 @@ import Navbar from "@/components/organisms/Navbar";
 import Footer from "@/components/organisms/Footer";
 import { privacySections } from "@/data/privacy";
 
-export default function PrivasiKeamanan() {
+export default function PrivacySecurity() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
@@ -14,7 +14,8 @@ export default function PrivasiKeamanan() {
             Privacy & Policy
           </h1>
           <p className="text-center text-gray-500 mb-8 text-sm max-w-xl mx-auto">
-          The following privacy and security policies apply to all services, features, and content available on the DiaryFood website.
+            The following privacy and security policies apply to all services,
+            features, and content available on the DiaryFood website.
           </p>
           <div className="space-y-8">
             {privacySections.map((section, idx) => (

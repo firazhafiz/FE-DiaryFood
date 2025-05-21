@@ -1,6 +1,7 @@
 import React from "react";
 import { FiStar } from "react-icons/fi";
 import Link from "next/link";
+import Image from "next/image";
 
 interface CardProps {
   title: string;
@@ -45,7 +46,7 @@ const Card: React.FC<CardProps> = ({
   slug,
 }) => {
   // Define the navigation path
-  const navPath = slug ? `/detail_resep?recipe=${slug}` : "#";
+  const navPath = slug ? `/recipe-detail?recipe=${slug}` : "#";
 
   // For debugging
   const handleClick = () => {
@@ -55,8 +56,12 @@ const Card: React.FC<CardProps> = ({
 
   return (
     <Link href={navPath} className="block" onClick={handleClick}>
-      <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 w-[250px] h-[320px] flex flex-col cursor-pointer hover:scale-[1.03] active:scale-95">
-        <img src={image} alt={title} className="w-full h-36 object-cover" />
+      <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 w-[250px] h-[320px] flex flex-col cursor-pointer hover:scale-[1] active:scale-95">
+        <img
+          src={author.avatar}
+          alt={title}
+          className="w-full h-36 object-cover"
+        />
         <div className="flex-1 flex flex-col justify-between p-4 pb-2 h-full">
           <div>
             <div className="flex items-center justify-between mb-1">
@@ -90,10 +95,12 @@ const Card: React.FC<CardProps> = ({
               </span>
             </div>
           </div>
-          <div className="flex items-center pt-2 border-t gap-2">
-            <img
+          <div className="flex items-center pt-2 border-t border-gray-200 gap-2">
+            <Image
               src={author.avatar}
               alt={author.name}
+              width={24}
+              height={24}
               className="w-6 h-6 rounded-full object-cover"
             />
             <span className="text-gray-800 text-xs font-medium">

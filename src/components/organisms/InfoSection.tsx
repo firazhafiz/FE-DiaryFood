@@ -9,11 +9,10 @@ const InfoSection = () => (
     <div className="max-w-6xl mx-auto">
       <div className="text-center mb-12">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
-          Kenapa Memilih Kami?
+          Why Choose Us?
         </h2>
         <p className="text-gray-600 max-w-2xl mx-auto text-md">
-          Temukan pengalaman memasak yang menyenangkan dengan berbagai fitur
-          unggulan kami
+          Discover an enjoyable cooking experience with our outstanding features
         </p>
       </div>
 
@@ -23,8 +22,8 @@ const InfoSection = () => (
             icon={
               <FaBlender className="text-4xl text-[color:var(--custom-orange)] mb-4" />
             }
-            title="Mudah & Praktis"
-            description="Cari dan buat resep favoritmu dengan mudah, dilengkapi panduan langkah demi langkah"
+            title="Easy & Practical"
+            description="Find and create your favorite recipes easily, complete with step-by-step guides"
           />
         </div>
 
@@ -33,8 +32,8 @@ const InfoSection = () => (
             icon={
               <FaListAlt className="text-4xl text-[color:var(--custom-orange)] mb-4" />
             }
-            title="Resep Beragam"
-            description="Ribuan resep pilihan dari berbagai kategori dan tingkat kesulitan"
+            title="Diverse Recipes"
+            description="Thousands of selected recipes from various categories and difficulty levels"
           />
         </div>
 
@@ -43,8 +42,8 @@ const InfoSection = () => (
             icon={
               <FaSmile className="text-4xl text-[color:var(--custom-orange)] mb-4" />
             }
-            title="Pengalaman Seru"
-            description="Nikmati proses memasak yang menyenangkan dengan tips dan trik dari para ahli"
+            title="Community Support"
+            description="Join our community of food lovers and share your cooking journey"
           />
         </div>
       </div>

@@ -1,4 +1,4 @@
-import ImageLogin from "./images/image_login.png";
+import ImageLogin from "./images/image_login.jpg";
 import ImageRegister from "./images/image_register.png";
 import IlustrasiCooking from "./images/ilustrasi_cooking.png";
 import ImageBanner1 from "./images/image_banner1.jpg";

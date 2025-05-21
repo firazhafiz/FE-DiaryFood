@@ -21,7 +21,7 @@ const RecipeSidebar: React.FC<RecipeSidebarProps> = ({ recipes }) => {
         {recipes.slice(0, 2).map((recipe, index) => (
           <Link
             key={index}
-            href={`/detail_resep?recipe=${recipe.slug}`}
+            href={`/recipe-detail?recipe=${recipe.slug}`}
             className="flex gap-3 items-center group"
           >
             <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
@@ -59,8 +59,8 @@ const RecipeSidebar: React.FC<RecipeSidebarProps> = ({ recipes }) => {
         <p className="text-sm text-gray-600 mb-3">
           Discover our new collection of seasonal recipes for every occasion.
         </p>
-        <button className="w-full py-2 bg-[color:var(--custom-orange)] text-white text-sm font-medium rounded-lg hover:bg-orange-600 transition-colors">
-          <Link href="/resep">Browse All Recipes</Link>
+        <button className="w-full py-2 bg-[color:var(--custom-orange)] text-white text-sm font-medium rounded-sm hover:bg-orange-600 transition-colors">
+          <Link href="/recipes">Browse All Recipes</Link>
         </button>
       </div>
     </div>

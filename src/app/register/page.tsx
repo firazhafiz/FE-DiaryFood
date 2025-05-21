@@ -9,9 +9,13 @@ export default function RegisterPage() {
   const router = useRouter();
   const [error, setError] = useState<string>("");
 
-  const handleRegister = async (formData: { name: string; email: string; password: string; confirmPassword: string }) => {
+  const handleRegister = async (formData: {
+    name: string;
+    email: string;
+    password: string;
+  }) => {
     try {
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch("http://localhost:4000/v1/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -20,6 +24,7 @@ export default function RegisterPage() {
       });
 
       const data = await response.json();
+      console.log(data);
 
       if (data.success) {
         router.push("/login");

@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { FoodShare, DrinkShare } from "../../../public/assets";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const ShareSection = () => (
   <div className="flex flex-col md:flex-row items-center justify-between bg-white rounded-2xl p-6 md:p-10 gap-8 md:gap-0">
@@ -34,19 +35,21 @@ const ShareSection = () => (
       </TiltCard>
     </div>
     {/* Text & Button */}
-    <div className="flex-1 flex flex-col md:items-center text-center md:text-center mt-8 md:mt-0">
+    <div className="flex flex-col items-start md:items-start z-2">
       <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-        Bagikan <span className="text-[color:var(--custom-orange)]">Resep</span>{" "}
-        Anda
+        Share Your{" "}
+        <span className="text-[color:var(--custom-orange)]">Recipes</span>
       </h3>
       <p className="mb-6 text-sm text-gray-600 max-w-md">
-        Tunjukkan kreasi masakan favoritmu dengan mengunggah resep lengkap
-        beserta foto, langkah memasak, dan tips andalan, lalu berpeluang tampil
-        di halaman utama dan jadi inspirasi jutaan orang!
+        Showcase your favorite cooking creations by uploading complete recipes
+        with photos, cooking steps, and your special tips. Get a chance to be
+        featured on the homepage and inspire millions of people!
       </p>
-      <button className="px-7 py-3 bg-[color:var(--custom-orange)] text-sm text-white rounded-full font-semibold shadow hover:brightness-95 transition">
-        Buat Resep Sekarang
-      </button>
+      <Link href="/profile/my-recipe/add-recipe">
+        <button className="px-7 py-3 bg-[color:var(--custom-orange)] cursor-pointer text-sm text-white rounded-full font-semibold shadow hover:brightness-95 transition">
+          Create Recipe Now
+        </button>
+      </Link>
     </div>
   </div>
 );

@@ -70,4 +70,5 @@ Assistant:`;
 
     return NextResponse.json({ error: "Terjadi kesalahan. Silakan coba lagi nanti." }, { status: 500 });
   }
+>>>>>>> 50166f51a82c66404db24498d3c9a0c4415accb6
 }

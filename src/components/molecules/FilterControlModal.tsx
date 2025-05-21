@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FilterItem } from "@/components/atoms/FilterSidebar";
 
 interface FilterCategory {
@@ -19,16 +19,14 @@ const FilterControlModal: React.FC<FilterControlModalProps> = ({
   selectedFilters,
   onFilterChange,
 }) => {
-  const [activeTab, setActiveTab] = useState("Pola Makan");
-
   // Comprehensive filter categories
   const filterCategories: FilterCategory[] = [
     {
-      name: "Pola Makan",
+      name: "Dietary Pattern",
       options: [
         "Vegetarian",
-        "Bebas Susu",
-        "Bebas Gula",
+        "Dairy Free",
+        "Sugar Free",
         "Vegan",
         "Pescatarian",
         "Keto",
@@ -36,45 +34,45 @@ const FilterControlModal: React.FC<FilterControlModalProps> = ({
       ],
     },
     {
-      name: "Alergi",
+      name: "Allergies",
       options: [
-        "Bebas Gluten",
-        "Kacang-Kacangan",
+        "Gluten Free",
+        "Nuts",
         "Seafood",
-        "Telur",
-        "Susu",
-        "Kedelai",
-        "Gandum",
+        "Eggs",
+        "Dairy",
+        "Soy",
+        "Wheat",
       ],
     },
     {
-      name: "Masakan Internasional",
+      name: "International Cuisine",
       options: [
         "Indonesia",
-        "Italia",
-        "Timur Tengah",
+        "Italy",
+        "Middle East",
         "India",
         "Korea",
-        "Jepang",
+        "Japan",
         "Thailand",
-        "Prancis",
-        "Spanyol",
-        "Meksiko",
-        "Amerika",
+        "France",
+        "Spain",
+        "Mexico",
+        "America",
         "China",
       ],
     },
     {
-      name: "Masakan Daerah",
+      name: "Regional Cuisine",
       options: [
-        "Jawa Timur",
+        "East Java",
         "Palembang",
         "Medan",
         "Padang",
         "Manado",
         "Bali",
         "Aceh",
-        "Jogja",
+        "Yogyakarta",
         "Sunda",
         "Betawi",
         "Makassar",
@@ -83,25 +81,37 @@ const FilterControlModal: React.FC<FilterControlModalProps> = ({
     {
       name: "Goals",
       options: [
-        "Penurunan Berat Badan",
-        "Protein Aktif",
+        "Weight Loss",
+        "Active Protein",
         "Bulking",
         "Detox",
-        "Rendah Lemak",
-        "Tinggi Serat",
-        "Menyehatkan Jantung",
+        "Low Fat",
+        "High Fiber",
+        "Heart Healthy",
       ],
     },
     {
-      name: "Waktu Persiapan",
+      name: "Preparation Time",
       options: [
-        "Kurang dari 15 menit",
-        "15-30 menit",
-        "30-60 menit",
-        "Lebih dari 60 menit",
+        "Less than 15 minutes",
+        "15-30 minutes",
+        "30-60 minutes",
+        "More than 60 minutes",
       ],
     },
   ];
+
+  // Set initial activeTab to the first category name
+  const [activeTab, setActiveTab] = useState(filterCategories[0].name);
+
+  // Ensure activeTab is always valid if filterCategories changes
+  useEffect(() => {
+    if (!filterCategories.some((cat) => cat.name === activeTab)) {
+      setActiveTab(filterCategories[0].name);
+    }
+  }, [activeTab, filterCategories]);
+
+  const isFilterActive = selectedFilters.length > 0;
 
   if (!isOpen) return null;
 
@@ -157,16 +167,18 @@ const FilterControlModal: React.FC<FilterControlModalProps> = ({
                 <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
               </svg>
             </span>
-            Filter Resep
+            Filter Recipes
           </h2>
           <div className="flex items-center gap-4">
-            <button
-              onClick={clearAllFilters}
-              className="text-gray-500 text-xs hover:text-[color:var(--custom-orange)] transition-colors duration-200 font-medium flex items-center gap-1"
-            >
-              <span className="hidden md:inline">Hapus Semua</span>
-              <span className="md:hidden">Clear</span>
-            </button>
+            {isFilterActive && (
+              <button
+                onClick={clearAllFilters}
+                className="text-gray-500 text-xs hover:text-[color:var(--custom-orange)] transition-colors duration-200 font-medium flex items-center gap-1"
+              >
+                <span className="hidden md:inline">Clear All</span>
+                <span className="md:hidden">Clear</span>
+              </button>
+            )}
             <button
               onClick={onClose}
               className="text-gray-800 hover:text-[color:var(--custom-orange)] transition-colors duration-200 p-1 rounded-full hover:bg-gray-100/50"
@@ -308,12 +320,10 @@ const FilterControlModal: React.FC<FilterControlModalProps> = ({
                   <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
                 </svg>
                 <span className="font-medium">{selectedFilters.length}</span>{" "}
-                filter terpilih
+                filters selected
               </span>
             ) : (
-              <span className="text-gray-400">
-                Tidak ada filter yang dipilih
-              </span>
+              <span className="text-gray-400">No filters selected</span>
             )}
           </div>
           <div className="flex gap-3">
@@ -321,13 +331,13 @@ const FilterControlModal: React.FC<FilterControlModalProps> = ({
               onClick={onClose}
               className="px-5 py-2 border border-gray-300/70 rounded-full text-gray-700 hover:bg-gray-100/70 transition-colors duration-200 text-xs"
             >
-              Batal
+              Cancel
             </button>
             <button
               onClick={onClose}
               className="px-6 py-2 bg-gradient-to-r from-[color:var(--custom-orange)] to-orange-400 text-white rounded-full hover:shadow-md hover:shadow-orange-200/50 transition-all duration-200 flex items-center font-medium text-xs"
             >
-              <span>Terapkan</span>
+              <span>Apply</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"

@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Title } from "../atoms/Title";
 import { SocialLogin } from "../molecules/SocialLogin";

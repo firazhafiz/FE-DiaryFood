@@ -42,7 +42,7 @@ const Footer = () => (
           </li>
           <li>
             <Link
-              href="/resep"
+              href="/recipes"
               className="hover:text-[color:var(--custom-orange)]"
             >
               Recipes
@@ -50,7 +50,7 @@ const Footer = () => (
           </li>
           <li>
             <Link
-              href="/tanya-ai"
+              href="/ask-ai"
               className="hover:text-[color:var(--custom-orange)]"
             >
               Ask AI
@@ -96,7 +96,7 @@ const Footer = () => (
           </li>
           <li>
             <Link
-              href="/syarat-ketentuan"
+              href="/terms"
               className="hover:text-[color:var(--custom-orange)]"
             >
               Terms & Conditions
@@ -104,7 +104,7 @@ const Footer = () => (
           </li>
           <li>
             <Link
-              href="/privasi"
+              href="/privacy"
               className="hover:text-[color:var(--custom-orange)]"
             >
               Privacy & Policy

@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import HeroImage2 from "../../../public/assets/images/hero2.jpg";
+import { TextHero } from "../molecules/TextHero";
 
 const Hero: React.FC = () => {
   return (
@@ -13,13 +14,7 @@ const Hero: React.FC = () => {
         className=""
       />
       <div className="absolute inset-0 flex items-center justify-center text-center text-white">
-        <div>
-          <h2 className="text-3xl font-bold drop-shadow-lg">
-            <span className="text-[var(--custom-orange)]">Welcome</span>, Enjoy
-            your Journey
-          </h2>
-          <p className="text-xl drop-shadow-lg">With an Amazing Recipes !</p>
-        </div>
+        <TextHero />
       </div>
     </div>
   );

@@ -30,7 +30,7 @@ const MainTemplate: React.FC<MainTemplateProps> = ({ recipes }) => {
 
     const handleScroll = () => {
       const offset = window.scrollY;
-      setIsSticky(offset > 50); // Aktifkan sticky dan dark mode setelah scroll 50px
+      setIsSticky(offset > 50); // Enable sticky and dark mode after 50px scroll
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -51,11 +51,11 @@ const MainTemplate: React.FC<MainTemplateProps> = ({ recipes }) => {
           <section suppressHydrationWarning>
             <div className="flex justify-between items-center mt-10">
               <h3 className="font-bold text-[color:var(--custom-orange)] text-xl">
-                Rekomendasi Terkini
+                Latest Recommendations
               </h3>
-              <Link href="/resep">
+              <Link href="/recipes">
                 <h2 className="text-sm text-gray-800 font-semibold hover:text-[color:var(--custom-orange)] cursor-pointer">
-                  Liat Semua
+                  View All
                 </h2>
               </Link>
             </div>
@@ -67,11 +67,11 @@ const MainTemplate: React.FC<MainTemplateProps> = ({ recipes }) => {
           <section>
             <div className="flex justify-between items-center">
               <h3 className="font-bold text-[color:var(--custom-orange)] text-xl">
-                Cepat dan Praktis
+                Quick & Easy
               </h3>
-              <Link href="/resep">
+              <Link href="/recipes">
                 <h2 className="text-sm text-gray-800 font-semibold hover:text-[color:var(--custom-orange)] cursor-pointer">
-                  Liat Semua
+                  View All
                 </h2>
               </Link>
             </div>
@@ -85,11 +85,11 @@ const MainTemplate: React.FC<MainTemplateProps> = ({ recipes }) => {
           <section className="mb-10">
             <div className="flex justify-between items-center">
               <h3 className="font-bold text-[color:var(--custom-orange)] text-xl">
-                Resep Pilihan
+                Featured Recipes
               </h3>
-              <Link href="/resep">
+              <Link href="/recipes">
                 <h2 className="text-sm text-gray-800 font-semibold hover:text-[color:var(--custom-orange)] cursor-pointer">
-                  Liat Semua
+                  View All
                 </h2>
               </Link>
             </div>

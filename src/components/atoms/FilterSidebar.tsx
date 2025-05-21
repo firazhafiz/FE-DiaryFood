@@ -49,7 +49,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
   return (
     <>
-      <aside className="w-full md:w-64 bg-gradient-to-b from-gray-50 to-gray-100 rounded-2xl p-6 mb-6 md:mb-0">
+      <aside className="w-full md:w-64 bg-gradient-to-b from-gray-50 to-gray-100 rounded-2xl px-6 py-4 mb-6 md:mb-0">
         <h2
           className="text-lg font-bold mb-4 text-gray-800 cursor-pointer flex items-center transition-colors hover:text-[color:var(--custom-orange)]"
           onClick={openModal}
@@ -76,16 +76,16 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         {/* Example filter groups */}
         <div className="mb-6">
           <h3 className="font-semibold text-gray-700 mb-2 text-sm">
-            Pola Makan
+            Dietary Pattern
           </h3>
           <div className="flex flex-col text-gray-500 font-medium gap-4">
             <label className="flex items-center gap-4 text-sm">
               <input
                 type="checkbox"
-                checked={isFilterSelected("Pola Makan", "Vegetarian")}
+                checked={isFilterSelected("Dietary Pattern", "Vegetarian")}
                 onChange={(e) =>
                   handleFilterChange(
-                    "Pola Makan",
+                    "Dietary Pattern",
                     "Vegetarian",
                     e.target.checked
                   )
@@ -97,75 +97,77 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <label className="flex items-center gap-4 text-sm">
               <input
                 type="checkbox"
-                checked={isFilterSelected("Pola Makan", "Bebas Susu")}
+                checked={isFilterSelected("Dietary Pattern", "Dairy Free")}
                 onChange={(e) =>
                   handleFilterChange(
-                    "Pola Makan",
-                    "Bebas Susu",
+                    "Dietary Pattern",
+                    "Dairy Free",
                     e.target.checked
                   )
                 }
                 className="accent-[color:var(--custom-orange)]"
               />{" "}
-              Bebas Susu
+              Dairy Free
             </label>
             <span
               onClick={openModal}
               className="text-xs text-[color:var(--custom-orange)] cursor-pointer mt-1 hover:underline"
             >
-              Lebih Banyak
-            </span>
-          </div>
-        </div>
-        <div className="mb-6">
-          <h3 className="font-semibold text-gray-700 mb-2 text-sm">Alergi</h3>
-          <div className="flex flex-col text-gray-500 font-medium  gap-4">
-            <label className="flex items-center gap-4 text-sm">
-              <input
-                type="checkbox"
-                checked={isFilterSelected("Alergi", "Bebas Gluten")}
-                onChange={(e) =>
-                  handleFilterChange("Alergi", "Bebas Gluten", e.target.checked)
-                }
-                className="accent-[color:var(--custom-orange)]"
-              />{" "}
-              Bebas Gluten
-            </label>
-            <label className="flex items-center gap-4 text-sm">
-              <input
-                type="checkbox"
-                checked={isFilterSelected("Alergi", "Kacang-Kacangan")}
-                onChange={(e) =>
-                  handleFilterChange(
-                    "Alergi",
-                    "Kacang-Kacangan",
-                    e.target.checked
-                  )
-                }
-                className="accent-[color:var(--custom-orange)]"
-              />{" "}
-              Kacang-Kacangan
-            </label>
-            <span
-              onClick={openModal}
-              className="text-xs text-[color:var(--custom-orange)] cursor-pointer mt-1 hover:underline"
-            >
-              Lebih Banyak
+              More
             </span>
           </div>
         </div>
         <div className="mb-6">
           <h3 className="font-semibold text-gray-700 mb-2 text-sm">
-            Masakan Internasional
+            Allergies
+          </h3>
+          <div className="flex flex-col text-gray-500 font-medium  gap-4">
+            <label className="flex items-center gap-4 text-sm">
+              <input
+                type="checkbox"
+                checked={isFilterSelected("Allergies", "Gluten Free")}
+                onChange={(e) =>
+                  handleFilterChange(
+                    "Allergies",
+                    "Gluten Free",
+                    e.target.checked
+                  )
+                }
+                className="accent-[color:var(--custom-orange)]"
+              />{" "}
+              Gluten Free
+            </label>
+            <label className="flex items-center gap-4 text-sm">
+              <input
+                type="checkbox"
+                checked={isFilterSelected("Allergies", "Nuts")}
+                onChange={(e) =>
+                  handleFilterChange("Allergies", "Nuts", e.target.checked)
+                }
+                className="accent-[color:var(--custom-orange)]"
+              />{" "}
+              Nuts
+            </label>
+            <span
+              onClick={openModal}
+              className="text-xs text-[color:var(--custom-orange)] cursor-pointer mt-1 hover:underline"
+            >
+              More
+            </span>
+          </div>
+        </div>
+        <div className="mb-6">
+          <h3 className="font-semibold text-gray-700 mb-2 text-sm">
+            International Cuisine
           </h3>
           <div className="flex flex-col text-gray-500 font-medium gap-4">
             <label className="flex items-center gap-4 text-sm">
               <input
                 type="checkbox"
-                checked={isFilterSelected("Masakan Internasional", "Indonesia")}
+                checked={isFilterSelected("International Cuisine", "Indonesia")}
                 onChange={(e) =>
                   handleFilterChange(
-                    "Masakan Internasional",
+                    "International Cuisine",
                     "Indonesia",
                     e.target.checked
                   )
@@ -177,43 +179,43 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <label className="flex items-center gap-4 text-sm">
               <input
                 type="checkbox"
-                checked={isFilterSelected("Masakan Internasional", "Italia")}
+                checked={isFilterSelected("International Cuisine", "Italy")}
                 onChange={(e) =>
                   handleFilterChange(
-                    "Masakan Internasional",
-                    "Italia",
+                    "International Cuisine",
+                    "Italy",
                     e.target.checked
                   )
                 }
                 className="accent-[color:var(--custom-orange)]"
               />{" "}
-              Italia
+              Italy
             </label>
             <label className="flex items-center gap-4 text-sm">
               <input
                 type="checkbox"
                 checked={isFilterSelected(
-                  "Masakan Internasional",
-                  "Timur Tengah"
+                  "International Cuisine",
+                  "Middle East"
                 )}
                 onChange={(e) =>
                   handleFilterChange(
-                    "Masakan Internasional",
-                    "Timur Tengah",
+                    "International Cuisine",
+                    "Middle East",
                     e.target.checked
                   )
                 }
                 className="accent-[color:var(--custom-orange)]"
               />{" "}
-              Timur Tengah
+              Middle East
             </label>
             <label className="flex items-center gap-4 text-sm">
               <input
                 type="checkbox"
-                checked={isFilterSelected("Masakan Internasional", "India")}
+                checked={isFilterSelected("International Cuisine", "India")}
                 onChange={(e) =>
                   handleFilterChange(
-                    "Masakan Internasional",
+                    "International Cuisine",
                     "India",
                     e.target.checked
                   )
@@ -225,10 +227,10 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <label className="flex items-center gap-4 text-sm">
               <input
                 type="checkbox"
-                checked={isFilterSelected("Masakan Internasional", "Korea")}
+                checked={isFilterSelected("International Cuisine", "Korea")}
                 onChange={(e) =>
                   handleFilterChange(
-                    "Masakan Internasional",
+                    "International Cuisine",
                     "Korea",
                     e.target.checked
                   )
@@ -241,37 +243,37 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               onClick={openModal}
               className="text-xs text-[color:var(--custom-orange)] cursor-pointer mt-1 hover:underline"
             >
-              Lebih Banyak
+              More
             </span>
           </div>
         </div>
         <div className="mb-6">
           <h3 className="font-semibold text-gray-700 mb-2 text-sm">
-            Masakan Daerah
+            Regional Cuisine
           </h3>
           <div className="flex flex-col gap-4 text-gray-500 font-medium ">
             <label className="flex items-center gap-4 text-sm">
               <input
                 type="checkbox"
-                checked={isFilterSelected("Masakan Daerah", "Jawa Timur")}
+                checked={isFilterSelected("Regional Cuisine", "East Java")}
                 onChange={(e) =>
                   handleFilterChange(
-                    "Masakan Daerah",
-                    "Jawa Timur",
+                    "Regional Cuisine",
+                    "East Java",
                     e.target.checked
                   )
                 }
                 className="accent-[color:var(--custom-orange)]"
               />{" "}
-              Jawa Timur
+              East Java
             </label>
             <label className="flex items-center gap-4 text-sm">
               <input
                 type="checkbox"
-                checked={isFilterSelected("Masakan Daerah", "Palembang")}
+                checked={isFilterSelected("Regional Cuisine", "Palembang")}
                 onChange={(e) =>
                   handleFilterChange(
-                    "Masakan Daerah",
+                    "Regional Cuisine",
                     "Palembang",
                     e.target.checked
                   )
@@ -283,10 +285,10 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <label className="flex items-center gap-4 text-sm">
               <input
                 type="checkbox"
-                checked={isFilterSelected("Masakan Daerah", "Medan")}
+                checked={isFilterSelected("Regional Cuisine", "Medan")}
                 onChange={(e) =>
                   handleFilterChange(
-                    "Masakan Daerah",
+                    "Regional Cuisine",
                     "Medan",
                     e.target.checked
                   )
@@ -299,7 +301,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               onClick={openModal}
               className="text-xs text-[color:var(--custom-orange)] cursor-pointer mt-1 hover:underline"
             >
-              Lebih Banyak
+              More
             </span>
           </div>
         </div>
@@ -309,34 +311,34 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <label className="flex items-center gap-4 text-sm">
               <input
                 type="checkbox"
-                checked={isFilterSelected("Goals", "Penurunan Berat Badan")}
+                checked={isFilterSelected("Goals", "Weight Loss")}
+                onChange={(e) =>
+                  handleFilterChange("Goals", "Weight Loss", e.target.checked)
+                }
+                className="accent-[color:var(--custom-orange)]"
+              />{" "}
+              Weight Loss
+            </label>
+            <label className="flex items-center gap-4 text-sm">
+              <input
+                type="checkbox"
+                checked={isFilterSelected("Goals", "Active Protein")}
                 onChange={(e) =>
                   handleFilterChange(
                     "Goals",
-                    "Penurunan Berat Badan",
+                    "Active Protein",
                     e.target.checked
                   )
                 }
                 className="accent-[color:var(--custom-orange)]"
               />{" "}
-              Penurunan Berat Badan
-            </label>
-            <label className="flex items-center gap-4 text-sm">
-              <input
-                type="checkbox"
-                checked={isFilterSelected("Goals", "Protein Aktif")}
-                onChange={(e) =>
-                  handleFilterChange("Goals", "Protein Aktif", e.target.checked)
-                }
-                className="accent-[color:var(--custom-orange)]"
-              />{" "}
-              Protein Aktif
+              Active Protein
             </label>
             <span
               onClick={openModal}
               className="text-xs text-[color:var(--custom-orange)] cursor-pointer mt-1 hover:underline"
             >
-              Lebih Banyak
+              More
             </span>
           </div>
         </div>

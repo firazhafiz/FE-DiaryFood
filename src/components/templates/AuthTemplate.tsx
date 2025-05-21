@@ -41,7 +41,7 @@ export const AuthTemplate: React.FC<AuthTemplateProps> = ({ children }) => {
     <div
       className="fixed inset-0 bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: "url('/assets/images/image-login.jpg')",
+        backgroundImage: "url('/assets/images/image_login.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
