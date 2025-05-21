@@ -1,41 +1,63 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import { LoginContent } from "@/components/organisms/LoginContent";
 import { AuthTemplate } from "@/components/templates/AuthTemplate";
+import { FcGoogle } from "react-icons/fc";
+import { config } from "@/config";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [error, setError] = useState<string>("");
 
+  useEffect(() => {
+    const errorParam = searchParams.get("error");
+    if (errorParam === "invalid_tokens") {
+      setError("Invalid authentication tokens. Please try again.");
+    } else if (errorParam === "no_tokens") {
+      setError("No authentication tokens received. Please try again.");
+    }
+  }, [searchParams]);
+
   const handleLogin = async (formData: { email: string; password: string }) => {
-    // try {
-    //   const response = await fetch("/api/auth/login", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(formData),
-    //   });
+    try {
+      const response = await fetch(`${config.apiUrl}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    //   const data = await response.json();
+      const data = await response.json();
 
-    //   if (data.success) {
-    //     localStorage.setItem("token", data.token);
-    //     router.push("/dashboard");
-    //   } else {
-    //     setError(data.message);
-    //   }
-    // } catch (error) {
-    //   setError("An error occurred during login");
-    // }
-    router.push("/dashboard");
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        router.push("/dashboard");
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      setError("An error occurred during login");
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      // Redirect ke endpoint Google OAuth di backend Express
+      window.location.href = `${config.apiUrl}/auth/google`;
+    } catch (err) {
+      setError("An error occurred during Google login", err);
+    }
   };
 
   return (
     <AuthTemplate>
-      <LoginContent onSubmit={handleLogin} />
+      <div className="space-y-4">
+        <LoginContent googleLogin={handleGoogleLogin} onSubmit={handleLogin} />
+      </div>
     </AuthTemplate>
   );
 }
