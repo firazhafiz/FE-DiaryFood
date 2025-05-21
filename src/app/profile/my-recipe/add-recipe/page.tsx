@@ -140,8 +140,7 @@ export default function AddRecipePage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 bg-white">
-      <div className="max-w-4xl mx-auto">
+    <div className="container mx-auto  p-8 bg-white">
         <h1 className="text-2xl font-semibold text-slate-800 mb-6">Add New Recipe</h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -237,7 +236,7 @@ export default function AddRecipePage() {
           <div className="pt-4 border-t border-slate-200">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-sm font-medium text-slate-800">Ingredients</h3>
-              <button type="button" onClick={addIngredient} className="inline-flex items-center px-3 py-1 text-sm font-medium text-[var(--custom-orange)] bg-orange-50 rounded-md hover:bg-orange-100 transition-colors">
+              <button type="button" onClick={addIngredient} className="inline-flex items-center px-3 py-1 text-sm font-medium text-[var(--custom-orange)] bg-gray-50 rounded-md hover:bg-orange-100 transition-colors">
                 <FaPlus className="mr-1" /> Add Ingredient
               </button>
             </div>
@@ -277,7 +276,7 @@ export default function AddRecipePage() {
           <div className="pt-4 border-t border-slate-200">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-sm font-medium text-slate-800">Preparation Steps</h3>
-              <button type="button" onClick={addStep} className="inline-flex items-center px-3 py-1 text-sm font-medium text-[var(--custom-orange)] bg-orange-50 rounded-md hover:bg-orange-100 transition-colors">
+              <button type="button" onClick={addStep} className="inline-flex items-center px-3 py-1 text-sm font-medium text-[var(--custom-orange)] bg-gray-50 rounded-md hover:bg-orange-100 transition-colors">
                 <FaPlus className="mr-1" /> Add Step
               </button>
             </div>
@@ -312,7 +311,7 @@ export default function AddRecipePage() {
           <div className="pt-4 border-t border-slate-200">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-sm font-medium text-slate-800">Note (Optional)</h3>
-              <button type="button" onClick={() => setShowNote(!showNote)} className="inline-flex items-center px-3 py-1 text-sm font-medium text-[var(--custom-orange)] bg-orange-50 rounded-md hover:bg-orange-100 transition-colors">
+              <button type="button" onClick={() => setShowNote(!showNote)} className="inline-flex items-center px-3 py-1 text-sm font-medium text-[var(--custom-orange)] bg-gray-50 rounded-md hover:bg-orange-100 transition-colors">
                 {showNote ? <FaTrash className="mr-1" /> : <FaPlus className="mr-1" />}
                 {showNote ? "Remove Note" : "Add Note"}
               </button>
@@ -339,7 +338,6 @@ export default function AddRecipePage() {
             </button>
           </div>
         </form>
-      </div>
     </div>
   );
 }

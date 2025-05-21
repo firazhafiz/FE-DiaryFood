@@ -9,7 +9,7 @@ import CommentsSection from "@/components/molecules/CommentsSection";
 import RecipeSidebar from "@/components/molecules/RecipeSidebar";
 import Footer from "@/components/organisms/Footer";
 import Navbar from "@/components/organisms/Navbar";
-import { dummyRecipes, sidebarRecipes, Recipe } from "@/data/recipes";
+import { dummyRecipes, Recipe } from "@/data/recipes";
 
 // Interfaces for type safety
 interface Comment {

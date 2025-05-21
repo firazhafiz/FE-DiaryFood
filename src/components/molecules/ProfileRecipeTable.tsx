@@ -2,13 +2,16 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { FaEllipsisH, FaEye, FaTrash, FaPlus, FaEdit } from "react-icons/fa";
-import { CatDessert } from "../../../public/assets";
+import Image from "next/image";
 import Link from "next/link";
 
 interface Recipe {
-  id: string;
+  id: number;
   title: string;
-  author: string;
+  author: {
+    name: string;
+    avatar: string;
+  };
   date: string;
   category: string;
   status: "published" | "draft";
@@ -16,8 +19,8 @@ interface Recipe {
 
 interface ProfileRecipeTableProps {
   recipes: Recipe[];
-  onShow?: (id: string) => void;
-  onDelete?: (id: string) => void;
+  onShow?: (id: number) => void;
+  onDelete?: (id: number) => void;
 }
 
 export const ProfileRecipeTable: React.FC<ProfileRecipeTableProps> = ({
@@ -79,11 +82,10 @@ export const ProfileRecipeTable: React.FC<ProfileRecipeTableProps> = ({
         </div>
 
         <div className="flex flex-col gap-4">
-          {recipes.map((recipe, index) => (
+          {recipes.map((recipe) => (
             <RecipeRow
               key={recipe.id}
               {...recipe}
-              index={index + 1}
               onDelete={onDelete}
               onShow={onShow}
             />
@@ -95,9 +97,8 @@ export const ProfileRecipeTable: React.FC<ProfileRecipeTableProps> = ({
 };
 
 interface RecipeRowProps extends Recipe {
-  index: number;
-  onDelete?: (id: string) => void;
-  onShow?: (id: string) => void;
+  onDelete?: (id: number) => void;
+  onShow?: (id: number) => void;
 }
 
 const RecipeRow: React.FC<RecipeRowProps> = ({
@@ -105,6 +106,7 @@ const RecipeRow: React.FC<RecipeRowProps> = ({
   title,
   author,
   category,
+  image,
   status,
   onDelete,
   onShow,
@@ -159,19 +161,21 @@ const RecipeRow: React.FC<RecipeRowProps> = ({
   };
 
   return (
-    <div
-      id={id}
-      className="grid grid-cols-5 items-center py-4 px-6 border-b bg-white/60 rounded-xl border-white/60 hover:bg-gray-50"
-    >
+    <div className="grid grid-cols-5 items-center py-4 px-6 border-b bg-white/60 rounded-xl border-white/60 hover:bg-gray-50">
       <div className="flex items-center gap-3 col-span-2">
-        <img
-          src={CatDessert}
-          alt="thumbnail"
-          className="w-10 h-10 rounded-lg object-cover"
-        />
+        <div className="relative w-48 h-28 rounded-lg overflow-hidden">
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className="object-cover"
+            priority={false}
+            sizes="100"
+          />
+        </div>
         <div>
           <p className="text-slate-700 font-medium">{title}</p>
-          <p className="text-slate-500 text-xs">Chef {author}</p>
+          <p className="text-slate-500 text-xs">Chef {author.name}</p>
         </div>
       </div>
 
@@ -206,7 +210,7 @@ const RecipeRow: React.FC<RecipeRowProps> = ({
               {!isConfirmingDelete ? (
                 <>
                   <Link
-                    href={"/recipe-detail?recipe=chicken-curry"}
+                    href={`/profile/my-recipe/show?id=${id}`}
                     className="w-full flex items-center gap-2 px-4 py-2 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors"
                     onClick={handleShow}
                   >

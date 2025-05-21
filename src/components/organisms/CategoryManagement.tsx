@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import AddCategoryModal from "../molecules/AddCategoryModal";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 interface Category {
   id: string;
@@ -13,36 +14,78 @@ interface Category {
 
 const CategoryManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
   const [categories, setCategories] = useState<Category[]>([
     {
       id: "1",
       name: "Breakfast",
+      description: "Breakfast recipes",
       recipeCount: 10,
+      createdAt: "2024-01-01",
     },
     {
       id: "2",
       name: "Lunch",
+      description: "Lunch recipes",
       recipeCount: 10,
+      createdAt: "2024-01-01",
     },
     {
       id: "3",
       name: "Dinner",
+      description: "Dinner recipes",
       recipeCount: 10,
+      createdAt: "2024-01-01",
     },
     {
       id: "4",
       name: "Dessert",
+      description: "Dessert recipes",
       recipeCount: 10,
+      createdAt: "2024-01-01",
     },
     {
       id: "5",
       name: "Snacks",
+      description: "Snack recipes",
       recipeCount: 10,
+      createdAt: "2024-01-01",
     },
     {
       id: "6",
       name: "Drinks",
+      description: "Drink recipes",
       recipeCount: 10,
+      createdAt: "2024-01-01",
+    },
+    {
+      id: "7",
+      name: "Appetizers",
+      description: "Appetizer recipes",
+      recipeCount: 10,
+      createdAt: "2024-01-01",
+    },
+    {
+      id: "8",
+      name: "Main Courses",
+      description: "Main course recipes",
+      recipeCount: 10,
+      createdAt: "2024-01-01",
+    },
+    {
+      id: "9",
+      name: "Side Dishes",
+      description: "Side dish recipes",
+      recipeCount: 10,
+      createdAt: "2024-01-01",
+    },
+    {
+      id: "10",
+      name: "Soups",
+      description: "Soup recipes",
+      recipeCount: 10,
+      createdAt: "2024-01-01",
     },
   ]);
 
@@ -50,50 +93,64 @@ const CategoryManagement = () => {
     setCategories(categories.filter((category) => category.id !== id));
   };
 
-  const handleAddCategory = (newCategory: { name: string; description: string }) => {
+  const handleAddCategory = (newCategory: { name: string }) => {
     const category: Category = {
       id: Date.now().toString(),
       name: newCategory.name,
-      description: newCategory.description,
+      description: "",
       recipeCount: 0,
       createdAt: new Date().toISOString().split("T")[0],
     };
     setCategories([...categories, category]);
   };
 
+  // Pagination calculations
+  const totalPages = Math.ceil(categories.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentCategories = categories.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   return (
-    <div className="bg-white/60 rounded-3xl shadow-sm border-2 border-white/60">
-      <div className="p-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-          <button onClick={() => setIsModalOpen(true)} className="bg-[#FF7A5C] text-white text-sm cursor-pointer px-4 py-2 rounded-xl hover:bg-[#ff6b4a] transition-colors flex items-center gap-2 shadow-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-            </svg>
-            Add Category
-          </button>
-        </div>
+    <div className="p-6 relative min-h-[calc(100vh-200px)]">
+      {/* Add Category Button */}
+      <div className="flex justify-center mb-6">
+        <button onClick={() => setIsModalOpen(true)} className="bg-[#FF7A5C] text-white text-sm cursor-pointer px-6 py-2 rounded-xl hover:bg-[#ff6b4a] transition-colors flex items-center gap-2 shadow-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+          </svg>
+          Add Category
+        </button>
+      </div>
 
+      {/* Table Section */}
+      <div className="w-full mx-auto mb-12">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">Recipe Count</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className=" divide-y divide-gray-200">
-              {categories.map((category) => (
-                <tr key={category.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{category.name}</div>
-                  </td>
+          {/* Header Row */}
+          <div className="min-w-full divide-y divide-gray-200">
+            <div className="grid grid-cols-3 rounded-2xl py-4 mb-1">
+              <div className="px-6 text-center text-md font-medium text-slate-700 tracking-wider">Name</div>
+              <div className="px-6 text-center text-md font-medium text-slate-700 tracking-wider">Recipe Count</div>
+              <div className="px-6 text-center text-md font-medium text-slate-700 tracking-wider">Actions</div>
+            </div>
 
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 py-1 text-xs font-medium text-slate-900">{category.recipeCount} recipes</span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-3">
+            {/* Body Rows */}
+            <div className="space-y-4">
+              {currentCategories.map((category) => (
+                <div key={category.id} className="grid grid-cols-3 bg-white/60 border-2 border-white rounded-2xl py-4">
+                  <div className="px-6 whitespace-nowrap">
+                    <div className="text-sm text-center font-medium text-gray-900">{category.name}</div>
+                  </div>
+
+                  <div className="px-6 whitespace-nowrap">
+                    <p className="px-2 py-1 text-xs text-center font-medium text-slate-900">{category.recipeCount} recipes</p>
+                  </div>
+
+                  <div className="px-6 whitespace-nowrap text-sm font-medium">
+                    <div className="flex justify-center space-x-3">
                       <button className="text-blue-600 hover:text-blue-800 transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                           <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
@@ -109,12 +166,37 @@ const CategoryManagement = () => {
                         </svg>
                       </button>
                     </div>
-                  </td>
-                </tr>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </div>
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="absolute bottom-6 right-6 flex items-center gap-2">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`p-2 rounded-lg ${currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "text-slate-700 hover:bg-white/60 transition-colors"}`}>
+              <FaChevronLeft />
+            </button>
+
+            {[...Array(totalPages)].map((_, index) => (
+              <button key={index + 1} onClick={() => handlePageChange(index + 1)} className={`w-8 h-8 rounded-lg ${currentPage === index + 1 ? "bg-[#FF7A5C] text-white" : "text-slate-700 hover:bg-white/60 transition-colors"}`}>
+                {index + 1}
+              </button>
+            ))}
+
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`p-2 rounded-lg ${currentPage === totalPages ? "text-gray-400 cursor-not-allowed" : "text-slate-700 hover:bg-white/60 transition-colors"}`}>
+              <FaChevronRight />
+            </button>
+          </div>
+        )}
       </div>
 
       <AddCategoryModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAdd={handleAddCategory} />

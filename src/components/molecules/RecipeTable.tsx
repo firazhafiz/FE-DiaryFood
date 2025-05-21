@@ -1,11 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaEllipsis, FaEye, FaTrash } from "react-icons/fa6";
-import { CatDessert } from "../../../public/assets";
+import Image from "next/image";
 
 interface Recipe {
-  id: string;
+  id: number;
   title: string;
-  author: string;
+  author: {
+    name: string;
+    avatar: string;
+  };
+  image: string;
   date: string;
   category: string;
   status: "published" | "draft";
@@ -13,8 +17,8 @@ interface Recipe {
 
 interface RecipeTableProps {
   recipes: Recipe[];
-  onShow?: (id: string) => void;
-  onDelete?: (id: string) => void;
+  onShow?: (id: number) => void;
+  onDelete?: (id: number) => void;
 }
 
 export const RecipeTable: React.FC<RecipeTableProps> = ({ recipes, onShow, onDelete }) => {
@@ -44,7 +48,7 @@ interface RecipeRowProps extends Recipe {
   onShow?: (id: string) => void;
 }
 
-const RecipeRow: React.FC<RecipeRowProps> = ({ id, title, author, category, status, index, onDelete, onShow }) => {
+const RecipeRow: React.FC<RecipeRowProps> = ({ id, title, author, category, status, image, onDelete, onShow }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -94,10 +98,12 @@ const RecipeRow: React.FC<RecipeRowProps> = ({ id, title, author, category, stat
   return (
     <div id={id} className="grid grid-cols-5 items-center py-4 px-6 border-b bg-white/60 rounded-xl   border-white/60 hover:bg-gray-50">
       <div className="flex items-center gap-3 col-span-2">
-        <img src={CatDessert} alt="thumbnail" className="w-10 h-10 rounded-lg object-cover" />
+        <div className="relative w-48 h-28 rounded-lg overflow-hidden">
+          <Image src={image} alt={title} fill className="object-cover" priority={false} sizes="100" />
+        </div>
         <div>
           <p className="text-slate-700 font-medium">{title}</p>
-          <p className="text-slate-500 text-xs">Chef {author}</p>
+          <p className="text-slate-500 text-xs">{author.name}</p>
         </div>
       </div>
 

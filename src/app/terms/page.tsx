@@ -8,8 +8,8 @@ export default function TermsConditions() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
-      <main className="bg-white flex w-full pt-[115px] pb-16 px-2 mt-12">
-        <div className="w-full max-w-4xl mx-auto bg-white/50 backdrop-blur-sm rounded-lg shadow-sm p-8 border border-gray-100">
+      <main className="bg-gray-100 flex w-full pt-[115px] pb-16 px-2 mt-6">
+        <div className="w-full max-w-4xl mx-auto backdrop-blur-sm rounded-lg">
           <h1 className="text-2xl md:text-3xl font-bold text-center mb-2 text-[color:var(--custom-orange)]">
             Terms & Conditions
           </h1>
