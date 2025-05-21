@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Input } from "../atoms/Input";
+import { FormFieldWithIcon } from "./FormFieldIcon";
 import { Button } from "../atoms/Button";
 import { motion } from "framer-motion";
+import { Input } from "../atoms/Input";
 
 interface RegisterFormProps {
   onSubmit: (data: {
@@ -36,7 +37,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit }) => {
       className="flex flex-col gap-y-3 text-sm "
       transition={{ duration: 0.8 }}
     >
-      <Input
+      <FormFieldWithIcon
         type="text"
         name="name"
         placeholder="Full Name"
@@ -44,7 +45,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit }) => {
         onChange={handleChange}
         className="placeholder:text-gray-500"
       />
-      <Input
+      <FormFieldWithIcon
         type="email"
         name="email"
         placeholder="Email"
@@ -52,7 +53,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit }) => {
         onChange={handleChange}
         className="placeholder:text-gray-500"
       />
-      <Input
+      <FormFieldWithIcon
         type="password"
         name="password"
         placeholder="Password"
@@ -60,7 +61,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit }) => {
         onChange={handleChange}
         className="placeholder:text-gray-500"
       />
-      <Input
+      <FormFieldWithIcon
         type="password"
         name="confirmPassword"
         placeholder="Confirm Password"

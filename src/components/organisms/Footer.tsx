@@ -40,18 +40,18 @@ const Footer = () => (
           </li>
           <li>
             <Link
-              href="/resep"
+              href="/recipes"
               className="hover:text-[color:var(--custom-orange)]"
             >
-              Resep
+              Recipes
             </Link>
           </li>
           <li>
             <Link
-              href="/tanya-ai"
+              href="/ask-ai"
               className="hover:text-[color:var(--custom-orange)]"
             >
-              Tanya AI
+              Ask AI
             </Link>
           </li>
           <li>
@@ -59,7 +59,7 @@ const Footer = () => (
               href="/login"
               className="hover:text-[color:var(--custom-orange)]"
             >
-              Masuk
+              Login
             </Link>
           </li>
           <li>
@@ -67,37 +67,37 @@ const Footer = () => (
               href="/register"
               className="hover:text-[color:var(--custom-orange)]"
             >
-              Daftar
+              Sign Up
             </Link>
           </li>
         </ul>
       </div>
       {/* Kanan: Bantuan */}
       <div>
-        <h4 className="font-bold text-md mb-3 text-gray-900">Bantuan</h4>
+        <h4 className="font-bold text-md mb-3 text-gray-900">Help</h4>
         <ul className="text-gray-700 text-sm space-y-3">
           <li>
             <Link
               href="/contact"
               className="hover:text-[color:var(--custom-orange)]"
             >
-              Kontak
+              Contact
             </Link>
           </li>
           <li>
             <Link
-              href="/syarat-ketentuan"
+              href="/terms"
               className="hover:text-[color:var(--custom-orange)]"
             >
-              Syarat & Ketentuan
+              Terms & Conditions
             </Link>
           </li>
           <li>
             <Link
-              href="/privasi"
+              href="/privacy"
               className="hover:text-[color:var(--custom-orange)]"
             >
-              Privasi & Keamanan
+              Privacy & Security
             </Link>
           </li>
         </ul>

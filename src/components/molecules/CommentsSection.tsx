@@ -128,14 +128,14 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Add a comment..."
-              className="w-full px-3 py-2 text-gray-800 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[color:var(--custom-orange)] focus:border-transparent"
+              className="w-full px-3 py-2 text-gray-800 text-sm border rounded-md border-gray-200 focus:outline-none focus:ring-1 focus:ring-[color:var(--custom-orange)] focus:border-transparent"
               rows={2}
             ></textarea>
             <div className="mt-2 flex justify-end">
               <button
                 type="submit"
                 disabled={!newComment.trim()}
-                className="px-4 py-1.5 text-sm bg-[color:var(--custom-orange)] text-white font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-1.5 text-sm bg-[color:var(--custom-orange)] text-white font-medium rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Post
               </button>

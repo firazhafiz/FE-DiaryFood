@@ -85,10 +85,10 @@ const DetailHeader: React.FC<DetailHeaderProps> = ({ recipe }) => {
         </Link>
         <span className="mx-1">/</span>
         <Link
-          href="/resep"
+          href="/recipes"
           className="hover:text-[color:var(--custom-orange)] transition-colors"
         >
-          Resep
+          Recipes
         </Link>
         <span className="mx-1">/</span>
         <span className="text-[color:var(--custom-orange)] font-semibold">

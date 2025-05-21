@@ -1,6 +1,7 @@
 import React from "react";
 import { FiStar } from "react-icons/fi";
 import Link from "next/link";
+import Image from "next/image";
 
 interface CardProps {
   title: string;
@@ -45,7 +46,7 @@ const Card: React.FC<CardProps> = ({
   slug,
 }) => {
   // Define the navigation path
-  const navPath = slug ? `/detail_resep?recipe=${slug}` : "#";
+  const navPath = slug ? `/recipe-detail?recipe=${slug}` : "#";
 
   // For debugging
   const handleClick = () => {
@@ -91,9 +92,11 @@ const Card: React.FC<CardProps> = ({
             </div>
           </div>
           <div className="flex items-center pt-2 border-t gap-2">
-            <img
+            <Image
               src={author.avatar}
               alt={author.name}
+              width={24}
+              height={24}
               className="w-6 h-6 rounded-full object-cover"
             />
             <span className="text-gray-800 text-xs font-medium">

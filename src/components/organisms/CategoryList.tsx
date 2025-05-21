@@ -16,50 +16,50 @@ import {
 const categories = [
   {
     image: CatDaerah,
-    label: "Makanan Daerah",
-    description: "Resep masakan khas daerah Indonesia",
+    label: "Regional Cuisine",
+    description: "Traditional Indonesian regional recipes",
   },
   {
     image: CatBreakfast,
-    label: "Resep Sarapan",
-    description: "Menu sarapan sehat dan bergizi",
+    label: "Breakfast Recipes",
+    description: "Healthy and nutritious breakfast menus",
   },
   {
     image: CatDessert,
-    label: "Makanan Penutup",
-    description: "Hidangan penutup manis dan lezat",
+    label: "Desserts",
+    description: "Sweet and delicious desserts",
   },
   {
     image: CatCamilan,
-    label: "Camilan & Kudapan",
-    description: "Snack dan kudapan untuk berbagai acara",
+    label: "Snacks & Treats",
+    description: "Snacks and treats for various occasions",
   },
   {
     image: CatDinner,
-    label: "Resep Makan Malam",
-    description: "Menu makan malam keluarga",
+    label: "Dinner Recipes",
+    description: "Family dinner menus",
   },
   {
     image: CatCleanFood,
-    label: "Resep Sehat",
-    description: "Masakan sehat dan bergizi",
+    label: "Healthy Recipes",
+    description: "Healthy and nutritious meals",
   },
   {
     image: CatCleanDrink,
-    label: "Minuman Segar",
-    description: "Minuman sehat dan menyegarkan",
+    label: "Fresh Drinks",
+    description: "Healthy and refreshing beverages",
   },
   {
     image: CatChild,
-    label: "Resep Anak",
-    description: "Menu khusus untuk anak-anak",
+    label: "Kids Recipes",
+    description: "Special menus for children",
   },
 ];
 
 const CategoryList = () => (
   <div className="container mx-auto px-4">
     <h2 className="text-2xl font-bold text-gray-800 text-center mb-8">
-      Kategori Resep
+      Recipe Categories
     </h2>
     <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
       {categories.map((cat, idx) => (

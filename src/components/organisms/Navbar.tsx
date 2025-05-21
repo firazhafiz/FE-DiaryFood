@@ -50,16 +50,18 @@ const Navbar: React.FC = () => {
         <div className="flex items-center justify-between gap-4">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <h1 className="font-bold text-2xl text-[color:var(--custom-orange)]">
-              Diary
-              <span
-                className={`font-bold text-2xl ${
-                  isSticky ? "text-white" : "text-gray-800"
-                }`}
-              >
-                Food
-              </span>
-            </h1>
+            <Link href="/">
+              <h1 className="font-bold text-2xl text-[color:var(--custom-orange)]">
+                Diary
+                <span
+                  className={`font-bold text-2xl ${
+                    isSticky ? "text-white" : "text-gray-800"
+                  }`}
+                >
+                  Food
+                </span>
+              </h1>
+            </Link>
           </div>
 
           {/* Categories Dropdown and Search Bar */}
@@ -86,7 +88,7 @@ const Navbar: React.FC = () => {
               Home
             </Link>
             <Link
-              href="/resep"
+              href="/recipes"
               className={`hover:text-[color:var(--custom-orange)] hover:font-semibold ${
                 isSticky
                   ? "text-white"
@@ -95,7 +97,7 @@ const Navbar: React.FC = () => {
                   : "text-gray-600"
               }`}
             >
-              Resep
+              Recipes
             </Link>
             <Link
               href="/tanya-ai"
@@ -107,7 +109,7 @@ const Navbar: React.FC = () => {
                   : "text-gray-600"
               }`}
             >
-              Tanya AI
+              Ask AI
             </Link>
           </div>
 
@@ -140,7 +142,7 @@ const Navbar: React.FC = () => {
 
         {/* Category Navigation */}
         <div
-          className={`flex justify-start gap-12 overflow-x-auto bg-[url('/wood-background.jpg')] bg-cover py-2 ${
+          className={`flex justify-start gap-12 overflow-x-auto bg-cover py-2 ${
             isSticky ? "text-white" : "text-gray-600"
           }`}
         >
@@ -148,7 +150,7 @@ const Navbar: React.FC = () => {
             (category) => (
               <Link
                 key={category}
-                href={`/resep?category=${category.toLowerCase()}`}
+                href={`/recipes?category=${category.toLowerCase()}`}
                 onClick={() => setActiveCategory(category)}
                 className={`transition-all rounded text-sm flex items-center justify-center h-8 ${
                   activeCategory === category && !isSticky
