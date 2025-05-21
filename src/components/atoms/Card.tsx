@@ -40,7 +40,7 @@ const Card: React.FC<CardProps> = ({
   rating = 4.5,
   author = {
     name: "Gadang Jatu Mahiswara",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    avatar: "/assets/images/image_login.jpg",
   },
   price,
   slug,
@@ -57,11 +57,7 @@ const Card: React.FC<CardProps> = ({
   return (
     <Link href={navPath} className="block" onClick={handleClick}>
       <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 w-[250px] h-[320px] flex flex-col cursor-pointer hover:scale-[1] active:scale-95">
-        <img
-          src={author.avatar}
-          alt={title}
-          className="w-full h-36 object-cover"
-        />
+        <img src={image} alt={title} className="w-full h-36 object-cover" />
         <div className="flex-1 flex flex-col justify-between p-4 pb-2 h-full">
           <div>
             <div className="flex items-center justify-between mb-1">

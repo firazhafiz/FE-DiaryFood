@@ -20,7 +20,11 @@ interface UserManagementProps {
   sortBy: string;
 }
 
-export const UserManagement: React.FC<UserManagementProps> = ({ onUserSelect, searchQuery = "", sortBy = "newest" }) => {
+export const UserManagement: React.FC<UserManagementProps> = ({
+  onUserSelect,
+  searchQuery = "",
+  sortBy = "newest",
+}) => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -67,15 +71,24 @@ export const UserManagement: React.FC<UserManagementProps> = ({ onUserSelect, se
   };
 
   const filteredAndSortedUsers = useMemo(() => {
-    const filtered = users.filter((user) => user.name.toLowerCase().includes(searchQuery.toLowerCase()) || user.email.toLowerCase().includes(searchQuery.toLowerCase()) || user.username.toLowerCase().includes(searchQuery.toLowerCase()));
+    const filtered = users.filter(
+      (user) =>
+        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.username.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     const sortableFiltered = [...filtered];
 
     sortableFiltered.sort((a, b) => {
       if (sortBy === "newest") {
-        return new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime();
+        return (
+          new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
+        );
       } else if (sortBy === "oldest") {
-        return new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime();
+        return (
+          new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime()
+        );
       } else if (sortBy === "name-asc") {
         return a.name.localeCompare(b.name);
       } else if (sortBy === "name-desc") {
@@ -108,14 +121,23 @@ export const UserManagement: React.FC<UserManagementProps> = ({ onUserSelect, se
         <div className="text-center py-4">Loading...</div>
       ) : (
         <div>
-          <UserTable users={currentUsers} onDelete={handleDelete} onShow={handleShow} />
+          <UserTable
+            users={currentUsers}
+            onDelete={handleDelete}
+            onShow={handleShow}
+          />
 
           {totalPages > 1 && (
             <div className="flex justify-end items-center mt-4 gap-2">
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`p-2 rounded-lg ${currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "text-slate-700 hover:bg-white/60 transition-colors"}`}>
+                className={`p-2 rounded-lg ${
+                  currentPage === 1
+                    ? "text-gray-400 cursor-not-allowed"
+                    : "text-slate-700 hover:bg-white/60 transition-colors"
+                }`}
+              >
                 <FaChevronLeft />
               </button>
 
@@ -123,7 +145,12 @@ export const UserManagement: React.FC<UserManagementProps> = ({ onUserSelect, se
                 <button
                   key={index + 1}
                   onClick={() => handlePageChange(index + 1)}
-                  className={`w-8 h-8 rounded-lg text-sm font-medium ${currentPage === index + 1 ? "bg-[#FF7A5C] text-white" : "text-slate-700 hover:bg-white/60 transition-colors"}`}>
+                  className={`w-8 h-8 rounded-lg text-sm font-medium ${
+                    currentPage === index + 1
+                      ? "bg-[#FF7A5C] text-white"
+                      : "text-slate-700 hover:bg-white/60 transition-colors"
+                  }`}
+                >
                   {index + 1}
                 </button>
               ))}
@@ -131,7 +158,12 @@ export const UserManagement: React.FC<UserManagementProps> = ({ onUserSelect, se
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`p-2 rounded-lg ${currentPage === totalPages ? "text-gray-400 cursor-not-allowed" : "text-slate-700 hover:bg-white/60 transition-colors"}`}>
+                className={`p-2 rounded-lg ${
+                  currentPage === totalPages
+                    ? "text-gray-400 cursor-not-allowed"
+                    : "text-slate-700 hover:bg-white/60 transition-colors"
+                }`}
+              >
                 <FaChevronRight />
               </button>
             </div>

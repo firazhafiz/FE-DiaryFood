@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import MainTemplate from "../components/templates/MainTemplate";
+import Loading from "./loading";
 
 const sampleRecipes = [
   {
@@ -12,8 +13,8 @@ const sampleRecipes = [
     isFree: true,
     rating: 4.5,
     author: {
-      name: "Gadang Jatu Mahiswara",
-      avatar: "/assets/images/image_login.png",
+      name: "Firaz Fulvian Hafiz",
+      avatar: "/assets/images/image_login.jpg",
     },
     slug: "spaghetti-carbonara",
   },
@@ -26,7 +27,7 @@ const sampleRecipes = [
     rating: 4.5,
     author: {
       name: "Gadang Jatu Mahiswara",
-      avatar: "/assets/images/image_login.png",
+      avatar: "/assets/images/image_login.jpg",
     },
     slug: "chicken-curry",
   },
@@ -38,8 +39,8 @@ const sampleRecipes = [
     isFree: true,
     rating: 4.5,
     author: {
-      name: "Gadang Jatu Mahiswara",
-      avatar: "/assets/images/image_login.png",
+      name: "Rengga Rendi",
+      avatar: "/assets/images/image_login.jpg",
     },
     slug: "beef-steak-american",
   },
@@ -52,8 +53,8 @@ const sampleRecipes = [
     price: 100000,
     rating: 4.5,
     author: {
-      name: "Gadang Jatu Mahiswara",
-      avatar: "/assets/images/image_login.png",
+      name: "Muhammad Ilham",
+      avatar: "/assets/images/image_login.jpg",
     },
     slug: "pizza-margherita",
   },
@@ -66,8 +67,8 @@ const sampleRecipes = [
     price: 100000,
     rating: 4.5,
     author: {
-      name: "Gadang Jatu Mahiswara",
-      avatar: "/assets/images/image_login.png",
+      name: "Bima Harinta",
+      avatar: "/assets/images/image_login.jpg",
     },
     slug: "pizza-margherita-2",
   },
@@ -81,7 +82,7 @@ export default function Home() {
   }, []);
 
   if (!mounted) {
-    return null; // or a loading skeleton
+    return <Loading />;
   }
 
   return <MainTemplate recipes={sampleRecipes} />;

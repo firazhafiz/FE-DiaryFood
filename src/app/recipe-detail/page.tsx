@@ -1,53 +1,115 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import DetailHeader from "@/components/molecules/DetailHeader";
-import IngredientsSection from "@/components/molecules/IngredientsSection";
-import InstructionsSection from "@/components/molecules/InstructionsSection";
-import CommentsSection from "@/components/molecules/CommentsSection";
-import RecipeSidebar from "@/components/molecules/RecipeSidebar";
-import Footer from "@/components/organisms/Footer";
-import Navbar from "@/components/organisms/Navbar";
-import { dummyRecipes, Recipe } from "@/data/recipes";
+import { useParams } from "next/navigation";
+import MainTemplate from "../../components/templates/MainTemplate";
+import Loading from "../loading";
 
-// Interfaces for type safety
-interface Comment {
-  user: {
+interface Recipe {
+  id?: string;
+  title: string;
+  image: string;
+  time: string;
+  category: string;
+  isFree: boolean;
+  rating: number;
+  author: {
     name: string;
     avatar: string;
   };
-  text: string;
-  time: string;
-  likes: number;
-  replies: {
-    user: {
-      name: string;
-      avatar: string;
-    };
-    text: string;
-    time: string;
-    likes: number;
-  }[];
+  ingredients: string[];
+  instructions: string[];
+  status?: string;
 }
 
-interface Ingredient {
-  text: string;
-  checked: boolean;
+interface RecipeData {
+  [key: string]: Recipe;
 }
 
-const DetailResep = () => {
-  const searchParams = useSearchParams();
-  const recipeSlug = searchParams.get("recipe") || "nasi-goreng-saos-tiram";
+// Dummy data for recipes
+const dummyRecipes: RecipeData = {
+  "spaghetti-carbonara": {
+    id: "1",
+    title: "Spaghetti Carbonara",
+    image: "/assets/images/image_spaghetti.jpg",
+    time: "30",
+    category: "Italian",
+    isFree: true,
+    rating: 4.5,
+    author: {
+      name: "Chef Mario",
+      avatar: "/assets/images/avatar_chef.jpg",
+    },
+    ingredients: [
+      "400g spaghetti",
+      "200g pancetta",
+      "4 large eggs",
+      "100g Pecorino Romano",
+      "100g Parmigiano-Reggiano",
+      "Black pepper",
+      "Salt",
+    ],
+    instructions: [
+      "Bring a large pot of salted water to boil",
+      "Cook spaghetti according to package instructions",
+      "Meanwhile, cut pancetta into small cubes",
+      "In a bowl, whisk eggs with grated cheeses and black pepper",
+      "Fry pancetta until crispy",
+      "Drain pasta and mix with pancetta",
+      "Remove from heat and quickly stir in egg mixture",
+      "Serve immediately with extra cheese and black pepper",
+    ],
+    status: "published",
+  },
+  "chicken-curry": {
+    id: "2",
+    title: "Chicken Curry",
+    image: "/assets/images/image_curry.jpg",
+    time: "45",
+    category: "Indian",
+    isFree: true,
+    rating: 4.8,
+    author: {
+      name: "Chef Priya",
+      avatar: "/assets/images/avatar_chef.jpg",
+    },
+    ingredients: [
+      "500g chicken thighs",
+      "2 onions",
+      "3 tomatoes",
+      "2 tbsp curry powder",
+      "1 cup coconut milk",
+      "Fresh coriander",
+      "Salt and pepper",
+    ],
+    instructions: [
+      "Cut chicken into bite-sized pieces",
+      "Dice onions and tomatoes",
+      "Heat oil in a large pan",
+      "Fry onions until golden",
+      "Add chicken and cook until browned",
+      "Add curry powder and stir",
+      "Add tomatoes and coconut milk",
+      "Simmer for 20 minutes",
+      "Garnish with fresh coriander",
+    ],
+    status: "published",
+  },
+};
+
+export default function RecipeDetail() {
+  const params = useParams();
+  const recipeSlug = params?.slug as string;
   const [recipe, setRecipe] = useState<Recipe | null>(null);
-
-  console.log("URL params:", {
-    recipeSlug,
-    allParams: Object.fromEntries(searchParams.entries()),
-    raw: searchParams.toString(),
-  });
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     console.log("Loading recipe for slug:", recipeSlug);
     console.log("Available recipes:", Object.keys(dummyRecipes));
 
@@ -67,52 +129,19 @@ const DetailResep = () => {
         setRecipe(firstRecipe);
       }
     }
-  }, [recipeSlug]);
+  }, [recipeSlug, mounted]);
+
+  if (!mounted) {
+    return <Loading />;
+  }
 
   if (!recipe) {
-    return <div className="text-center py-10">Loading recipe...</div>;
-  }
-
-  // Utility to add id to comments and replies if missing
-  function addIdsToComments(comments: any[]): any[] {
-    return comments.map((comment: any, idx: number) => ({
-      ...comment,
-      id:
-        comment.id ||
-        `comment-${idx}-${Math.random().toString(36).slice(2, 8)}`,
-      replies: (comment.replies || []).map((reply: any, ridx: number) => ({
-        ...reply,
-        id:
-          reply.id ||
-          `reply-${idx}-${ridx}-${Math.random().toString(36).slice(2, 8)}`,
-      })),
-    }));
-  }
-
-  const commentsWithIds = addIdsToComments(recipe.comments || []);
-
-  return (
-    <>
-      <Navbar />
-      <div className="max-w-7xl mx-auto w-full px-4 py-8 flex flex-col md:flex-row gap-8 pt-34">
-        <div className="flex-1 min-w-0">
-          <DetailHeader recipe={recipe} />
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-            <IngredientsSection ingredients={recipe.ingredients} />
-            <InstructionsSection
-              instructions={recipe.instructions}
-              notes={recipe.notes}
-            />
-          </div>
-          <CommentsSection comments={commentsWithIds} />
-        </div>
-        <div className="w-full md:w-80 flex-shrink-0">
-          <RecipeSidebar recipes={Object.values(dummyRecipes)} />
-        </div>
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600">Recipe not found</p>
       </div>
-      <Footer />
-    </>
-  );
-};
+    );
+  }
 
-export default DetailResep;
+  return <MainTemplate recipes={[recipe]} />;
+}
