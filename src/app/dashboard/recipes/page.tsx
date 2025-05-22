@@ -12,7 +12,9 @@ export default function RecipesPage() {
     <div className="p-8">
       <div className="flex flex-col gap-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-xl font-semibold text-gray-900">Recipes Management</h1>
+          <h1 className="text-xl font-semibold text-gray-900">
+            Recipes Management
+          </h1>
         </div>
 
         {/* Search and Sort Controls */}
@@ -35,7 +37,8 @@ export default function RecipesPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="appearance-none pl-4 pr-10 py-2 rounded-xl border-2 border-white bg-white/40 focus:outline-none focus:border-[var(--custom-orange)] text-slate-700  transition-colors cursor-pointer">
+              className="appearance-none pl-4 pr-10 py-2 rounded-xl border-2 border-white bg-white/40 focus:outline-none focus:border-[var(--custom-orange)] text-slate-700  transition-colors cursor-pointer"
+            >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
               <option value="title-asc">Title (A-Z)</option>

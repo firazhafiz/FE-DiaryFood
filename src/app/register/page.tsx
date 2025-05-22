@@ -1,13 +1,19 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { RegisterContent } from "@/components/organisms/RegisterContent";
 import { AuthTemplate } from "@/components/templates/AuthTemplate";
+import Loading from "./loading";
 
 export default function RegisterPage() {
   const router = useRouter();
   const [error, setError] = useState<string>("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleRegister = async (formData: {
     name: string;
@@ -35,6 +41,10 @@ export default function RegisterPage() {
       setError("An error occurred during registration");
     }
   };
+
+  if (!mounted) {
+    return <Loading />;
+  }
 
   return (
     <AuthTemplate>

@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import MainTemplate from "../components/templates/MainTemplate";
 import Loading from "./loading";
+import { supabase } from "@/lib/db";
+import type { Recipe } from "@/types/recipe";
 
 const sampleRecipes = [
   {
@@ -75,7 +77,43 @@ const sampleRecipes = [
 ];
 
 export default function Home() {
+  const [categoryList, setCategoryList] = useState([]);
   const [mounted, setMounted] = useState(false);
+  const [recipe, setRecipe] = useState<Recipe[]>([]);
+
+  useEffect(() => {
+    const fetchCategoryList = async () => {
+      const response = await fetch("http://localhost:4000/v1/category");
+      if (!response.ok) {
+        throw new Error("Failed to fetch category list");
+      }
+      const data = await response.json();
+      console.log(data);
+      setCategoryList(data);
+    };
+    fetchCategoryList();
+  }, []);
+
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        const { data, error } = await supabase.from("Resep").select("*");
+
+        if (error) {
+          console.error("Error:", error.message);
+          return;
+        }
+
+        setRecipe(data);
+      } catch (err) {
+        console.error("Error fetching:", err);
+      }
+    };
+
+    fetchRecipes();
+  }, [supabase]);
+
+  console.log(recipe);
 
   useEffect(() => {
     setMounted(true);

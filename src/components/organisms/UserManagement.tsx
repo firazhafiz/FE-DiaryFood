@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react"; // DIUBAH: Hapus useEffect yang tidak perlu
 import { UserTable } from "../molecules/UserTable";
 import { DashboardCard } from "../molecules/DashboardCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
@@ -9,121 +9,123 @@ interface User {
   id: string;
   email: string;
   name: string;
+  photo: string;
   username: string;
   createdAt?: string;
   recipeCount?: number;
 }
 
 interface UserManagementProps {
-  onUserSelect: (user: User | null) => void;
+  users: User[];
+  onUserSelect: (user: User | null) => void; // DIUBAH: Perbarui tipe untuk menerima null
   searchQuery: string;
   sortBy: string;
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
 }
 
 export const UserManagement: React.FC<UserManagementProps> = ({
+  users,
   onUserSelect,
-  searchQuery = "",
-  sortBy = "newest",
+  searchQuery,
+  sortBy,
+  setUsers,
 }) => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1); // BARU: State untuk paginasi
   const itemsPerPage = 7;
 
-  useEffect(() => {
-    fetchUsers();
-    setCurrentPage(1);
-  }, [searchQuery, sortBy]);
-
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch("/api/users");
-      if (!response.ok) throw new Error("Failed to fetch users");
-      const data = await response.json();
-      setUsers(data);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      try {
-        const response = await fetch(`/api/users/${id}`, {
-          method: "DELETE",
-        });
-
-        if (response.ok) {
-          setUsers(users.filter((user) => user.id !== id));
-          onUserSelect?.(null);
-        }
-      } catch (error) {
-        console.error("Error deleting user:", error);
-      }
-    }
-  };
-
-  const handleShow = (id: string) => {
-    const selectedUser = users.find((user) => user.id === id);
-    onUserSelect?.(selectedUser || null);
-  };
-
-  const filteredAndSortedUsers = useMemo(() => {
-    const filtered = users.filter(
+  // Filter pengguna berdasarkan pencarian
+  const filteredUsers = useMemo(() => {
+    return users.filter(
       (user) =>
         user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.username.toLowerCase().includes(searchQuery.toLowerCase())
+        user.email.toLowerCase().includes(searchQuery.toLowerCase())
     );
+  }, [users, searchQuery]); // BARU: Gunakan useMemo untuk optimasi
 
-    const sortableFiltered = [...filtered];
-
-    sortableFiltered.sort((a, b) => {
-      if (sortBy === "newest") {
-        return (
-          new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
-        );
-      } else if (sortBy === "oldest") {
-        return (
-          new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime()
-        );
-      } else if (sortBy === "name-asc") {
-        return a.name.localeCompare(b.name);
-      } else if (sortBy === "name-desc") {
-        return b.name.localeCompare(a.name);
-      } else if (sortBy === "username-asc") {
-        return a.username.localeCompare(b.username);
-      } else if (sortBy === "username-desc") {
-        return b.username.localeCompare(a.username);
+  // Urutkan pengguna berdasarkan sortBy
+  const sortedUsers = useMemo(() => {
+    return [...filteredUsers].sort((a, b) => {
+      switch (sortBy) {
+        case "newest":
+          return (
+            new Date(b.createdAt || "").getTime() -
+            new Date(a.createdAt || "").getTime()
+          );
+        case "oldest":
+          return (
+            new Date(a.createdAt || "").getTime() -
+            new Date(b.createdAt || "").getTime()
+          );
+        case "name-asc":
+          return a.name.localeCompare(b.name);
+        case "name-desc":
+          return b.name.localeCompare(a.name);
+        default:
+          return 0;
       }
-      return 0;
     });
+  }, [filteredUsers, sortBy]); // BARU: Gunakan useMemo untuk optimasi
 
-    return sortableFiltered;
-  }, [users, searchQuery, sortBy]);
+  // Hitung total halaman dan pengguna untuk halaman saat ini
+  const totalPages = Math.ceil(sortedUsers.length / itemsPerPage); // BARU: Definisikan totalPages
+  const paginatedUsers = sortedUsers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  ); // BARU: Ambil pengguna untuk halaman saat ini
 
-  const totalPages = Math.ceil(filteredAndSortedUsers.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentUsers = filteredAndSortedUsers.slice(startIndex, endIndex);
-
+  // Fungsi untuk mengubah halaman
   const handlePageChange = (page: number) => {
+    // BARU: Definisikan handlePageChange
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
 
+  // Fungsi untuk menghapus pengguna
+  const handleDeleteUser = async (id: string) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const response = await fetch(`http://localhost:4000/v1/user/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to delete user");
+      }
+
+      setUsers(users.filter((user) => user.id !== id));
+      onUserSelect(null);
+      alert("User deleted successfully");
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      alert(error instanceof Error ? error.message : "Failed to delete user");
+    }
+  };
+
+  // Fungsi untuk memilih pengguna
+  const handleShow = (id: string) => {
+    const selectedUser = users.find((user) => user.id === id);
+    onUserSelect(selectedUser || null);
+  };
+
   return (
     <DashboardCard>
-      {loading ? (
-        <div className="text-center py-4">Loading...</div>
+      {sortedUsers.length === 0 ? ( // BARU: Tangani kasus tidak ada data
+        <div className="text-center py-4">No users found.</div>
       ) : (
         <div>
           <UserTable
-            users={currentUsers}
-            onDelete={handleDelete}
+            users={paginatedUsers} // DIUBAH: Kirim pengguna yang sudah dipaginasi
+            onDelete={handleDeleteUser}
             onShow={handleShow}
           />
 

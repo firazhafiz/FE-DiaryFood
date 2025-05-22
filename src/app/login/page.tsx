@@ -4,18 +4,15 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { LoginContent } from "@/components/organisms/LoginContent";
 import { AuthTemplate } from "@/components/templates/AuthTemplate";
-<<<<<<< HEAD
 import { FcGoogle } from "react-icons/fc";
 import { config } from "@/config";
-=======
 import Loading from "./loading";
->>>>>>> 0adf862b7be8a21aa9c006e1167a100382a4f643
 
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [error, setError] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const errorParam = searchParams.get("error");
@@ -24,6 +21,7 @@ export default function LoginPage() {
     } else if (errorParam === "no_tokens") {
       setError("No authentication tokens received. Please try again.");
     }
+    setMounted(true);
   }, [searchParams]);
 
   const handleLogin = async (formData: { email: string; password: string }) => {
@@ -54,17 +52,19 @@ export default function LoginPage() {
       // Redirect ke endpoint Google OAuth di backend Express
       window.location.href = `${config.apiUrl}/auth/google`;
     } catch (err) {
-      setError("An error occurred during Google login", err);
-
+      setError("An error occurred during Google login");
     }
   };
+
+  if (!mounted) {
+    return <Loading />;
+  }
 
   return (
     <AuthTemplate>
       <div className="space-y-4">
         <LoginContent googleLogin={handleGoogleLogin} onSubmit={handleLogin} />
       </div>
-    
     </AuthTemplate>
   );
 }
