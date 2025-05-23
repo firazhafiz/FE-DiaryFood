@@ -49,7 +49,13 @@ const NavbarHome: React.FC = () => {
             <Link href="/recipes" className={`hover:text-[color:var(--custom-orange)] hover:font-semibold ${isSticky ? "text-gray-600" : "text-white"}`}>
               Recipes
             </Link>
-            <Link href="/tanya-ai" className={`hover:text-[color:var(--custom-orange)] hover:font-semibold ${isSticky ? "text-gray-600" : "text-white"}`}>
+
+            <Link
+              href="/ask-ai"
+              className={`hover:text-[color:var(--custom-orange)] hover:font-semibold ${
+                isSticky ? "text-gray-600" : "text-white"
+              }`}
+            >
               Ask AI
             </Link>
           </div>

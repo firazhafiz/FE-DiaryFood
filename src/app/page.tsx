@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import MainTemplate from "../components/templates/MainTemplate";
+import Loading from "./loading";
+import { supabase } from "@/lib/db";
+import type { Recipe } from "@/types/recipe";
 
 const sampleRecipes = [
   {
@@ -12,7 +15,8 @@ const sampleRecipes = [
     isFree: true,
     rating: 4.5,
     author: {
-      name: "Gadang Jatu Mahiswara",
+
+      name: "Firaz Fulvian Hafiz",
       avatar: "/assets/images/image_login.jpg",
     },
     slug: "spaghetti-carbonara",
@@ -38,7 +42,8 @@ const sampleRecipes = [
     isFree: true,
     rating: 4.5,
     author: {
-      name: "Gadang Jatu Mahiswara",
+
+      name: "Rengga Rendi",
       avatar: "/assets/images/image_login.jpg",
     },
     slug: "beef-steak-american",
@@ -52,7 +57,7 @@ const sampleRecipes = [
     price: 100000,
     rating: 4.5,
     author: {
-      name: "Gadang Jatu Mahiswara",
+      name: "Muhammad Ilham",
       avatar: "/assets/images/image_login.jpg",
     },
     slug: "pizza-margherita",
@@ -66,7 +71,8 @@ const sampleRecipes = [
     price: 100000,
     rating: 4.5,
     author: {
-      name: "Gadang Jatu Mahiswara",
+
+      name: "Bima Harinta",
       avatar: "/assets/images/image_login.jpg",
     },
     slug: "pizza-margherita-2",
@@ -74,14 +80,50 @@ const sampleRecipes = [
 ];
 
 export default function Home() {
+  const [categoryList, setCategoryList] = useState([]);
   const [mounted, setMounted] = useState(false);
+  const [recipe, setRecipe] = useState<Recipe[]>([]);
+
+  useEffect(() => {
+    const fetchCategoryList = async () => {
+      const response = await fetch("http://localhost:4000/v1/category");
+      if (!response.ok) {
+        throw new Error("Failed to fetch category list");
+      }
+      const data = await response.json();
+      console.log(data);
+      setCategoryList(data);
+    };
+    fetchCategoryList();
+  }, []);
+
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        const { data, error } = await supabase.from("Resep").select("*");
+
+        if (error) {
+          console.error("Error:", error.message);
+          return;
+        }
+
+        setRecipe(data);
+      } catch (err) {
+        console.error("Error fetching:", err);
+      }
+    };
+
+    fetchRecipes();
+  }, [supabase]);
+
+  console.log(recipe);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   if (!mounted) {
-    return null; // or a loading skeleton
+    return <Loading />;
   }
 
   return <MainTemplate recipes={sampleRecipes} />;

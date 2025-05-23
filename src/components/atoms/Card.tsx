@@ -1,7 +1,6 @@
 import React from "react";
 import { FiStar } from "react-icons/fi";
 import Link from "next/link";
-import Image from "next/image";
 
 interface CardProps {
   id: number;
@@ -32,7 +31,20 @@ function formatRupiah(price?: number) {
   return "Rp. " + price.toLocaleString("id-ID", { minimumFractionDigits: 0 });
 }
 
-const Card: React.FC<CardProps> = ({ id, nama, photoResep, time, category, isFree = true, rating = 4.5, user, price, slug }) => {
+const Card: React.FC<CardProps> = ({
+  title,
+  image,
+  time,
+  category,
+  isFree = true,
+  rating = 4.5,
+  author = {
+    name: "Gadang Jatu Mahiswara",
+    avatar: "/assets/images/image_login.jpg",
+  },
+  price,
+  slug,
+}) => {
   // Define the navigation path
   const navPath = slug ? `/recipe-detail?recipe=${slug}` : "#";
 
@@ -45,7 +57,7 @@ const Card: React.FC<CardProps> = ({ id, nama, photoResep, time, category, isFre
   return (
     <Link href={`/recipe-detail?id=${id}`} className="block" onClick={handleClick}>
       <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 w-[250px] h-[320px] flex flex-col cursor-pointer hover:scale-[1] active:scale-95">
-        <img src={photoResep} alt={nama} className="w-full h-36 object-cover" />
+        <img src={image} alt={title} className="w-full h-36 object-cover" />
         <div className="flex-1 flex flex-col justify-between p-4 pb-2 h-full">
           <div>
             <div className="flex items-center justify-between mb-1">

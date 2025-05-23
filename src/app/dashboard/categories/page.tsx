@@ -3,6 +3,14 @@
 import CategoryManagement from "@/components/organisms/CategoryManagement";
 import { useDeferredValue, useEffect, useState } from "react";
 
+interface Category {
+  id: string;
+  name: string; // DIUBAH: Gunakan 'name' untuk konsistensi dengan CategoryManagement
+  description: string;
+  recipeCount: number;
+  createdAt: string;
+}
+
 const CategoriesPage = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);

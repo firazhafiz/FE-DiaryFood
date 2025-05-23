@@ -3,6 +3,7 @@
 import Link from "next/link";
 import React, { useState, useRef, useEffect } from "react";
 import { FaPaperPlane, FaPlus, FaBars } from "react-icons/fa";
+import Loading from "./loading";
 
 interface Message {
   role: "user" | "assistant";
@@ -14,7 +15,12 @@ export default function TanyaAIPage() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -23,6 +29,10 @@ export default function TanyaAIPage() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  if (!mounted) {
+    return <Loading />;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,7 +76,10 @@ export default function TanyaAIPage() {
       // Add error message to chat
       const errorMessage: Message = {
         role: "assistant",
-        content: error instanceof Error ? error.message : "Sorry, I encountered an error. Please try again.",
+        content:
+          error instanceof Error
+            ? error.message
+            : "Sorry, I encountered an error. Please try again.",
       };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
@@ -94,29 +107,47 @@ export default function TanyaAIPage() {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <Link href="/" className="text-sm hover:text-[var(--custom-orange)] hover:font-semibold transition-colors">
+              <Link
+                href="/"
+                className="text-sm hover:text-[var(--custom-orange)] hover:font-semibold transition-colors"
+              >
                 Home
               </Link>
-              <Link href="/resep" className="text-sm hover:text-[var(--custom-orange)] hover:font-semibold transition-colors">
+              <Link
+                href="/resep"
+                className="text-sm hover:text-[var(--custom-orange)] hover:font-semibold transition-colors"
+              >
                 Resep
               </Link>
-              <Link href="/tanya-ai" className="text-sm hover:text-[var(--custom-orange)] hover:font-semibold transition-colors">
+              <Link
+                href="/tanya-ai"
+                className="text-sm hover:text-[var(--custom-orange)] hover:font-semibold transition-colors"
+              >
                 Tanya AI
               </Link>
             </div>
 
             {/* Auth Buttons */}
             <div className="hidden md:flex items-center space-x-4">
-              <Link href="/login" className="px-4 py-2 text-sm font-semibold border border-white rounded-lg hover:bg-orange-50 hover:text-slate-900 transition-colors">
+              <Link
+                href="/login"
+                className="px-4 py-2 text-sm font-semibold border border-white rounded-lg hover:bg-orange-50 hover:text-slate-900 transition-colors"
+              >
                 Login
               </Link>
-              <Link href="/register" className="px-4 py-2 text-sm font-semibold text-white bg-[var(--custom-orange)] rounded-lg hover:bg-orange-600 transition-colors">
+              <Link
+                href="/register"
+                className="px-4 py-2 text-sm font-semibold text-white bg-[var(--custom-orange)] rounded-lg hover:bg-orange-600 transition-colors"
+              >
                 Sign Up
               </Link>
             </div>
 
             {/* Mobile menu button */}
-            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="md:hidden p-2 rounded-lg hover:bg-slate-100">
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="md:hidden p-2 rounded-lg hover:bg-slate-100"
+            >
               <FaBars className="w-5 h-5 text-slate-600" />
             </button>
           </div>
@@ -126,15 +157,24 @@ export default function TanyaAIPage() {
       {/* Main Content */}
       <div className="flex h-[calc(100vh-4rem)]">
         {/* Sidebar */}
-        <div className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} fixed md:relative md:translate-x-0 w-64 bg-white text-slate-700 shadow-md flex flex-col transition-transform duration-300 ease-in-out z-40`}>
+        <div
+          className={`${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } fixed md:relative md:translate-x-0 w-64 bg-white text-slate-700 shadow-md flex flex-col transition-transform duration-300 ease-in-out z-40`}
+        >
           {/* New Chat Button */}
-          <button onClick={clearChat} className="flex items-center justify-center gap-3 m-4 py-2  text-center rounded-lg border border-slate-700 hover:bg-slate-800 transition-colors hover:text-white">
+          <button
+            onClick={clearChat}
+            className="flex items-center justify-center gap-3 m-4 py-2  text-center rounded-lg border border-slate-700 hover:bg-slate-800 transition-colors hover:text-white"
+          >
             <FaPlus className="w-4 h-4" />
             <span>New Chat</span>
           </button>
 
           {/* Chat History */}
-          <div className="flex-1 overflow-y-auto">{/* You can add chat history items here */}</div>
+          <div className="flex-1 overflow-y-auto">
+            {/* You can add chat history items here */}
+          </div>
 
           {/* User Section */}
           <div className="p-4 border-t border-slate-700">
@@ -160,9 +200,22 @@ export default function TanyaAIPage() {
               </div>
             )}
             {messages.map((message, index) => (
-              <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[80%] md:max-w-[70%] rounded-lg py-3 px-4 ${message.role === "user" ? "bg-[var(--custom-orange)] text-white" : "bg-white text-slate-800"}`}>
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+              <div
+                key={index}
+                className={`flex ${
+                  message.role === "user" ? "justify-end" : "justify-start"
+                }`}
+              >
+                <div
+                  className={`max-w-[80%] md:max-w-[70%] rounded-lg py-3 px-4 ${
+                    message.role === "user"
+                      ? "bg-[var(--custom-orange)] text-white"
+                      : "bg-white text-slate-800"
+                  }`}
+                >
+                  <p className="text-sm whitespace-pre-wrap">
+                    {message.content}
+                  </p>
                 </div>
               </div>
             ))}
@@ -182,7 +235,10 @@ export default function TanyaAIPage() {
 
           {/* Input Form */}
           <div className="border-t border-slate-200 p-4">
-            <form onSubmit={handleSubmit} className="flex gap-2 max-w-4xl mx-auto">
+            <form
+              onSubmit={handleSubmit}
+              className="flex gap-2 max-w-4xl mx-auto"
+            >
               <input
                 type="text"
                 value={input}
@@ -191,7 +247,11 @@ export default function TanyaAIPage() {
                 className="flex-1 px-4 py-2 border text-slate-900 border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent"
                 disabled={isLoading}
               />
-              <button type="submit" disabled={isLoading || !input.trim()} className="px-4 py-2 bg-[var(--custom-orange)] text-white rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              <button
+                type="submit"
+                disabled={isLoading || !input.trim()}
+                className="px-4 py-2 bg-[var(--custom-orange)] text-white rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <FaPaperPlane />
               </button>
             </form>

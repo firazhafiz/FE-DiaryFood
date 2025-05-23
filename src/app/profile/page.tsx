@@ -31,28 +31,45 @@ const ProfilePage = () => {
       <div className="flex justify-between mb-6">
         <h1 className="text-2xl font-semibold text-slate-700">Dashboard</h1>
         <div className=" text-xs text-right">
-          <span className="font-medium text-sm text-slate-700">{new Date().toLocaleDateString("en-US", { weekday: "long" })}</span>
-          <p className="text-slate-500">{new Date().toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}</p>
+          <span className="font-medium text-sm text-slate-700">
+            {new Date().toLocaleDateString("en-US", { weekday: "long" })}
+          </span>
+          <p className="text-slate-500">
+            {new Date().toLocaleDateString("en-US", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
         </div>
       </div>
       <div className="flex flex-col gap-8">
         <div className="flex gap-4 items-center justify-between">
           <div className="flex items-center gap-4">
-            <Image src={CatBreakfast} alt="profile" className="rounded-full object-cover border-4 border-white shadow-lg w-36 h-36" />
+            <Image
+              src={CatBreakfast}
+              alt="profile"
+              className="rounded-full object-cover border-4 border-white shadow-lg w-36 h-36"
+            />
             <div className="flex flex-col">
               <h4 className="text-black font-semibold text-lg">{form.name}</h4>
               <p className="text-gray-400 text-sm">Gadang@gmail.com</p>
             </div>
           </div>
           <div className="pr-8">
-            <button className="bg-[#FF7A5C] text-white px-6 py-2 rounded-md text-sm font-medium hover:bg-[#ff6b4a] transition-colors cursor-pointer" onClick={() => router.push("/profile/edit")}>
+            <button
+              className="bg-[#FF7A5C] text-white px-6 py-2 rounded-md text-sm font-medium hover:bg-[#ff6b4a] transition-colors cursor-pointer"
+              onClick={() => router.push("/profile/edit")}
+            >
               Edit
             </button>
           </div>
         </div>
         <form className="flex flex-col gap-6 w-full">
           <div>
-            <label className="block text-sm font-semibold text-gray-800 mb-1">Full Name</label>
+            <label className="block text-sm font-semibold text-gray-800 mb-1">
+              Full Name
+            </label>
             <input
               type="text"
               name="name"
@@ -65,7 +82,9 @@ const ProfilePage = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-800 mb-1">Phone Number</label>
+            <label className="block text-sm font-semibold text-gray-800 mb-1">
+              Phone Number
+            </label>
             <input
               type="text"
               name="phone"
@@ -77,7 +96,9 @@ const ProfilePage = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-800 mb-1">Date of Birth</label>
+            <label className="block text-sm font-semibold text-gray-800 mb-1">
+              Date of Birth
+            </label>
             <input
               type="date"
               name="dob"
@@ -89,7 +110,9 @@ const ProfilePage = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-800 mb-1">Address</label>
+            <label className="block text-sm font-semibold text-gray-800 mb-1">
+              Address
+            </label>
             <input
               type="text"
               name="address"
@@ -102,9 +125,14 @@ const ProfilePage = () => {
           </div>
           <button
             type="button"
-            className={`${isEditing ? "mt-4 bg-[#FF7A5C] text-sm text-white px-6 py-2 rounded-md self-start disabled:opacity-60 hover:bg-[#ff6b4a] transition-colors cursor-pointer" : "hidden"}`}
+            className={`${
+              isEditing
+                ? "mt-4 bg-[#FF7A5C] text-sm text-white px-6 py-2 rounded-md self-start disabled:opacity-60 hover:bg-[#ff6b4a] transition-colors cursor-pointer"
+                : "hidden"
+            }`}
             disabled={!isEditing}
-            onClick={handleSave}>
+            onClick={handleSave}
+          >
             Save Changes
           </button>
         </form>

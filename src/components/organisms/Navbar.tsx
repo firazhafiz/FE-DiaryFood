@@ -100,7 +100,7 @@ const Navbar: React.FC = () => {
               Recipes
             </Link>
             <Link
-              href="/tanya-ai"
+              href="/ask-ai"
               className={`hover:text-[color:var(--custom-orange)] hover:font-semibold ${
                 isSticky
                   ? "text-white"

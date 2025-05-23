@@ -65,7 +65,8 @@ export const dummyRecipes = [
     prepTime: 10,
     cookTime: 20,
     serveTime: 5,
-    description: "Pasta klasik Italia dengan saus krim yang creamy dari telur, keju parmesan, dan pancetta. Hidangan sederhana namun sangat lezat!",
+    description:
+      "Pasta klasik Italia dengan saus krim yang creamy dari telur, keju parmesan, dan pancetta. Hidangan sederhana namun sangat lezat!",
     ingredients: [
       { text: "350g spaghetti", checked: false },
       { text: "150g pancetta atau bacon, potong dadu", checked: false },
@@ -86,7 +87,8 @@ export const dummyRecipes = [
       "Tambahkan sedikit air pasta jika terlalu kental.",
       "Sajikan dengan taburan keju parut dan merica hitam tambahan.",
     ],
-    notes: "Kuncinya adalah mencampurkan telur saat api sudah dimatikan agar tidak menggumpal. Pasta harus masih panas untuk memasak telur dengan lembut.",
+    notes:
+      "Kuncinya adalah mencampurkan telur saat api sudah dimatikan agar tidak menggumpal. Pasta harus masih panas untuk memasak telur dengan lembut.",
     comments: [
       {
         user: {
@@ -109,6 +111,7 @@ export const dummyRecipes = [
     author: {
       name: "Gadang Jatu Mahiswara",
       avatar: "/assets/images/image_login.jpg",
+
     },
     date: "15-04-2025",
     saves: 19,
@@ -118,7 +121,8 @@ export const dummyRecipes = [
     prepTime: 15,
     cookTime: 30,
     serveTime: 5,
-    description: "Hidangan kari ayam yang kaya bumbu dan rempah-rempah. Saus creamy dengan cita rasa yang kuat, cocok disantap dengan nasi atau roti.",
+    description:
+      "Hidangan kari ayam yang kaya bumbu dan rempah-rempah. Saus creamy dengan cita rasa yang kuat, cocok disantap dengan nasi atau roti.",
     ingredients: [
       { text: "800g ayam potong, potong 12 bagian", checked: false },
       { text: "2 buah bawang bombay, cincang", checked: false },
@@ -142,7 +146,8 @@ export const dummyRecipes = [
       "Koreksi rasa dengan garam secukupnya.",
       "Sajikan hangat dengan nasi putih atau roti naan.",
     ],
-    notes: "Agar kuah kari lebih kental dan bumbu meresap sempurna, bisa dimasak lebih lama dengan api kecil.",
+    notes:
+      "Agar kuah kari lebih kental dan bumbu meresap sempurna, bisa dimasak lebih lama dengan api kecil.",
     comments: [
       {
         user: {
@@ -184,7 +189,8 @@ export const dummyRecipes = [
     prepTime: 20,
     cookTime: 15,
     serveTime: 5,
-    description: "Steak daging sapi gaya Amerika dengan tingkat kematangan medium-rare yang juicy. Disajikan dengan kentang panggang dan saus lada hitam.",
+    description:
+      "Steak daging sapi gaya Amerika dengan tingkat kematangan medium-rare yang juicy. Disajikan dengan kentang panggang dan saus lada hitam.",
     ingredients: [
       { text: "2 potong ribeye steak (masing-masing 300g)", checked: false },
       { text: "3 sdm olive oil", checked: false },
@@ -210,7 +216,8 @@ export const dummyRecipes = [
       "Untuk saus, masak semua bahan saus hingga mengental.",
       "Sajikan steak dengan kentang panggang dan saus lada hitam.",
     ],
-    notes: "Untuk hasil terbaik, gunakan termometer daging dan angkat steak saat suhu bagian dalam mencapai 130°F (54°C) untuk tingkat kematangan medium-rare.",
+    notes:
+      "Untuk hasil terbaik, gunakan termometer daging dan angkat steak saat suhu bagian dalam mencapai 130°F (54°C) untuk tingkat kematangan medium-rare.",
     comments: [
       {
         user: {
@@ -233,6 +240,7 @@ export const dummyRecipes = [
     author: {
       name: "Gadang Jatu Mahiswara",
       avatar: "/assets/images/image_login.jpg",
+
     },
     date: "05-04-2025",
     saves: 32,
@@ -242,7 +250,8 @@ export const dummyRecipes = [
     prepTime: 30,
     cookTime: 15,
     serveTime: 5,
-    description: "Pizza klasik Italia dengan adonan tipis dan renyah, saus tomat segar, keju mozzarella berkualitas tinggi, dan daun basil. Sederhana namun lezat!",
+    description:
+      "Pizza klasik Italia dengan adonan tipis dan renyah, saus tomat segar, keju mozzarella berkualitas tinggi, dan daun basil. Sederhana namun lezat!",
     ingredients: [
       { text: "300g tepung protein tinggi", checked: false },
       { text: "1 sdt ragi instan", checked: false },
@@ -270,7 +279,8 @@ export const dummyRecipes = [
       "Panggang pizza selama 10-15 menit hingga pinggiran kecokelatan dan keju meleleh.",
       "Setelah matang, taburi dengan daun basil segar dan siram dengan sedikit minyak zaitun.",
     ],
-    notes: "Rahasia pizza yang enak adalah oven yang sangat panas. Jika memungkinkan, gunakan batu pizza untuk hasil yang lebih renyah.",
+    notes:
+      "Rahasia pizza yang enak adalah oven yang sangat panas. Jika memungkinkan, gunakan batu pizza untuk hasil yang lebih renyah.",
     comments: [
       {
         user: {

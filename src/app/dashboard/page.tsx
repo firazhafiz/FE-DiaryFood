@@ -134,6 +134,7 @@ export default function DashboardPage() {
         data: [stats.totalRecipes, stats.publishedRecipes, stats.pendingRecipes.length],
         backgroundColor: ["rgba(0, 10, 50, 1)", "rgba(34, 197, 94, 0.8)", "rgba(234, 179, 8, 0.8)"],
         borderColor: ["rgb(0, 10, 50)", "rgb(34, 197, 94)", "rgb(234, 179, 8)"],
+
         borderWidth: 1,
       },
     ],
@@ -204,6 +205,7 @@ export default function DashboardPage() {
             <Image src={IlustrasiCategories} alt="ilustrasi kategori" className="w-[100px] object-cover" />
             <div className="flex flex-col items-center justify-center">
               <h2 className="text-3xl text-center font-semibold text-slate-700 mb-2">{stats.totalCategories}</h2>
+
               <p className="text-slate-500 text-sm">Categories</p>
             </div>
           </div>
@@ -226,38 +228,38 @@ export default function DashboardPage() {
         </div>
 
         {/* Pending Recipes Section */}
-        <div className="bg-white/50 rounded-3xl p-6 border-2 border-white/60">
-          <h2 className="text-lg text-center font-semibold text-slate-700 mb-8">Prescription Approval Pending</h2>
-          {loading && <p className="text-slate-500">Loading...</p>}
-          {error && <p className="text-red-500">Error: {error}</p>}
-          {stats.pendingRecipes.length === 0 ? (
-            <p className="text-slate-500">Tidak ada resep yang menunggu persetujuan</p>
+
+        <div className="bg-white/50 rounded-3xl p-6  border-white/60 border-2">
+          <h2 className="text-lg text-center font-semibold text-slate-700 mb-8">Pending Recipe Approvals</h2>
+
+          {pendingRecipes.length === 0 ? (
+            <p className="text-slate-500">No pending recipes to approve</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead>
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 tracking-wider">Title</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 tracking-wider">Author</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 tracking-wider">Date</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 tracking-wider">Categoy</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 tracking-wider">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700  tracking-wider">Title</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700  tracking-wider">Author</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700  tracking-wider">Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700  tracking-wider">Category</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700  tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {stats.pendingRecipes.map((recipe: any) => (
                     <tr key={recipe.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.nama}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.user.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(recipe.tanggalUnggahan).toLocaleDateString("id-ID")}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.kategori.nama}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.title}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.author.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.date}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.category}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="flex space-x-2">
                           <button onClick={() => handleApprove(recipe.id)} className="bg-slate-700 text-white px-3 py-1 rounded-md hover:bg-slate-900 transition-colors">
-                            Setujui
+                            Approve
                           </button>
                           <button onClick={() => handleReject(recipe.id)} className="bg-red-400 text-white px-3 py-1 rounded-md hover:bg-red-500 transition-colors">
-                            Tolak
+                            Reject
                           </button>
                         </div>
                       </td>

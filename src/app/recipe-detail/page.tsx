@@ -31,23 +31,13 @@ interface Comment {
     name: string;
     avatar: string;
   };
-  text: string;
-  time: string;
-  likes: number;
-  replies: {
-    user: {
-      name: string;
-      avatar: string;
-    };
-    text: string;
-    time: string;
-    likes: number;
-  }[];
+  ingredients: string[];
+  instructions: string[];
+  status?: string;
 }
 
-interface Ingredient {
-  text: string;
-  checked: boolean;
+interface RecipeData {
+  [key: string]: Recipe;
 }
 
 const DetailResep = () => {
@@ -101,9 +91,6 @@ const DetailResep = () => {
           <RecipeSidebar recipes={recipe} />
         </div>
       </div>
-      <Footer />
     </>
   );
 };
-
-export default DetailResep;
