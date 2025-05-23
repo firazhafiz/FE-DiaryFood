@@ -28,7 +28,7 @@ export default function ApproveRecipesPage() {
     { id: "10", title: "Burger Sliders", author: "Anna White", category: "American", status: "pending", submittedAt: "2024-03-29T11:00:00Z" },
   ]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 5;
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("newest");
 

@@ -8,6 +8,7 @@ import FilterSidebar, { FilterItem } from "@/components/atoms/FilterSidebar";
 import SelectedFilters from "@/components/atoms/SelectedFilters";
 import FilterControlModal from "@/components/molecules/FilterControlModal";
 import { useSearchParams } from "next/navigation";
+import { getRecipes } from "@/services/recipeService";
 
 const dummyRecipes = [
   {
@@ -19,7 +20,7 @@ const dummyRecipes = [
     rating: 4.5,
     author: {
       name: "Gadang Jatu Mahiswara",
-      avatar: "/assets/images/image_login.png",
+      avatar: "/assets/images/image_login.jpg",
     },
     tags: ["Italia", "Bebas Gluten"],
     slug: "spaghetti-carbonara",
@@ -33,7 +34,7 @@ const dummyRecipes = [
     rating: 4.5,
     author: {
       name: "Gadang Jatu Mahiswara",
-      avatar: "/assets/images/image_login.png",
+      avatar: "/assets/images/image_login.jpg",
     },
     tags: ["India", "Protein Aktif"],
     slug: "chicken-curry",
@@ -47,7 +48,7 @@ const dummyRecipes = [
     rating: 4.5,
     author: {
       name: "Gadang Jatu Mahiswara",
-      avatar: "/assets/images/image_login.png",
+      avatar: "/assets/images/image_login.jpg",
     },
     tags: ["Protein Aktif"],
     slug: "beef-steak-american",
@@ -62,7 +63,7 @@ const dummyRecipes = [
     rating: 4.5,
     author: {
       name: "Gadang Jatu Mahiswara",
-      avatar: "/assets/images/image_login.png",
+      avatar: "/assets/images/image_login.jpg",
     },
     tags: ["Italia", "Vegetarian"],
     slug: "pizza-margherita",
@@ -77,7 +78,7 @@ const dummyRecipes = [
     rating: 4.5,
     author: {
       name: "Gadang Jatu Mahiswara",
-      avatar: "/assets/images/image_login.png",
+      avatar: "/assets/images/image_login.jpg",
     },
     tags: ["Indonesia", "Jawa Timur"],
     slug: "rendang-padang",
@@ -90,14 +91,29 @@ const Resep = () => {
   const [filteredRecipes, setFilteredRecipes] = useState(dummyRecipes);
   const [selectedFilters, setSelectedFilters] = useState<FilterItem[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [recipes, setRecipes] = useState([]);
+
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/v1/resep");
+        const data = await response.json();
+        console.log(data.data.reseps);
+        setRecipes(data.data.reseps);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchRecipe();
+  }, []);
 
   // Handle category from URL
   useEffect(() => {
     const categoryFromUrl = searchParams.get("category");
     if (categoryFromUrl) {
       // Convert category to proper case (e.g., "breakfast" -> "Breakfast")
-      const categoryValue =
-        categoryFromUrl.charAt(0).toUpperCase() + categoryFromUrl.slice(1);
+      const categoryValue = categoryFromUrl.charAt(0).toUpperCase() + categoryFromUrl.slice(1);
       setSelectedFilters([{ category: "Category", value: categoryValue }]);
     }
   }, [searchParams]);
@@ -133,15 +149,7 @@ const Resep = () => {
   };
 
   const handleRemoveFilter = (filterToRemove: FilterItem) => {
-    setSelectedFilters(
-      selectedFilters.filter(
-        (filter) =>
-          !(
-            filter.category === filterToRemove.category &&
-            filter.value === filterToRemove.value
-          )
-      )
-    );
+    setSelectedFilters(selectedFilters.filter((filter) => !(filter.category === filterToRemove.category && filter.value === filterToRemove.value)));
   };
 
   const handleClearAllFilters = () => {
@@ -154,21 +162,9 @@ const Resep = () => {
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 flex flex-col md:flex-row gap-6 mb-12 mt-6 pt-[120px]">
         {/* Mobile Filter Button */}
         <div className="md:hidden w-full mb-4">
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="w-full py-3 px-4 bg-gradient-to-r from-[color:var(--custom-orange)] to-orange-400 text-white rounded-xl flex items-center justify-center gap-2 font-medium"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm1 5a1 1 0 100 2h12a1 1 0 100-2H4z"
-                clipRule="evenodd"
-              />
+          <button onClick={() => setIsModalOpen(true)} className="w-full py-3 px-4 bg-gradient-to-r from-[color:var(--custom-orange)] to-orange-400 text-white rounded-xl flex items-center justify-center gap-2 font-medium">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm1 5a1 1 0 100 2h12a1 1 0 100-2H4z" clipRule="evenodd" />
             </svg>
             Filter Resep
           </button>
@@ -176,31 +172,18 @@ const Resep = () => {
 
         {/* Sidebar - hidden on mobile */}
         <div className="hidden md:block md:w-1/4">
-          <FilterSidebar
-            selectedFilters={selectedFilters}
-            onFilterChange={handleFilterChange}
-          />
+          <FilterSidebar selectedFilters={selectedFilters} onFilterChange={handleFilterChange} />
         </div>
 
         {/* Main content */}
         <div className="w-full md:w-3/4">
-          <SelectedFilters
-            selectedFilters={selectedFilters}
-            totalRecipes={filteredRecipes.length}
-            onRemoveFilter={handleRemoveFilter}
-            onClearAll={handleClearAllFilters}
-          />
-          <RecipeCardGrid recipes={filteredRecipes} />
+          <SelectedFilters selectedFilters={selectedFilters} totalRecipes={filteredRecipes.length} onRemoveFilter={handleRemoveFilter} onClearAll={handleClearAllFilters} />
+          <RecipeCardGrid recipes={recipes} />
         </div>
       </main>
 
       {/* Filter Modal for both mobile and desktop */}
-      <FilterControlModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        selectedFilters={selectedFilters}
-        onFilterChange={handleFilterChange}
-      />
+      <FilterControlModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} selectedFilters={selectedFilters} onFilterChange={handleFilterChange} />
 
       <Footer />
     </div>

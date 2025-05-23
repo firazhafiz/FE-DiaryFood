@@ -28,17 +28,14 @@ export default function UsersPage() {
   return (
     <div className="p-4 md:p-8 min-h-screen">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Main Content - User List */}
         <div className={`${selectedUser ? "lg:col-span-8" : "lg:col-span-12"} transition-all duration-700 ease-in-out`}>
           <div className="flex flex-col gap-6">
-            {/* Header */}
             <div className="flex justify-between items-center">
               <h1 className="text-xl font-semibold text-slate-900">Users Management</h1>
             </div>
 
             {/* Search and Sort Controls */}
             <div className="flex flex-col sm:flex-row gap-4">
-              {/* Sort Dropdown */}
               <div className="relative w-full sm:w-48">
                 <select
                   value={sortBy}
@@ -78,7 +75,7 @@ export default function UsersPage() {
             <div className="sticky top-8">
               <div className="bg-white/60 border-2 rounded-3xl p-6 transform transition-all duration-500 ease-out hover:scale-[1.02]">
                 <div className="flex flex-col items-center">
-                  <img src="/assets/images/image_login.png" alt={selectedUser.name} className="w-32 h-32 md:w-40 md:h-40 rounded-full mb-6 object-cover animate-fade-in" />
+                  <img src="/assets/images/image_login.jpg" alt={selectedUser.name} className="w-32 h-32 md:w-40 md:h-40 rounded-full mb-6 object-cover animate-fade-in" />
                   <h1 className="text-lg font-semibold text-gray-900 text-center animate-fade-in-delay-1">{selectedUser.name}</h1>
                   <p className="text-slate-500 text-center animate-fade-in-delay-2">{selectedUser.email}</p>
 

@@ -76,7 +76,7 @@ const DetailUser: React.FC = () => {
           <div className="flex justify-center mb-6">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-200/50 to-purple-200/50 rounded-full blur-xl"></div>
-              <img src="/assets/images/image_login.png" alt={user.name} className="relative w-32 h-32 rounded-full border-4 border-white/50 shadow-lg" />
+              <img src="/assets/images/image_login.jpg" alt={user.name} className="relative w-32 h-32 rounded-full border-4 border-white/50 shadow-lg" />
             </div>
           </div>
 

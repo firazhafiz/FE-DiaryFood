@@ -9,8 +9,22 @@ import CommentsSection from "@/components/molecules/CommentsSection";
 import RecipeSidebar from "@/components/molecules/RecipeSidebar";
 import Footer from "@/components/organisms/Footer";
 import Navbar from "@/components/organisms/Navbar";
-import { dummyRecipes, Recipe } from "@/data/recipes";
 
+interface Recipe {
+  id: number;
+  nama: string;
+  photoResep: string;
+  time: string | number;
+  category: string;
+  isFree?: boolean;
+  rating?: number;
+  user?: {
+    name: string;
+    photo: string;
+  };
+  price?: number;
+  slug?: string;
+}
 // Interfaces for type safety
 interface Comment {
   user: {
@@ -38,36 +52,20 @@ interface Ingredient {
 
 const DetailResep = () => {
   const searchParams = useSearchParams();
-  const recipeSlug = searchParams.get("recipe") || "nasi-goreng-saos-tiram";
+  const id = searchParams.get("id");
+  console.log(id);
   const [recipe, setRecipe] = useState<Recipe | null>(null);
 
-  console.log("URL params:", {
-    recipeSlug,
-    allParams: Object.fromEntries(searchParams.entries()),
-    raw: searchParams.toString(),
-  });
-
   useEffect(() => {
-    console.log("Loading recipe for slug:", recipeSlug);
-    console.log("Available recipes:", Object.keys(dummyRecipes));
+    const recipeById = async () => {
+      const res = await fetch(`http://localhost:4000/v1/resep/1`);
 
-    // In a real app, you would fetch the recipe data based on the slug
-    // For now, we'll use our dummy data
-    const recipeData = dummyRecipes[recipeSlug];
-
-    if (recipeData) {
-      console.log("Recipe found:", recipeData.title);
-      setRecipe(recipeData);
-    } else {
-      console.warn("Recipe not found for slug:", recipeSlug);
-      // Fallback to the first recipe if the requested one doesn't exist
-      if (Object.keys(dummyRecipes).length > 0) {
-        const firstRecipe = dummyRecipes[Object.keys(dummyRecipes)[0]];
-        console.log("Falling back to:", firstRecipe.title);
-        setRecipe(firstRecipe);
-      }
-    }
-  }, [recipeSlug]);
+      const data = await res.json();
+      console.log(data);
+      setRecipe(data.data);
+    };
+    recipeById();
+  }, [id]);
 
   if (!recipe) {
     return <div className="text-center py-10">Loading recipe...</div>;
@@ -77,14 +75,10 @@ const DetailResep = () => {
   function addIdsToComments(comments: any[]): any[] {
     return comments.map((comment: any, idx: number) => ({
       ...comment,
-      id:
-        comment.id ||
-        `comment-${idx}-${Math.random().toString(36).slice(2, 8)}`,
+      id: comment.id || `comment-${idx}-${Math.random().toString(36).slice(2, 8)}`,
       replies: (comment.replies || []).map((reply: any, ridx: number) => ({
         ...reply,
-        id:
-          reply.id ||
-          `reply-${idx}-${ridx}-${Math.random().toString(36).slice(2, 8)}`,
+        id: reply.id || `reply-${idx}-${ridx}-${Math.random().toString(36).slice(2, 8)}`,
       })),
     }));
   }
@@ -99,15 +93,12 @@ const DetailResep = () => {
           <DetailHeader recipe={recipe} />
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
             <IngredientsSection ingredients={recipe.ingredients} />
-            <InstructionsSection
-              instructions={recipe.instructions}
-              notes={recipe.notes}
-            />
+            <InstructionsSection instructions={recipe.instructions} notes={recipe.notes} />
           </div>
           <CommentsSection comments={commentsWithIds} />
         </div>
         <div className="w-full md:w-80 flex-shrink-0">
-          <RecipeSidebar recipes={Object.values(dummyRecipes)} />
+          <RecipeSidebar recipes={recipe} />
         </div>
       </div>
       <Footer />

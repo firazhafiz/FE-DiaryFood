@@ -16,7 +16,7 @@ export const users: User[] = [
     email: "john@example.com",
     password: "hashed_password_1", // Dalam implementasi nyata, password harus di-hash
     role: "user",
-    photo: "/assets/images/image_login.png",
+    photo: "/assets/images/image_login.jpg",
   },
   {
     id: 2,
@@ -24,7 +24,7 @@ export const users: User[] = [
     email: "jane@example.com",
     password: "hashed_password_2",
     role: "user",
-    photo: "/assets/images/image_login.png",
+    photo: "/assets/images/image_login.jpg",
   },
   {
     id: 3,
@@ -32,7 +32,7 @@ export const users: User[] = [
     email: "admin@example.com",
     password: "hashed_password_3",
     role: "admin",
-    photo: "/assets/images/image_login.png",
+    photo: "/assets/images/image_login.jpg",
   },
   {
     id: 4,
@@ -40,7 +40,7 @@ export const users: User[] = [
     email: "sarah@example.com",
     password: "hashed_password_4",
     role: "user",
-    photo: "/assets/images/image_login.png",
+    photo: "/assets/images/image_login.jpg",
   },
   {
     id: 5,
@@ -48,6 +48,6 @@ export const users: User[] = [
     email: "mike@example.com",
     password: "hashed_password_5",
     role: "user",
-    photo: "/assets/images/image_login.png",
+    photo: "/assets/images/image_login.jpg",
   },
 ];

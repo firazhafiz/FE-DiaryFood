@@ -55,7 +55,7 @@ const NavbarHome: React.FC = () => {
           </div>
           {isAuthenticated ? (
             <div className="flex items-center gap-2">
-              <Image src="/assets/images/image_login.png" alt="Login" width={32} height={32} />
+              <Image src="/assets/images/image_login.jpg" alt="Login" width={32} height={32} />
               <span className="text-xs">John Doe</span>
             </div>
           ) : (

@@ -88,7 +88,7 @@ const UserRow: React.FC<UserRowProps> = ({ id, email, username, index, onDelete,
     <div id={id} className="flex justify-between items-center bg-white/60 border-2 rounded-2xl p-4">
       <div className="flex items-center gap-2">
         <div className="bg-slate-100 w-8 h-8 rounded-full flex items-center justify-center text-slate-700 font-medium">{index}</div>
-        <img src="/assets/images/image_login.png" alt="user" className="w-10 h-10 rounded-full" />
+        <img src="/assets/images/image_login.jpg" alt="user" className="w-10 h-10 rounded-full" />
         <p className="text-slate-700 font-medium">{username}</p>
       </div>
 
