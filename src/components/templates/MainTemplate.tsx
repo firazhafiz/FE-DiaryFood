@@ -50,13 +50,9 @@ const MainTemplate: React.FC<MainTemplateProps> = ({ recipes }) => {
         <main className="max-w-5xl mx-auto px-4">
           <section suppressHydrationWarning>
             <div className="flex justify-between items-center mt-10">
-              <h3 className="font-bold text-[color:var(--custom-orange)] text-xl">
-                Latest Recommendations
-              </h3>
+              <h3 className="font-bold text-[color:var(--custom-orange)] text-xl">Latest Recommendations</h3>
               <Link href="/recipes">
-                <h2 className="text-sm text-gray-800 font-semibold hover:text-[color:var(--custom-orange)] cursor-pointer">
-                  View All
-                </h2>
+                <h2 className="text-sm text-gray-800 font-semibold hover:text-[color:var(--custom-orange)] cursor-pointer">View All</h2>
               </Link>
             </div>
             <RecipeList recipes={recipes} />
@@ -66,13 +62,9 @@ const MainTemplate: React.FC<MainTemplateProps> = ({ recipes }) => {
           </div>
           <section>
             <div className="flex justify-between items-center">
-              <h3 className="font-bold text-[color:var(--custom-orange)] text-xl">
-                Quick & Easy
-              </h3>
+              <h3 className="font-bold text-[color:var(--custom-orange)] text-xl">Quick & Easy</h3>
               <Link href="/recipes">
-                <h2 className="text-sm text-gray-800 font-semibold hover:text-[color:var(--custom-orange)] cursor-pointer">
-                  View All
-                </h2>
+                <h2 className="text-sm text-gray-800 font-semibold hover:text-[color:var(--custom-orange)] cursor-pointer">View All</h2>
               </Link>
             </div>
             <RecipeList recipes={recipes} />
@@ -84,13 +76,9 @@ const MainTemplate: React.FC<MainTemplateProps> = ({ recipes }) => {
         <main className="max-w-5xl mx-auto px-4 mb-12">
           <section className="mb-10">
             <div className="flex justify-between items-center">
-              <h3 className="font-bold text-[color:var(--custom-orange)] text-xl">
-                Featured Recipes
-              </h3>
+              <h3 className="font-bold text-[color:var(--custom-orange)] text-xl">Featured Recipes</h3>
               <Link href="/recipes">
-                <h2 className="text-sm text-gray-800 font-semibold hover:text-[color:var(--custom-orange)] cursor-pointer">
-                  View All
-                </h2>
+                <h2 className="text-sm text-gray-800 font-semibold hover:text-[color:var(--custom-orange)] cursor-pointer">View All</h2>
               </Link>
             </div>
             <RecipeList recipes={recipes} />
