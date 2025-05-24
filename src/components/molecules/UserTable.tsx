@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { FaEllipsis, FaEye, FaTrash } from "react-icons/fa6";
 
 interface User {
-  id: string;
+  id: number;
   email: string;
   username: string;
   photo: string;
@@ -10,8 +10,8 @@ interface User {
 
 interface UserTableProps {
   users: User[];
-  onDelete?: (id: string) => void;
-  onShow?: (id: string) => void;
+  onDelete?: (id: number) => void;
+  onShow?: (id: number) => void;
 }
 
 export const UserTable: React.FC<UserTableProps> = ({
@@ -45,8 +45,8 @@ export const UserTable: React.FC<UserTableProps> = ({
 
 interface UserRowProps extends User {
   index: number;
-  onDelete?: (id: string) => void;
-  onShow?: (id: string) => void;
+  onDelete?: (id: number) => void;
+  onShow?: (id: number) => void;
 }
 
 const UserRow: React.FC<UserRowProps> = ({
@@ -110,7 +110,6 @@ const UserRow: React.FC<UserRowProps> = ({
 
   return (
     <div
-      id={id}
       className="flex justify-between items-center bg-white/60 border-2 rounded-lg p-4"
     >
       <div className="flex items-center gap-2">

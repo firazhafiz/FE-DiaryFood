@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import MainTemplate from "../components/templates/MainTemplate";
 import Loading from "./loading";
-import { supabase } from "@/lib/db";
 import type { Recipe } from "@/types/recipe";
 
 const sampleRecipes = [
@@ -15,7 +14,6 @@ const sampleRecipes = [
     isFree: true,
     rating: 4.5,
     author: {
-
       name: "Firaz Fulvian Hafiz",
       avatar: "/assets/images/image_login.jpg",
     },
@@ -42,7 +40,6 @@ const sampleRecipes = [
     isFree: true,
     rating: 4.5,
     author: {
-
       name: "Rengga Rendi",
       avatar: "/assets/images/image_login.jpg",
     },
@@ -71,7 +68,6 @@ const sampleRecipes = [
     price: 100000,
     rating: 4.5,
     author: {
-
       name: "Bima Harinta",
       avatar: "/assets/images/image_login.jpg",
     },
@@ -96,25 +92,6 @@ export default function Home() {
     };
     fetchCategoryList();
   }, []);
-
-  useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        const { data, error } = await supabase.from("Resep").select("*");
-
-        if (error) {
-          console.error("Error:", error.message);
-          return;
-        }
-
-        setRecipe(data);
-      } catch (err) {
-        console.error("Error fetching:", err);
-      }
-    };
-
-    fetchRecipes();
-  }, [supabase]);
 
   console.log(recipe);
 

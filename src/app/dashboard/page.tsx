@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend } from "chart.js";
 import { Bar, Line } from "react-chartjs-2";
 import { useRouter } from "next/navigation";
+import getRelativeTime from "@/helper/relativeTime";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend);
 
@@ -21,8 +22,9 @@ export default function DashboardPage() {
     recipeCategories: [] as { category: string; count: number }[],
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
+  console.log(stats.pendingRecipes);
 
   useEffect(() => {
     const getDashboardData = async () => {
@@ -66,9 +68,9 @@ export default function DashboardPage() {
           })),
         });
 
-        setError(null);
-      } catch (err: any) {
-        setError(err.message);
+        console.log(data.data);
+
+      } catch (err: unknown) {
         console.error("Error fetching dashboard data:", err);
       } finally {
         setLoading(false);
@@ -77,53 +79,6 @@ export default function DashboardPage() {
 
     getDashboardData();
   }, []);
-
-  const handleApprove = async (recipeId: string) => {
-    try {
-      const response = await fetch(`/api/recipes/${recipeId}/approve`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      // Perbarui state untuk menghapus resep yang disetujui
-      setStats((prev) => ({
-        ...prev,
-        pendingRecipes: prev.pendingRecipes.filter((recipe: any) => recipe.id !== recipeId),
-        publishedRecipes: prev.publishedRecipes + 1,
-      }));
-    } catch (error) {
-      console.error("Error approving recipe:", error);
-      setError("Gagal menyetujui resep");
-    }
-  };
-
-  const handleReject = async (recipeId: string) => {
-    try {
-      const response = await fetch(`/api/recipes/${recipeId}/reject`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      // Perbarui state untuk menghapus resep yang ditolak
-      setStats((prev) => ({
-        ...prev,
-        pendingRecipes: prev.pendingRecipes.filter((recipe: any) => recipe.id !== recipeId),
-      }));
-    } catch (error) {
-      console.error("Error rejecting recipe:", error);
-      setError("Gagal menolak resep");
-    }
-  };
 
   // Chart data for recipe statistics
   const recipeChartData = {
@@ -232,7 +187,7 @@ export default function DashboardPage() {
         <div className="bg-white/50 rounded-3xl p-6  border-white/60 border-2">
           <h2 className="text-lg text-center font-semibold text-slate-700 mb-8">Pending Recipe Approvals</h2>
 
-          {pendingRecipes.length === 0 ? (
+          {stats.pendingRecipes.length === 0 ? (
             <p className="text-slate-500">No pending recipes to approve</p>
           ) : (
             <div className="overflow-x-auto">
@@ -241,28 +196,17 @@ export default function DashboardPage() {
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-700  tracking-wider">Title</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-700  tracking-wider">Author</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700  tracking-wider">Date</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-700  tracking-wider">Category</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700  tracking-wider">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700  tracking-wider">Date</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {stats.pendingRecipes.map((recipe: any) => (
                     <tr key={recipe.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.title}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.author.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.date}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.category}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <div className="flex space-x-2">
-                          <button onClick={() => handleApprove(recipe.id)} className="bg-slate-700 text-white px-3 py-1 rounded-md hover:bg-slate-900 transition-colors">
-                            Approve
-                          </button>
-                          <button onClick={() => handleReject(recipe.id)} className="bg-red-400 text-white px-3 py-1 rounded-md hover:bg-red-500 transition-colors">
-                            Reject
-                          </button>
-                        </div>
-                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.nama}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.user.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{recipe.kategori.nama}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{getRelativeTime(recipe.tanggalUnggahan)}</td>
                     </tr>
                   ))}
                 </tbody>

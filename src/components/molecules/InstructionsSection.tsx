@@ -1,7 +1,14 @@
 import React from "react";
 
+interface instructions{
+ id: number;
+ resepId:number;
+  urutan: number;
+  deskripsi: string;
+}
+
 interface InstructionsSectionProps {
-  instructions: string[];
+  instructions: instructions[];
   notes?: string;
 }
 
@@ -16,7 +23,7 @@ const InstructionsSection: React.FC<InstructionsSectionProps> = ({ instructions,
               <div className="flex-shrink-0">
                 <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[color:var(--custom-orange)] text-white font-semibold text-sm">{index + 1}</div>
               </div>
-              <div className="text-gray-700 text-sm">{instruction}</div>
+              <div className="text-gray-700 text-sm">{instruction.deskripsi}</div>
             </li>
           ))}
         </ol>

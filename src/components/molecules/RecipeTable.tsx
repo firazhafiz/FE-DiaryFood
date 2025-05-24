@@ -1,18 +1,21 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaEllipsis, FaEye, FaTrash } from "react-icons/fa6";
-import Image from "next/image";
 
 interface Recipe {
   id: number;
-  title: string;
-  author: {
+  nama: string;
+  user: {
     name: string;
-    avatar: string;
+    photo: string;
   };
-  image: string;
+  kategori: {
+    id: number;
+    nama: string;
+  };
+  photoResep: string;
   date: string;
-  category: string;
-  status: "published" | "draft";
+
+  isApproved: "APPROVED";
 }
 
 interface RecipeTableProps {
@@ -24,8 +27,8 @@ interface RecipeTableProps {
 export const RecipeTable: React.FC<RecipeTableProps> = ({ recipes, onShow, onDelete }) => {
   return (
     <div className="w-full">
-      <div className="rounded-xl overflow-hidden">
-        <div className="grid grid-cols-5 py-4 px-6 border-b">
+      <div className="rounded-xl ">
+        <div className="grid grid-cols-5 py-4 px-6 ">
           <p className="text-slate-700 font-medium text-sm col-span-2">Recipe</p>
           <p className="text-slate-700 font-medium text-sm">Category</p>
           <p className="text-slate-700 font-medium text-sm">Status</p>
@@ -48,10 +51,12 @@ interface RecipeRowProps extends Recipe {
   onShow?: (id: string) => void;
 }
 
-const RecipeRow: React.FC<RecipeRowProps> = ({ id, title, author, category, status, image, onDelete, onShow }) => {
+const RecipeRow: React.FC<RecipeRowProps> = ({ id, nama, user, kategori, isApproved, photoResep, onDelete, onShow }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  console.log(photoResep);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -96,23 +101,23 @@ const RecipeRow: React.FC<RecipeRowProps> = ({ id, title, author, category, stat
   };
 
   return (
-    <div id={id} className="grid grid-cols-5 items-center py-4 px-6 border-b bg-white/60 rounded-xl   border-white/60 hover:bg-gray-50">
+    <div id={id} className="grid grid-cols-5 items-center py-2 px-2 border-2 bg-white/60 rounded-xl   border-white/60 hover:bg-gray-50">
       <div className="flex items-center gap-3 col-span-2">
-        <div className="relative w-48 h-28 rounded-lg overflow-hidden">
-          <Image src={image} alt={title} fill className="object-cover" priority={false} sizes="100" />
+        <div className="relative w-44 h-28 rounded-lg overflow-hidden">
+          <img src={photoResep} alt={nama} className="object-cover w-full h-full" />
         </div>
         <div>
-          <p className="text-slate-700 font-medium">{title}</p>
-          <p className="text-slate-500 text-xs">{author.name}</p>
+          <p className="text-slate-700 font-medium  text-md">{nama}</p>
+          <p className="text-slate-500 text-xs">{user.name}</p>
         </div>
       </div>
 
       <div>
-        <p className="text-slate-700">{category}</p>
+        <p className="text-slate-700">{kategori.nama}</p>
       </div>
 
       <div>
-        <span className={`px-4 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${status === "published" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}>{status}</span>
+        <span className="px-4 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{isApproved}</span>
       </div>
 
       <div className="relative flex justify-end" ref={dropdownRef}>

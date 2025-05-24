@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import Card from "../atoms/Card";
 
 interface Recipe {
+  id: number;
   title: string;
   image: string;
   time: string;

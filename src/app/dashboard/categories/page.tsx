@@ -100,8 +100,6 @@ const CategoriesPage = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-semibold text-slate-900">Manajemen Kategori</h1>
       </div>
-      {loading && <p className="text-slate-500">Memuat...</p>}
-      {error && <p className="text-red-500">Error: {error}</p>}
       <CategoryManagement categories={deferredCategories} onAddCategory={handleAddCategory} onDeleteCategory={handleDeleteCategory} />
     </div>
   );

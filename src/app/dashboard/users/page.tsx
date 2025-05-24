@@ -59,11 +59,7 @@ export default function UsersPage() {
     getUsers();
   }, [router]); // DIUBAH: Tambahkan router sebagai dependency
 
-  function showDetail() {
-    if (selectedUser) {
-      router.push(`/dashboard/users/detail?id=${selectedUser.id}`);
-    }
-  }
+ 
 
   return (
     <div className="p-4 md:p-8 min-h-screen">

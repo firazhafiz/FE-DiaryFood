@@ -8,25 +8,29 @@ import { useSearchParams } from "next/navigation";
 
 interface Recipe {
   id: number;
-  title: string;
-  author: {
+  nama: string;
+  photoResep: string;
+  user: {
     name: string;
     avatar: string;
   };
   date: string;
   category: string;
-  status: "published" | "draft";
+  isApproved: string;
   image: string;
   description: string;
-  ingredients: Array<{
+  bahanList: Array<{
     id: number;
-    name: string;
-    amount: string;
+    nama: string;
+    jumlah: string;
   }>;
-  instructions: Array<{
+  langkahList: Array<{
     id: number;
-    step: string;
+    resepId:number;
+    urutan: number;
+    deskripsi: string;
   }>;
+  tanggalUnggahan: string;
   notes: string;
   cookingTime: string;
   servings: number;
@@ -43,7 +47,6 @@ const DetailMyRecipe = () => {
   const id = searchParams.get("id");
 
   useEffect(() => {
-    console.log(id);
     const fetchRecipe = async () => {
       if (!id) {
         setError("Recipe ID is required");
@@ -52,12 +55,19 @@ const DetailMyRecipe = () => {
       }
 
       try {
-        const response = await fetch(`/api/recipes/${id}`);
+        const token = localStorage.getItem("token");
+        const response = await fetch(`http://localhost:4000/v1/admin/dashboard/recipes/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch recipe");
         }
         const data = await response.json();
-        setRecipe(data);
+        setRecipe(data.data);
+        console.log(data.data.bahanList);
       } catch (error) {
         console.error("Error fetching recipe:", error);
         setError("Failed to load recipe details");
@@ -76,13 +86,14 @@ const DetailMyRecipe = () => {
   if (error || !recipe) {
     return <div className="text-center py-8 text-red-500">{error || "Recipe not found"}</div>;
   }
+  console.log(recipe);
 
   return (
     <div className="p-8">
       <DetailHeader recipe={recipe} />
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-        <IngredientsSection ingredients={recipe.ingredients} />
-        <InstructionsSection instructions={recipe.instructions} notes={recipe.notes} />
+        <IngredientsSection ingredients={recipe.bahanList} />
+        <InstructionsSection instructions={recipe.langkahList} notes={recipe.notes} />
       </div>
     </div>
   );

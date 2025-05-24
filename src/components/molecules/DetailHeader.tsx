@@ -1,14 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
+import getRelativeTime from "@/helper/relativeTime";
+import { FaArrowLeft } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 interface DetailHeaderProps {
   recipe: {
     id: number;
     nama: string;
     photoResep: string;
-    time: string | number;
+    tanggalUnggahan
+: string;
     category: string;
     isFree?: boolean;
     rating?: number;
@@ -27,6 +30,7 @@ const DetailHeader: React.FC<DetailHeaderProps> = ({ recipe }) => {
   const [saves, setSaves] = useState(recipe.saves);
   const [rating, setRating] = useState(recipe.rating);
   const [ratingCount, setRatingCount] = useState(recipe.ratingCount);
+  const router = useRouter();
 
   const handleSave = () => {
     if (saved) {
@@ -69,25 +73,26 @@ const DetailHeader: React.FC<DetailHeaderProps> = ({ recipe }) => {
     }
   };
 
+  const handleBack =() =>{
+    router.back();
+  }
+
   return (
     <div className="mb-8">
-      <div className="text-xs text-gray-400 mb-2 flex items-center gap-1">
-        <Link href="/" className="hover:text-[color:var(--custom-orange)] transition-colors">
-          Home
-        </Link>
-        <span className="mx-1">/</span>
-        <Link href="/recipes" className="hover:text-[color:var(--custom-orange)] transition-colors">
-          Recipes
-        </Link>
-        <span className="mx-1">/</span>
-        <span className="text-[color:var(--custom-orange)] font-semibold">{recipe.nama}</span>
-      </div>
-      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 leading-tight">{recipe.nama}</h1>
+     <button
+     onClick={handleBack}
+  className="px-4 py-1 flex gap-2 w-fit items-center rounded-lg border border-[var(--custom-orange)] text-slate-700 hover:bg-[var(--custom-orange)] hover:text-white transition-colors"
+  aria-label="Back to recipes"
+>
+  <FaArrowLeft />
+  Back
+</button>
+      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 leading-tight mt-8">{recipe.nama}</h1>
       <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 mb-4 justify-between">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
-            <img src={recipe.photoResep} alt={recipe.nama} className="w-6 h-6 rounded-full object-cover" />
-            <span className="font-medium text-gray-700">{recipe.nama}</span>
+            <img src={recipe.user?.photo} alt={recipe.nama} className="w-6 h-6 rounded-full object-cover" />
+            <span className="font-medium text-gray-700">{recipe.user?.name}</span>
           </div>
           <span>•</span>
           <span className="flex items-center gap-1">
@@ -95,7 +100,7 @@ const DetailHeader: React.FC<DetailHeaderProps> = ({ recipe }) => {
               <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
               <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" strokeWidth="2" />
             </svg>
-            {recipe.date}
+            {getRelativeTime(recipe.tanggalUnggahan)}
           </span>
           <span>•</span>
           <span className="flex items-center gap-1">
@@ -130,7 +135,7 @@ const DetailHeader: React.FC<DetailHeaderProps> = ({ recipe }) => {
       </div>
       {/* Image */}
       <div className="rounded-2xl overflow-hidden mb-4 w-full max-w-2xl">
-        <img src={recipe.image} alt={recipe.title} className="w-full h-72 object-cover" />
+        <img src={recipe.photoResep} alt={recipe.nama} className="w-full h-72 object-cover" />
       </div>
       {/* Time info - revert to previous version */}
       <div className="flex gap-8 mb-4 text-center">
