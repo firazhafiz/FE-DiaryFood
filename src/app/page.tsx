@@ -9,6 +9,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -28,6 +29,7 @@ export default function Home() {
         }, 500);
       }
     };
+
     fetchRecipes();
   }, []);
 
