@@ -9,7 +9,6 @@ import SelectedFilters from "@/components/atoms/SelectedFilters";
 import FilterControlModal from "@/components/molecules/FilterControlModal";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Recipe } from "@/types/recipe";
-import Loading from "./loading";
 
 const Resep = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -94,7 +93,6 @@ const Resep = () => {
   // Track navigation using sessionStorage
   useEffect(() => {
     if (isInitialLoad) {
-      // Set a flag in sessionStorage during navigation
       sessionStorage.setItem("isNavigating", "true");
     }
   }, [isInitialLoad]);
@@ -113,7 +111,6 @@ const Resep = () => {
       pathname
     );
 
-    // Check if this is a page refresh (not navigation)
     const isNavigating = sessionStorage.getItem("isNavigating") === "true";
     if (!isNavigating && categoryFromUrl) {
       setSelectedFilters([]);
@@ -121,7 +118,6 @@ const Resep = () => {
       console.log("Page refresh: Cleared category from URL");
     }
 
-    // Clear the navigation flag after first load
     sessionStorage.removeItem("isNavigating");
     setIsInitialLoad(false);
   }, [isInitialLoad, searchParams, router, pathname]);
@@ -256,9 +252,7 @@ const Resep = () => {
 
         {/* Main content */}
         <div className="w-full md:w-3/4">
-          {isLoading ? (
-            <Loading />
-          ) : error ? (
+          {error ? (
             <div className="text-center py-8">
               <div className="text-red-500 mb-2">
                 <svg
@@ -288,7 +282,13 @@ const Resep = () => {
                 onRemoveFilter={handleRemoveFilter}
                 onClearAll={handleClearAllFilters}
               />
-              <RecipeCardGrid recipes={filteredRecipes} />
+              <RecipeCardGrid
+                recipes={filteredRecipes}
+                isLoading={isLoading}
+                initialRecipeCount={
+                  allRecipes.length > 0 ? allRecipes.length : 6
+                }
+              />
             </>
           )}
         </div>

@@ -4,7 +4,10 @@ const nextConfig: NextConfig = {
   experimental: {
     esmExternals: true,
   },
-  /* config options here */
+
+  turbo: {
+    enabled: false, // Nonaktifkan Turbopack
+  },
 
   images: {
     domains: [

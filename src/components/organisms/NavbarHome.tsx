@@ -1,48 +1,21 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import SearchBar from "../molecules/SearchBar";
-import { Categories } from "@/types/categories";
-
-interface CategoryResponse {
-  data: { id: string; nama: string }[];
-}
 
 const NavbarHome: React.FC = () => {
   const [isSticky, setIsSticky] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [categories, setCategories] = useState<Categories[]>([]);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch("http://localhost:4000/v1/category");
-        if (!response.ok) {
-          throw new Error("Gagal mengambil kategori");
-        }
-        const data: CategoryResponse = await response.json();
-        console.log("Raw API response:", data);
-
-        if (data?.data && Array.isArray(data.data)) {
-          const convertedCategories = data.data.map((item) => ({
-            id: parseInt(item.id),
-            nama: item.nama,
-          }));
-          const sortedCategories = convertedCategories.sort(
-            (a, b) => a.id - b.id
-          );
-          setCategories(sortedCategories);
-          console.log("Converted and sorted categories:", sortedCategories);
-        } else {
-          throw new Error("Format data kategori tidak valid");
-        }
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-        setCategories([]);
-      }
-    };
-    fetchCategories();
-  }, []);
+  // Static categories array
+  const staticCategories = [
+    { id: 1, nama: "Breakfast" },
+    { id: 2, nama: "Lunch" },
+    { id: 3, nama: "Dinner" },
+    { id: 4, nama: "Dessert" },
+    { id: 5, nama: "Snacks" },
+    { id: 6, nama: "Drinks" },
+  ];
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -89,7 +62,7 @@ const NavbarHome: React.FC = () => {
           <div className="flex gap-8 items-center text-sm">
             <Link
               href="/"
-              className={`hover:text-[color:var(--custom-orange)] hover:font-semibold  ${
+              className={`min-w-[50px] px-2 py-1 text-center hover:text-[color:var(--custom-orange)] ${
                 isSticky ? "text-gray-600" : "text-white"
               }`}
             >
@@ -97,22 +70,22 @@ const NavbarHome: React.FC = () => {
             </Link>
             <Link
               href="/recipes"
-              className={`hover:text-[color:var(--custom-orange)] hover:font-semibold ${
+              className={`min-w-[60px] px-2 py-1 text-center hover:text-[color:var(--custom-orange)] ${
                 isSticky ? "text-gray-600" : "text-white"
               }`}
             >
               Recipes
             </Link>
-
             <Link
               href="/ask-ai"
-              className={`hover:text-[color:var(--custom-orange)] hover:font-semibold ${
+              className={`min-w-[60px] px-2 py-1 text-center hover:text-[color:var(--custom-orange)] ${
                 isSticky ? "text-gray-600" : "text-white"
               }`}
             >
               Ask AI
             </Link>
           </div>
+          {/* Auth Buttons */}
           <div className="text-xs flex gap-x-4">
             <Link
               href="/login"
@@ -143,8 +116,8 @@ const NavbarHome: React.FC = () => {
             isSticky ? "text-gray-600" : "text-white"
           }`}
         >
-          {categories.length > 0 ? (
-            categories.map((category) => (
+          {staticCategories.length > 0 ? (
+            staticCategories.map((category) => (
               <Link
                 key={category.id}
                 href={`/recipes?category=${category.nama}`}

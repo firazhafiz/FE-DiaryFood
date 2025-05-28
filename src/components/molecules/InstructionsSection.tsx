@@ -1,18 +1,34 @@
 import React from "react";
 import { RecipeDetail } from "@/types/recipe-detail";
 
-interface instructions {
-  id: number;
-  resepId: number;
-  urutan: number;
-  deskripsi: string;
-}
-
 interface InstructionsSectionProps {
   recipe: RecipeDetail;
+  loading: boolean;
 }
 
-const InstructionsSection = ({ recipe }: InstructionsSectionProps) => {
+const InstructionsSection = ({ recipe, loading }: InstructionsSectionProps) => {
+  if (loading) {
+    return (
+      <div className="min-h-auto w-full animate-pulse">
+        <div className="rounded-2xl p-6">
+          <div className="h-6 bg-gray-200 rounded w-1/4 mb-4" />
+          <ol className="space-y-4 mb-6">
+            {[...Array(3)].map((_, idx) => (
+              <li key={idx} className="flex gap-4">
+                <div className="w-7 h-7 bg-gray-200 rounded-full" />
+                <div className="h-4 bg-gray-200 rounded w-3/4" />
+              </li>
+            ))}
+          </ol>
+          <div className="mt-6 pt-6 border-t border-gray-100">
+            <div className="h-5 bg-gray-200 rounded w-1/5 mb-2" />
+            <div className="h-4 bg-gray-200 rounded w-full" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-auto w-full">
       <div className="rounded-2xl p-6">
@@ -36,9 +52,7 @@ const InstructionsSection = ({ recipe }: InstructionsSectionProps) => {
         </ol>
         <div className="mt-6 pt-6 border-t border-gray-100">
           <h3 className="text-base font-semibold text-gray-900 mb-2">Notes</h3>
-          <p className="text-gray-600 text-sm italic">
-            This is a dummy note for the recipe instructions
-          </p>
+          <p className="text-gray-600 text-sm italic">{recipe.note}</p>
         </div>
       </div>
     </div>

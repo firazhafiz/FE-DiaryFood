@@ -2,17 +2,14 @@
 
 import { useEffect, useState } from "react";
 import MainTemplate from "../components/templates/MainTemplate";
-import Loading from "./loading";
 import type { Recipe } from "@/types/recipe";
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchRecipes = async () => {
-      setIsLoading(true);
       try {
         const response = await fetch("http://localhost:4000/v1/resep");
         if (!response.ok) {
@@ -20,12 +17,8 @@ export default function Home() {
         }
         const data = await response.json();
         setRecipes(Array.isArray(data.data.reseps) ? data.data.reseps : []);
-      } catch (error) {
+      } catch (error) {   
         setRecipes([]);
-      } finally {
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 500);
       }
     };
     fetchRecipes();
@@ -35,8 +28,8 @@ export default function Home() {
     setMounted(true);
   }, []);
 
-  if (!mounted || isLoading) {
-    return <Loading />;
+  if (!mounted) {
+    return null; // or a loading spinner if needed globally
   }
 
   return <MainTemplate recipes={recipes} />;
