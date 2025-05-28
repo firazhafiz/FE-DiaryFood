@@ -9,9 +9,9 @@ import Footer from "@/components/organisms/Footer";
 import Navbar from "@/components/organisms/Navbar";
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { RecipeDetail } from "@/types/recipe-detail";
+import { Recipe } from "@/types/recipe"; // Gunakan Recipe sebagai tipe sementara
 import Loading from "@/app/loading";
-import { Recipe } from "@/types/recipe";
+import { RecipeDetail } from "@/types/recipe-detail";
 
 export default function DetailResep() {
   const searchParams = useSearchParams();
@@ -20,15 +20,9 @@ export default function DetailResep() {
   const [recipe, setRecipe] = useState<RecipeDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
 
-  // Pastikan render hanya terjadi di sisi klien
-  useEffect(() => {
-    const recipeById = async () => {
-      const res = await fetch(`http://localhost:4000/v1/resep/1`);
-
-  // Fetch data resep dan rekomendasi
+  // Pastikan fetch data hanya berjalan di sisi klien
   useEffect(() => {
     if (!recipeId) {
       setError("ID resep tidak ditemukan. Kembali ke halaman utama?");
@@ -86,10 +80,10 @@ export default function DetailResep() {
     };
 
     fetchData();
-  }, [recipeId]);
+  }, [recipeId]); // Dependency hanya pada recipeId
 
-  // Tampilkan loading state selama fetch atau saat belum mounted
-  if (!mounted || loading) {
+  // Tampilkan loading state selama fetch
+  if (loading) {
     return <Loading />;
   }
 

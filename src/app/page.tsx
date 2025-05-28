@@ -10,7 +10,6 @@ export default function Home() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-<<<<<<< HEAD
   useEffect(() => {
     const fetchRecipes = async () => {
       setIsLoading(true);
@@ -31,9 +30,6 @@ export default function Home() {
     };
     fetchRecipes();
   }, []);
-=======
-  console.log(recipe);
->>>>>>> 7b7066a501956835e8f7aff0f7f220656402602c
 
   useEffect(() => {
     setMounted(true);
