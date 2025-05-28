@@ -1,10 +1,47 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import SearchBar from "../molecules/SearchBar";
+import { Categories } from "@/types/categories";
+
+interface CategoryResponse {
+  data: { id: string; nama: string }[];
+}
 
 const NavbarHome: React.FC = () => {
   const [isSticky, setIsSticky] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Categories[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/v1/category");
+        if (!response.ok) {
+          throw new Error("Gagal mengambil kategori");
+        }
+        const data: CategoryResponse = await response.json();
+        console.log("Raw API response:", data);
+
+        if (data?.data && Array.isArray(data.data)) {
+          const convertedCategories = data.data.map((item) => ({
+            id: parseInt(item.id),
+            nama: item.nama,
+          }));
+          const sortedCategories = convertedCategories.sort(
+            (a, b) => a.id - b.id
+          );
+          setCategories(sortedCategories);
+          console.log("Converted and sorted categories:", sortedCategories);
+        } else {
+          throw new Error("Format data kategori tidak valid");
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        setCategories([]);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -103,21 +140,25 @@ const NavbarHome: React.FC = () => {
             isSticky ? "text-gray-600" : "text-white"
           }`}
         >
-          {["Breakfast", "Lunch", "Dinner", "Dessert", "Snacks", "Drinks"].map(
-            (category) => (
+          {categories.length > 0 ? (
+            categories.map((category) => (
               <Link
-                key={category}
-                href={`/recipes?category=${category.toLowerCase()}`}
-                onClick={() => setActiveCategory(category)}
+                key={category.id}
+                href={`/recipes?category=${category.nama}`}
+                onClick={() => setActiveCategory(category.nama)}
                 className={`transition-all rounded text-sm flex items-center justify-center h-8 ${
-                  activeCategory === category && !isSticky
+                  activeCategory === category.nama && !isSticky
                     ? ""
                     : "hover:text-[var(--custom-orange)]"
                 }`}
               >
-                {category}
+                {category.nama}
               </Link>
-            )
+            ))
+          ) : (
+            <span className="text-gray-500 text-sm">
+              No categories available
+            </span>
           )}
         </div>
       </div>

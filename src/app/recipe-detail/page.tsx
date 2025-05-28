@@ -1,147 +1,146 @@
 "use client";
 
+import DetailHeader from "@/components/molecules/DetailHeader";
+import IngredientsSection from "@/components/molecules/IngredientsSection";
+import InstructionsSection from "@/components/molecules/InstructionsSection";
+import CommentsSection from "@/components/molecules/CommentsSection";
+import RecipeSidebar from "@/components/molecules/RecipeSidebar";
+import Footer from "@/components/organisms/Footer";
+import Navbar from "@/components/organisms/Navbar";
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import MainTemplate from "../../components/templates/MainTemplate";
-import Loading from "../loading";
+import { useSearchParams, useRouter } from "next/navigation";
+import { RecipeDetail } from "@/types/recipe-detail";
+import Loading from "@/app/loading";
+import { Recipe } from "@/types/recipe";
 
-interface Recipe {
-  id?: string;
-  title: string;
-  image: string;
-  time: string;
-  category: string;
-  isFree: boolean;
-  rating: number;
-  author: {
-    name: string;
-    avatar: string;
-  };
-  ingredients: string[];
-  instructions: string[];
-  status?: string;
-}
-
-interface RecipeData {
-  [key: string]: Recipe;
-}
-
-// Dummy data for recipes
-const dummyRecipes: RecipeData = {
-  "spaghetti-carbonara": {
-    id: "1",
-    title: "Spaghetti Carbonara",
-    image: "/assets/images/image_spaghetti.jpg",
-    time: "30",
-    category: "Italian",
-    isFree: true,
-    rating: 4.5,
-    author: {
-      name: "Chef Mario",
-      avatar: "/assets/images/avatar_chef.jpg",
-    },
-    ingredients: [
-      "400g spaghetti",
-      "200g pancetta",
-      "4 large eggs",
-      "100g Pecorino Romano",
-      "100g Parmigiano-Reggiano",
-      "Black pepper",
-      "Salt",
-    ],
-    instructions: [
-      "Bring a large pot of salted water to boil",
-      "Cook spaghetti according to package instructions",
-      "Meanwhile, cut pancetta into small cubes",
-      "In a bowl, whisk eggs with grated cheeses and black pepper",
-      "Fry pancetta until crispy",
-      "Drain pasta and mix with pancetta",
-      "Remove from heat and quickly stir in egg mixture",
-      "Serve immediately with extra cheese and black pepper",
-    ],
-    status: "published",
-  },
-  "chicken-curry": {
-    id: "2",
-    title: "Chicken Curry",
-    image: "/assets/images/image_curry.jpg",
-    time: "45",
-    category: "Indian",
-    isFree: true,
-    rating: 4.8,
-    author: {
-      name: "Chef Priya",
-      avatar: "/assets/images/avatar_chef.jpg",
-    },
-    ingredients: [
-      "500g chicken thighs",
-      "2 onions",
-      "3 tomatoes",
-      "2 tbsp curry powder",
-      "1 cup coconut milk",
-      "Fresh coriander",
-      "Salt and pepper",
-    ],
-    instructions: [
-      "Cut chicken into bite-sized pieces",
-      "Dice onions and tomatoes",
-      "Heat oil in a large pan",
-      "Fry onions until golden",
-      "Add chicken and cook until browned",
-      "Add curry powder and stir",
-      "Add tomatoes and coconut milk",
-      "Simmer for 20 minutes",
-      "Garnish with fresh coriander",
-    ],
-    status: "published",
-  },
-};
-
-export default function RecipeDetail() {
-  const params = useParams();
-  const recipeSlug = params?.slug as string;
-  const [recipe, setRecipe] = useState<Recipe | null>(null);
+export default function DetailResep() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const recipeId = searchParams.get("recipeId"); // Ambil recipeId dari query parameter
+  const [recipe, setRecipe] = useState<RecipeDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
 
+  // Pastikan render hanya terjadi di sisi klien
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // Fetch data resep dan rekomendasi
   useEffect(() => {
-    if (!mounted) return;
-
-    console.log("Loading recipe for slug:", recipeSlug);
-    console.log("Available recipes:", Object.keys(dummyRecipes));
-
-    // In a real app, you would fetch the recipe data based on the slug
-    // For now, we'll use our dummy data
-    const recipeData = dummyRecipes[recipeSlug];
-
-    if (recipeData) {
-      console.log("Recipe found:", recipeData.title);
-      setRecipe(recipeData);
-    } else {
-      console.warn("Recipe not found for slug:", recipeSlug);
-      // Fallback to the first recipe if the requested one doesn't exist
-      if (Object.keys(dummyRecipes).length > 0) {
-        const firstRecipe = dummyRecipes[Object.keys(dummyRecipes)[0]];
-        console.log("Falling back to:", firstRecipe.title);
-        setRecipe(firstRecipe);
-      }
+    if (!recipeId) {
+      setError("ID resep tidak ditemukan. Kembali ke halaman utama?");
+      setLoading(false);
+      return;
     }
-  }, [recipeSlug, mounted]);
 
-  if (!mounted) {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const parsedRecipeId = parseInt(recipeId); // Pastikan recipeId adalah integer
+        if (isNaN(parsedRecipeId)) {
+          throw new Error("ID resep tidak valid");
+        }
+
+        // Fetch detail resep
+        const recipeResponse = await fetch(
+          `http://localhost:4000/v1/resep/${parsedRecipeId}`
+        );
+        if (!recipeResponse.ok) {
+          throw new Error("Resep tidak ditemukan di server");
+        }
+        const recipeData = await recipeResponse.json();
+        console.log("Recipe detail fetched:", recipeData);
+        if (!recipeData.data) {
+          throw new Error("Data resep tidak tersedia");
+        }
+        setRecipe(recipeData.data);
+
+        // Fetch daftar semua resep
+        const recipesResponse = await fetch("http://localhost:4000/v1/resep");
+        if (!recipesResponse.ok) {
+          throw new Error("Failed to fetch recipes");
+        }
+        const recipesData = await recipesResponse.json();
+        if (Array.isArray(recipesData.data.reseps)) {
+          // Filter untuk mengecualikan resep yang sedang ditampilkan
+          const filteredRecipes = recipesData.data.reseps.filter(
+            (r: Recipe) => r.id !== parsedRecipeId
+          );
+          // Batasi menjadi 2 resep untuk rekomendasi
+          setRecipes(filteredRecipes.slice(0, 2));
+        } else {
+          setRecipes([]);
+        }
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError(
+          err instanceof Error ? err.message : "Gagal mengambil detail resep"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [recipeId]);
+
+  // Tampilkan loading state selama fetch atau saat belum mounted
+  if (!mounted || loading) {
     return <Loading />;
   }
 
-  if (!recipe) {
+  // Tampilkan error jika ada dengan opsi kembali
+  if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-600">Recipe not found</p>
+      <div className="flex items-center justify-center min-h-screen flex-col gap-4">
+        <div className="text-red-500 text-lg">{error}</div>
+        <button
+          onClick={() => router.push("/")}
+          className="bg-[color:var(--custom-orange)] text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors"
+        >
+          Kembali ke Beranda
+        </button>
       </div>
     );
   }
 
-  return <MainTemplate recipes={[recipe]} />;
+  // Tampilkan pesan jika resep tidak ditemukan dengan opsi kembali
+  if (!recipe) {
+    return (
+      <div className="flex items-center justify-center min-h-screen flex-col gap-4">
+        <div className="text-gray-700 text-lg">Resep tidak ditemukan</div>
+        <button
+          onClick={() => router.push("/")}
+          className="bg-[color:var(--custom-orange)] text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors"
+        >
+          Kembali ke Beranda
+        </button>
+      </div>
+    );
+  }
+
+  // Render konten dengan data resep
+  return (
+    <div className="bg-gray-100">
+      <Navbar />
+      <div className="max-w-7xl mx-auto w-full px-4 py-8 flex flex-col md:flex-row gap-8 pt-[136px]">
+        <div className="flex-1 min-w-0">
+          <DetailHeader recipe={recipe} />
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <IngredientsSection recipe={recipe} />
+            <InstructionsSection recipe={recipe} />
+          </div>
+          <CommentsSection />
+        </div>
+        <div className="w-full md:w-80 flex-shrink-0">
+          <RecipeSidebar recipes={recipes} />
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
 }

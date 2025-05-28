@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 
 const ShareSection = () => (
-  <div className="flex flex-col md:flex-row items-center justify-between bg-white rounded-2xl p-6 md:p-10 gap-8 md:gap-0">
+  <div className="flex flex-col md:flex-row items-center justify-between rounded-2xl p-6 md:p-10 gap-8 md:gap-0">
     <div className="absolute left-[255px] z-1  w-[320px] h-[320px] rounded-full bg-gradient-to-r from-orange-300 to-orange-400 blur-3xl opacity-50"></div>
     {/* Images */}
     <div className="flex z-2 flex-row md:flex-col gap-4 md:gap-0 md:mr-8 relative w-full md:w-auto md:min-w-[320px] md:max-w-[340px]">

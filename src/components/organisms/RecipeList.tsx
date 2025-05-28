@@ -2,21 +2,7 @@
 
 import React, { useRef } from "react";
 import Card from "../atoms/Card";
-
-interface Recipe {
-  title: string;
-  image: string;
-  time: string;
-  category: string;
-  isFree?: boolean;
-  rating?: number;
-  author?: {
-    name: string;
-    avatar: string;
-  };
-  price?: number;
-  slug?: string;
-}
+import { Recipe } from "@/types/recipe";
 
 interface RecipeListProps {
   recipes: Recipe[];
@@ -68,7 +54,7 @@ const RecipeList: React.FC<RecipeListProps> = ({ recipes }) => {
       >
         {recipes.map((recipe, index) => (
           <div key={index} className="flex-shrink-0 ">
-            <Card {...recipe} />
+            <Card recipe={recipe} />
           </div>
         ))}
       </div>

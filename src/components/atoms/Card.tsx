@@ -1,25 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FiStar } from "react-icons/fi";
 import Link from "next/link";
 import Image from "next/image";
+import { Recipe } from "@/types/recipe";
 
 interface CardProps {
-  title: string;
-  image: string;
-  time: string | number;
-  category: string;
-  isFree?: boolean;
-  rating?: number;
-  author?: {
-    name: string;
-    avatar: string;
-  };
-  price?: number;
-  slug?: string; // for navigation
+  recipe: Recipe;
 }
 
 function formatTime(time: string | number) {
-  // Remove any 'min' or 'mins' (case-insensitive), trim, and add 'min' at the end
   let t = String(time)
     .replace(/\s*mins?/i, "")
     .trim();
@@ -31,27 +20,25 @@ function formatRupiah(price?: number) {
   return "Rp. " + price.toLocaleString("id-ID", { minimumFractionDigits: 0 });
 }
 
-const Card: React.FC<CardProps> = ({
-  title,
-  image,
-  time,
-  category,
-  isFree = true,
-  rating = 4.5,
-  author = {
-    name: "Gadang Jatu Mahiswara",
-    avatar: "/assets/images/image_login.jpg",
-  },
-  price,
-  slug,
-}) => {
-  // Define the navigation path
-  const navPath = slug ? `/recipe-detail?recipe=${slug}` : "#";
+const Card: React.FC<CardProps> = ({ recipe }) => {
+  console.log("Card received recipe:", recipe);
+  const title = recipe.nama || "Resep Tanpa Nama";
+  const image = recipe.photoResep || "/default-recipe.jpg";
+  const time = "30"; // Nilai default
+  const category = recipe.kategori?.nama || "Kategori Tidak Diketahui";
+  const isFree = true;
+  const rating = 4.5;
+  const author = {
+    name: recipe.user?.name || "Pengguna Tidak Diketahui",
+    avatar: recipe.user?.photo || "/default-avatar.jpg",
+  };
 
-  // For debugging
+  // Gunakan ID langsung untuk navigasi
+  const navPath = `/recipe-detail?recipeId=${recipe.id}`;
+
   const handleClick = () => {
     console.log("Navigating to:", navPath);
-    console.log("Slug value:", slug);
+    console.log("Recipe ID:", recipe.id);
   };
 
   return (
@@ -72,7 +59,7 @@ const Card: React.FC<CardProps> = ({
               </span>
               {!isFree && (
                 <span className="text-red-500 font-semibold text-xs">
-                  {formatRupiah(price)}
+                  {formatRupiah(undefined)}
                 </span>
               )}
               <div className="flex items-center gap-1 text-yellow-500 text-sm">
