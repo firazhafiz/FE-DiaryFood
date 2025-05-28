@@ -12,7 +12,7 @@ interface Recipe {
   photoResep: string;
   user: {
     name: string;
-    avatar: string;
+    photo: string;
   };
   date: string;
   category: string;

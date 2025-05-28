@@ -1,11 +1,16 @@
+import Image from "next/image";
 import React, { useState, useRef, useEffect } from "react";
 import { FaEllipsis, FaEye, FaTrash } from "react-icons/fa6";
+import { DefaultProfile } from "../../../public/assets";
 
 interface User {
   id: number;
   email: string;
-  username: string;
+  name: string;
   photo: string;
+  username: string;
+  createdAt?: string;
+  recipeCount?: number;
 }
 
 interface UserTableProps {
@@ -14,11 +19,7 @@ interface UserTableProps {
   onShow?: (id: number) => void;
 }
 
-export const UserTable: React.FC<UserTableProps> = ({
-  users,
-  onDelete,
-  onShow,
-}) => {
+export const UserTable: React.FC<UserTableProps> = ({ users, onDelete, onShow }) => {
   console.log(users);
   return (
     <div className="">
@@ -30,13 +31,7 @@ export const UserTable: React.FC<UserTableProps> = ({
 
       <div className="flex flex-col gap-2">
         {users.map((user, index) => (
-          <UserRow
-            key={user.id}
-            {...user}
-            index={index + 1}
-            onDelete={onDelete}
-            onShow={onShow}
-          />
+          <UserRow key={user.id} {...user} index={index + 1} onDelete={onDelete} onShow={onShow} />
         ))}
       </div>
     </div>
@@ -49,15 +44,7 @@ interface UserRowProps extends User {
   onShow?: (id: number) => void;
 }
 
-const UserRow: React.FC<UserRowProps> = ({
-  id,
-  email,
-  username,
-  index,
-  photo,
-  onDelete,
-  onShow,
-}) => {
+const UserRow: React.FC<UserRowProps> = ({ id, email, username, index, photo, onDelete, onShow }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -66,10 +53,7 @@ const UserRow: React.FC<UserRowProps> = ({
   useEffect(() => {
     console.log(photo);
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
         setIsConfirmingDelete(false);
       }
@@ -109,26 +93,17 @@ const UserRow: React.FC<UserRowProps> = ({
   };
 
   return (
-    <div
-      className="flex justify-between items-center bg-white/60 border-2 rounded-lg p-4"
-    >
+    <div className="flex justify-between items-center bg-white/60 border-2 rounded-lg p-4">
       <div className="flex items-center gap-2">
-
-        <div className="bg-slate-100 w-8 h-8 rounded-full flex items-center justify-center text-slate-700 font-medium">
-          {index}
-        </div>
-        <img src={photo} alt="user" className="w-10 h-10 rounded-full" />
+        <div className="bg-slate-100 w-8 h-8 rounded-full flex items-center justify-center text-slate-700 font-medium">{index}</div>
+        <Image src={photo ? photo : DefaultProfile} alt="user" className="w-10 h-10 rounded-full" height={100} width={100} />
         <p className="text-slate-700 font-medium">{username}</p>
       </div>
 
       <p className="text-slate-700 font-medium">{email}</p>
 
       <div className="relative" ref={dropdownRef}>
-        <button
-          className="cursor-pointer text-slate-700 p-2 rounded-full hover:bg-slate-100 transition-colors"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="User actions"
-        >
+        <button className="cursor-pointer text-slate-700 p-2 rounded-full hover:bg-slate-100 transition-colors" onClick={() => setIsOpen(!isOpen)} aria-label="User actions">
           <FaEllipsis />
         </button>
 
@@ -137,37 +112,23 @@ const UserRow: React.FC<UserRowProps> = ({
             <div className="bg-white shadow-lg rounded-xl py-1 min-w-32 border border-slate-100">
               {!isConfirmingDelete ? (
                 <>
-                  <button
-                    className="w-full flex items-center gap-2 px-4 py-2 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors"
-                    onClick={handleShow}
-                  >
+                  <button className="w-full flex items-center gap-2 px-4 py-2 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors" onClick={handleShow}>
                     <FaEye className="text-slate-500" />
                     <span>Show</span>
                   </button>
-                  <button
-                    className="w-full flex items-center gap-2 px-4 py-2 text-red-600 font-medium text-sm hover:bg-slate-50 transition-colors"
-                    onClick={handleDelete}
-                  >
+                  <button className="w-full flex items-center gap-2 px-4 py-2 text-red-600 font-medium text-sm hover:bg-slate-50 transition-colors" onClick={handleDelete}>
                     <FaTrash className="text-red-500" />
                     <span>Delete</span>
                   </button>
                 </>
               ) : (
                 <div className="p-3">
-                  <p className="text-slate-700 font-medium text-sm mb-2">
-                    Are you sure you want to delete this user?
-                  </p>
+                  <p className="text-slate-700 font-medium text-sm mb-2">Are you sure you want to delete this user?</p>
                   <div className="flex gap-2 mt-2">
-                    <button
-                      className="px-3 py-1 bg-red-500 text-white text-xs font-medium rounded-lg hover:bg-red-600 transition-colors"
-                      onClick={handleDelete}
-                    >
+                    <button className="px-3 py-1 bg-red-500 text-white text-xs font-medium rounded-lg hover:bg-red-600 transition-colors" onClick={handleDelete}>
                       Confirm
                     </button>
-                    <button
-                      className="px-3 py-1 bg-slate-200 text-slate-700 text-xs font-medium rounded-lg hover:bg-slate-300 transition-colors"
-                      onClick={handleCancelDelete}
-                    >
+                    <button className="px-3 py-1 bg-slate-200 text-slate-700 text-xs font-medium rounded-lg hover:bg-slate-300 transition-colors" onClick={handleCancelDelete}>
                       Cancel
                     </button>
                   </div>
