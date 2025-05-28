@@ -12,20 +12,20 @@ interface Recipe {
   nama: string;
   photoResep: string;
   user: {
-    name: string,
+    name: string;
     photo: string;
   };
   tanggalUnggahan: string;
-  kategori:{
-    nama : string;
-  } ,
+  kategori: {
+    nama: string;
+  };
   status: string;
   submittedAt: string;
 }
 
 export default function ApproveRecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [searchQuery, setSearchQuery] = useState("");
@@ -35,82 +35,30 @@ export default function ApproveRecipesPage() {
   const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const router = useRouter();
 
+  useEffect(() => {
+    const getPendingRecipe = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/login"); // Redirect ke halaman login jika tidak ada token
+        return;
+      }
 
-
-useEffect(()=>{
-
-  const getPendingRecipe = async ()=>{
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login"); // Redirect ke halaman login jika tidak ada token
-      return;
-    }
-    
-    const response = await fetch("http://localhost:4000/v1/admin/dashboard/pending-recipes", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token || ""}`,
-      },
-    });
-
-
-    const data = await response.json();
-    console.log(data.data.data)
-    setRecipes(data.data.data)
-  }
-  getPendingRecipe();
-
-},[])
-
-
-  const handleAccept = async (id: string) => {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-      return;
-    }
-
-    const response = await fetch(
-      `http://localhost:4000/v1/admin/dashboard/pending-recipes/${id}/approve`,
-      {
-        method: "PUT",
+      const response = await fetch("http://localhost:4000/v1/admin/dashboard/pending-recipes", {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token || ""}`,
         },
-      }
-    );
-
-    if (response.ok) {
-      setRecipes(recipes.filter((recipe) => recipe.id !== id));
-      console.log("approve recipe berhasil");
-      Swal.fire({
-        title: "Recipe Approved",
-        text: "The recipe has been approved successfully.",
-        icon: "success",
-        confirmButtonColor: "#ff725e",
       });
-    } else {
-      router.push("/")
-    }
-  } catch (error) {
-    console.error("Error approving recipe:", error);
-    let errorMessage = "Failed to approve the recipe. Please try again.";
-    if (error instanceof Error) {
-      errorMessage = `Failed to approve the recipe: ${error.message}`;
-    }
-    Swal.fire({
-      title: "Error!",
-      text: errorMessage,
-      icon: "error",
-      confirmButtonColor: "#ff725e",
-    });
-  }
-};
-const handleReject = async (id: string) => {
+
+      const data = await response.json();
+      console.log(data.data.data);
+      setRecipes(data.data.data);
+    };
+    getPendingRecipe();
+  }, []);
+
+  const handleAccept = async (id: string) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -118,16 +66,55 @@ const handleReject = async (id: string) => {
         return;
       }
 
-      const response = await fetch(
-        `http://localhost:4000/v1/admin/dashboard/pending-recipes/${id}/reject`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`http://localhost:4000/v1/admin/dashboard/pending-recipes/${id}/approve`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        setRecipes(recipes.filter((recipe) => recipe.id !== id));
+        console.log("approve recipe berhasil");
+        Swal.fire({
+          title: "Recipe Approved",
+          text: "The recipe has been approved successfully.",
+          icon: "success",
+          confirmButtonColor: "#ff725e",
+        });
+      } else {
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Error approving recipe:", error);
+      let errorMessage = "Failed to approve the recipe. Please try again.";
+      if (error instanceof Error) {
+        errorMessage = `Failed to approve the recipe: ${error.message}`;
+      }
+      Swal.fire({
+        title: "Error!",
+        text: errorMessage,
+        icon: "error",
+        confirmButtonColor: "#ff725e",
+      });
+    }
+  };
+  const handleReject = async (id: string) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+
+      const response = await fetch(`http://localhost:4000/v1/admin/dashboard/pending-recipes/${id}/reject`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (response.ok) {
         setRecipes(recipes.filter((recipe) => recipe.id !== id));
@@ -137,7 +124,6 @@ const handleReject = async (id: string) => {
           icon: "success",
           confirmButtonColor: "#ff725e",
         });
-       
       } else {
         throw new Error("Failed to reject the recipe");
       }
@@ -153,14 +139,11 @@ const handleReject = async (id: string) => {
         icon: "error",
         confirmButtonColor: "#ff725e",
       });
-  }
-};
+    }
+  };
 
-
-
-  function handleView(id:string){
+  function handleView(id: string) {
     router.push(`/dashboard/recipes/show?id=${id}`);
-
   }
   const filteredAndSortedRecipes = useMemo(() => {
     const filtered = recipes.filter(
@@ -204,7 +187,6 @@ const handleReject = async (id: string) => {
     }
   };
 
-
   const toggleDropdown = (id: string) => {
     setOpenDropdownId(openDropdownId === id ? null : id);
     setConfirmingRejectId(null); // Reset reject confirmation when toggling
@@ -225,8 +207,7 @@ const handleReject = async (id: string) => {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="w-full appearance-none pl-4 pr-10 py-2 rounded-xl border-2 border-white bg-white/40 focus:outline-none focus:border-[var(--custom-orange)] text-slate-700 transition-colors cursor-pointer"
-          >
+            className="w-full appearance-none pl-4 pr-10 py-2 rounded-xl border-2 border-white bg-white/40 focus:outline-none focus:border-[var(--custom-orange)] text-slate-700 transition-colors cursor-pointer">
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
             <option value="title-asc">Title (A-Z)</option>
@@ -260,52 +241,32 @@ const handleReject = async (id: string) => {
             {isLoading ? (
               <div className="text-center py-12 text-gray-500">Loading...</div>
             ) : currentRecipes.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
-                No matching recipes found.
-              </div>
+              <div className="text-center py-12 text-gray-500">No matching recipes found.</div>
             ) : (
               currentRecipes.map((recipe) => (
-                <div
-                  key={recipe.id}
-                  className="grid grid-cols-1 md:grid-cols-5 bg-white/60 border-2 border-white rounded-2xl py-4 px-4 items-center gap-4 hover:bg-gray-50"
-                >
+                <div key={recipe.id} className="grid grid-cols-1 md:grid-cols-5 bg-white/60 border-2 border-white rounded-2xl py-4 px-4 items-center gap-4 hover:bg-gray-50">
                   {/* Image and Recipe Info */}
                   <div className="flex items-center gap-4 col-span-2">
                     <div className="h-20 w-28 flex-shrink-0">
-                      <img
-                        src={recipe.photoResep}
-                        alt={`Image of ${recipe.nama}`}
-                        className="h-full w-full object-cover rounded-lg"
-                      />
+                      <img src={recipe.photoResep} alt={`Image of ${recipe.nama}`} className="h-full w-full object-cover rounded-lg" />
                     </div>
                     <div className="flex flex-col">
-                      <div className="text-lg font-semibold text-slate-700 break-words">
-                        {recipe.nama}
-                      </div>
+                      <div className="text-lg font-semibold text-slate-700 break-words">{recipe.nama}</div>
                       <div className="text-sm text-gray-500">by {recipe.user.name}</div>
                     </div>
                   </div>
 
                   {/* Category */}
                   <div className="text-sm text-gray-500 flex items-center">
-                    <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                      {recipe.kategori.nama}
-                    </span>
+                    <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">{recipe.kategori.nama}</span>
                   </div>
 
                   {/* Submission Date */}
-                  <div className="text-sm text-gray-500 flex items-center">
-                    {new Date(recipe.tanggalUnggahan).toLocaleDateString()}
-                  </div>
+                  <div className="text-sm text-gray-500 flex items-center">{new Date(recipe.tanggalUnggahan).toLocaleDateString()}</div>
 
                   {/* Actions */}
                   <div className="relative flex justify-end" ref={(el) => (dropdownRefs.current[recipe.id] = el)}>
-                    <button
-                      className="cursor-pointer text-slate-500 p-2 rounded-full hover:bg-slate-100 transition-colors"
-                      onClick={() => toggleDropdown(recipe.id)}
-                      aria-label="Recipe actions"
-                      disabled={isLoading}
-                    >
+                    <button className="cursor-pointer text-slate-500 p-2 rounded-full hover:bg-slate-100 transition-colors" onClick={() => toggleDropdown(recipe.id)} aria-label="Recipe actions" disabled={isLoading}>
                       <FaEllipsis />
                     </button>
 
@@ -314,44 +275,27 @@ const handleReject = async (id: string) => {
                         <div className="bg-white shadow-lg rounded-xl py-1 min-w-32 border border-slate-100">
                           {confirmingRejectId === recipe.id ? (
                             <div className="p-3">
-                              <p className="text-slate-700 font-medium text-sm mb-2">
-                                Are you sure you want to reject this recipe?
-                              </p>
+                              <p className="text-slate-700 font-medium text-sm mb-2">Are you sure you want to reject this recipe?</p>
                               <div className="flex gap-2 mt-2">
-                                <button
-                                  className="px-3 py-1 bg-red-500 text-white text-xs font-medium rounded-lg hover:bg-red-600 transition-colors"
-                                  onClick={() => handleReject(recipe.id)}
-                                >
+                                <button className="px-3 py-1 bg-red-500 text-white text-xs font-medium rounded-lg hover:bg-red-600 transition-colors" onClick={() => handleReject(recipe.id)}>
                                   Confirm
                                 </button>
-                                <button
-                                  className="px-3 py-1 bg-slate-200 text-slate-700 text-xs font-medium rounded-lg hover:bg-slate-300 transition-colors"
-                                  onClick={handleCancelReject}
-                                >
+                                <button className="px-3 py-1 bg-slate-200 text-slate-700 text-xs font-medium rounded-lg hover:bg-slate-300 transition-colors" onClick={handleCancelReject}>
                                   Cancel
                                 </button>
                               </div>
                             </div>
                           ) : (
                             <>
-                              <button
-                                className="w-full flex items-center gap-2 px-4 py-2 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors"
-                                onClick={() => handleView(recipe.id)}
-                              >
+                              <button className="w-full flex items-center gap-2 px-4 py-2 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors" onClick={() => handleView(recipe.id)}>
                                 <FiEye className="text-slate-700" />
                                 <span>Show</span>
                               </button>
-                              <button
-                                className="w-full flex items-center gap-2 px-4 py-2 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors"
-                                onClick={() => handleAccept(recipe.id)}
-                              >
+                              <button className="w-full flex items-center gap-2 px-4 py-2 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors" onClick={() => handleAccept(recipe.id)}>
                                 <FiCheck className="text-slate-700" />
                                 <span>Accept</span>
                               </button>
-                              <button
-                                className="w-full flex items-center gap-2 px-4 py-2 text-red-600 font-medium text-sm hover:bg-slate-50 transition-colors"
-                                onClick={() => setConfirmingRejectId(recipe.id)}
-                              >
+                              <button className="w-full flex items-center gap-2 px-4 py-2 text-red-600 font-medium text-sm hover:bg-slate-50 transition-colors" onClick={() => setConfirmingRejectId(recipe.id)}>
                                 <FiX className="text-red-500" />
                                 <span>Reject</span>
                               </button>
@@ -373,12 +317,7 @@ const handleReject = async (id: string) => {
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1 || isLoading}
-            className={`p-2 rounded-lg ${
-              currentPage === 1 || isLoading
-                ? "text-gray-400 cursor-not-allowed"
-                : "text-slate-700 hover:bg-white/60 transition-colors"
-            }`}
-          >
+            className={`p-2 rounded-lg ${currentPage === 1 || isLoading ? "text-gray-400 cursor-not-allowed" : "text-slate-700 hover:bg-white/60 transition-colors"}`}>
             <FaChevronLeft />
           </button>
 
@@ -386,13 +325,8 @@ const handleReject = async (id: string) => {
             <button
               key={index + 1}
               onClick={() => handlePageChange(index + 1)}
-              className={`w-8 h-8 rounded-lg text-sm font-medium ${
-                currentPage === index + 1
-                  ? "bg-[#FF7A5C] text-white"
-                  : "text-slate-700 hover:bg-white/60 transition-colors"
-              }`}
-              disabled={isLoading}
-            >
+              className={`w-8 h-8 rounded-lg text-sm font-medium ${currentPage === index + 1 ? "bg-[#FF7A5C] text-white" : "text-slate-700 hover:bg-white/60 transition-colors"}`}
+              disabled={isLoading}>
               {index + 1}
             </button>
           ))}
@@ -400,12 +334,7 @@ const handleReject = async (id: string) => {
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages || isLoading}
-            className={`p-2 rounded-lg ${
-              currentPage === totalPages || isLoading
-                ? "text-gray-400 cursor-not-allowed"
-                : "text-slate-700 hover:bg-white/60 transition-colors"
-            }`}
-          >
+            className={`p-2 rounded-lg ${currentPage === totalPages || isLoading ? "text-gray-400 cursor-not-allowed" : "text-slate-700 hover:bg-white/60 transition-colors"}`}>
             <FaChevronRight />
           </button>
         </div>

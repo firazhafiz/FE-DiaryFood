@@ -4,42 +4,42 @@ import DetailHeader from "@/components/molecules/DetailHeader";
 import IngredientsSection from "@/components/molecules/IngredientsSection";
 import InstructionsSection from "@/components/molecules/InstructionsSection";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-
+import { useRouter, useSearchParams } from "next/navigation";
 interface Recipe {
   id: number;
-  title: string;
-  author: {
+  nama: string;
+  photoResep: string;
+  user: {
     name: string;
-    avatar: string;
+    photo: string;
   };
   date: string;
   category: string;
-  status: "published" | "draft";
-  image: string;
+  isApproved: string;
   description: string;
-  ingredients: Array<{
-    id: number;
-    name: string;
-    amount: string;
-  }>;
-  instructions: Array<{
-    id: number;
-    step: string;
-  }>;
-  notes: string;
   cookingTime: string;
-  servings: number;
-  difficulty: string;
-  isFree: boolean;
-  price: number;
+  preparationTime: string;
+  servingTime: string;
+  bahanList: Array<{
+    id: number;
+    nama: string;
+    jumlah: string;
+  }>;
+  langkahList: Array<{
+    id: number;
+    resepId: number;
+    urutan: number;
+    deskripsi: string;
+  }>;
+  tanggalUnggahan: string;
+  note: string;
 }
-
 const DetailMyRecipe = () => {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams();
+  const router = useRouter();
   const id = searchParams.get("id");
 
   useEffect(() => {
@@ -50,14 +50,24 @@ const DetailMyRecipe = () => {
         setLoading(false);
         return;
       }
-
       try {
-        const response = await fetch(`/api/recipes/${id}`);
+        const token = localStorage.getItem("token");
+        if (!token) {
+          router.push("/login");
+          return;
+        }
+        const response = await fetch(`http://localhost:4000/v1/profile/recipe/${id}`, {
+          method: "Get",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch recipe");
         }
         const data = await response.json();
-        setRecipe(data);
+        console.log(data.data);
+        setRecipe(data.data);
       } catch (error) {
         console.error("Error fetching recipe:", error);
         setError("Failed to load recipe details");
@@ -78,11 +88,11 @@ const DetailMyRecipe = () => {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-8 min-h-screen">
       <DetailHeader recipe={recipe} />
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-        <IngredientsSection ingredients={recipe.ingredients} />
-        <InstructionsSection instructions={recipe.instructions} notes={recipe.notes} />
+        <IngredientsSection ingredients={recipe.bahanList} />
+        <InstructionsSection instructions={recipe.langkahList} notes={recipe.notes} />
       </div>
     </div>
   );

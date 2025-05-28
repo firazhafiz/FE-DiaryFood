@@ -29,7 +29,8 @@
     "remeda": "^2.21.6",
     "shiki": "^1.29.2",
     "sonner": "^2.0.3",
-    "sweetalert2": "^11.21.0"
+    "sweetalert2": "^11.21.0",
+    "swr": "^2.3.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -1,39 +1,167 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { CatBreakfast } from "../../../public/assets";
 import { ProfileTemplate } from "@/components/templates/ProfileTemplate";
 import { useRouter } from "next/navigation";
+import { DefaultProfile } from "../../../public/assets";
+import useSWR from "swr";
+import ProfileSkeleton from "@/components/skeletons/ProfileSkeleton";
+import { FaCheck } from "react-icons/fa";
+
+interface UserProfile {
+  id: number;
+  name: string;
+  email: string;
+  photo: string;
+  createdAt: string;
+  phoneNumber?: string | null;
+}
+
+const fetcher = async (url: string) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to fetch profile data");
+  }
+
+  return response.json();
+};
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [form, setForm] = useState<UserProfile>({
+    id: 0,
+    name: "",
+    email: "",
+    photo: "",
+    createdAt: "",
+    phoneNumber: "",
+  });
   const router = useRouter();
-  const [form, setForm] = useState({
-    name: "Gadang Jatu Mahiswara",
-    gender: "",
-    phone: "",
-    dob: "",
-    address: "",
+  const modalButtonRef = useRef<HTMLButtonElement>(null);
+
+  const { data, error, isLoading } = useSWR("http://localhost:4000/v1/profile", fetcher, {
+    onError: (error) => {
+      if (error.message === "No token found" || error.message.includes("401")) {
+        localStorage.removeItem("token");
+        router.push("/login");
+      }
+    },
+    revalidateOnFocus: false,
   });
 
+  useEffect(() => {
+    if (data?.data) {
+      setForm({
+        id: data.data.id || 0,
+        name: data.data.name || "",
+        email: data.data.email || "",
+        photo: data.data.photo || "",
+        createdAt: data.data.createdAt || "",
+        phoneNumber: data.data.phoneNumber ?? "",
+      });
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (showSuccessModal && modalButtonRef.current) {
+      modalButtonRef.current.focus(); // Focus close button for accessibility
+    }
+  }, [showSuccessModal]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-    router.push("/profile");
+  const handleSave = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+
+      const payload: Partial<UserProfile> = {
+        name: form.name,
+        photo: form.photo,
+      };
+      if (form.phoneNumber) {
+        payload.phoneNumber = form.phoneNumber;
+      }
+
+      const response = await fetch(`http://localhost:4000/v1/user/${form.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to update profile");
+      }
+
+      setIsEditing(false);
+      setShowSuccessModal(true); // Show modal on success
+    } catch (error) {
+      console.error("Save error:", error);
+      alert(`Failed to save profile: ${error.message}`);
+    }
   };
+
+  const closeModal = () => {
+    setShowSuccessModal(false);
+  };
+
+  if (isLoading) {
+    return <ProfileSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <ProfileTemplate>
+        <div className="text-center py-12 text-red-500">Error loading profile: {error.message}</div>
+      </ProfileTemplate>
+    );
+  }
 
   return (
     <ProfileTemplate>
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center ">
+          <div className="bg-white rounded-xl p-6 max-w-60 w-full mx-4 shadow-xl">
+            <FaCheck />
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">Profile Updated</h2>
+            <p className="text-gray-600 mb-6 text-sm">Your profile has been successfully updated!</p>
+            <button ref={modalButtonRef} onClick={closeModal} className="w-full bg-[#FF7A5C] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-[#ff6b4a] transition-colors focus:outline-none focus:ring-2 focus:ring-orange-200">
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="flex justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-slate-700">Dashboard</h1>
-        <div className=" text-xs text-right">
-          <span className="font-medium text-sm text-slate-700">
-            {new Date().toLocaleDateString("en-US", { weekday: "long" })}
-          </span>
+        <h1 className="text-2xl font-semibold text-slate-700">Profile</h1>
+        <div className="text-xs text-right">
+          <span className="font-medium text-sm text-slate-700">{new Date().toLocaleDateString("en-US", { weekday: "long" })}</span>
           <p className="text-slate-500">
             {new Date().toLocaleDateString("en-US", {
               day: "numeric",
@@ -46,30 +174,17 @@ const ProfilePage = () => {
       <div className="flex flex-col gap-8">
         <div className="flex gap-4 items-center justify-between">
           <div className="flex items-center gap-4">
-            <Image
-              src={CatBreakfast}
-              alt="profile"
-              className="rounded-full object-cover border-4 border-white shadow-lg w-36 h-36"
-            />
-            <div className="flex flex-col">
-              <h4 className="text-black font-semibold text-lg">{form.name}</h4>
-              <p className="text-gray-400 text-sm">Gadang@gmail.com</p>
-            </div>
+            <Image src={form.photo || DefaultProfile} alt="profile" width={100} height={100} priority={true} className="rounded-full object-cover border-4 border-white shadow-lg w-36 h-36" />
           </div>
           <div className="pr-8">
-            <button
-              className="bg-[#FF7A5C] text-white px-6 py-2 rounded-md text-sm font-medium hover:bg-[#ff6b4a] transition-colors cursor-pointer"
-              onClick={() => router.push("/profile/edit")}
-            >
+            <button className="bg-[#FF7A5C] text-white px-6 py-2 rounded-md text-sm font-medium hover:bg-[#ff6b4a] transition-colors cursor-pointer" onClick={() => setIsEditing(true)}>
               Edit
             </button>
           </div>
         </div>
         <form className="flex flex-col gap-6 w-full">
           <div>
-            <label className="block text-sm font-semibold text-gray-800 mb-1">
-              Full Name
-            </label>
+            <label className="block text-sm font-semibold text-gray-800 mb-1">Full Name</label>
             <input
               type="text"
               name="name"
@@ -80,61 +195,58 @@ const ProfilePage = () => {
               placeholder="Your Name"
             />
           </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 mb-1">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              disabled={!isEditing}
+              className="block w-full rounded-md border-0 bg-white/50 backdrop-blur-sm py-2 px-3 text-gray-900 focus:ring-2 focus:ring-orange-200 disabled:opacity-70 placeholder-gray-400"
+              placeholder="Your Email"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 mb-1">Phone Number</label>
+            <input
+              type="tel"
+              name="phoneNumber"
+              value={form.phoneNumber ?? ""}
+              onChange={handleChange}
+              disabled={!isEditing}
+              className="block w-full rounded-md border-0 bg-white/50 backdrop-blur-sm py-2 px-3 text-gray-900 focus:ring-2 focus:ring-orange-200 disabled:opacity-70 placeholder-gray-400"
+              placeholder={isEditing ? "Enter phone number" : form.phoneNumber ? form.phoneNumber : "Not provided"}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 mb-1">Since</label>
+            <input
+              type="text"
+              name="createdAt"
+              value={
+                form.createdAt
+                  ? new Date(form.createdAt).toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                    })
+                  : "N/A"
+              }
+              disabled={true}
+              className="block w-full rounded-md border-0 bg-white/50 backdrop-blur-sm py-2 px-3 text-gray-900 focus:ring-2 focus:ring-orange-200 disabled:opacity-70 placeholder-gray-400"
+            />
+          </div>
 
-          <div>
-            <label className="block text-sm font-semibold text-gray-800 mb-1">
-              Phone Number
-            </label>
-            <input
-              type="text"
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-              disabled={!isEditing}
-              className="block w-full rounded-md border-0 bg-white/50 backdrop-blur-sm py-2 px-3 text-gray-900 focus:ring-2 focus:ring-orange-200 disabled:opacity-70 placeholder-gray-400"
-              placeholder="Your Phone Number"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-semibold text-gray-800 mb-1">
-              Date of Birth
-            </label>
-            <input
-              type="date"
-              name="dob"
-              value={form.dob}
-              onChange={handleChange}
-              disabled={!isEditing}
-              className="block w-full rounded-md border-0 bg-white/50 backdrop-blur-sm py-2 px-3 text-gray-900 focus:ring-2 focus:ring-orange-200 disabled:opacity-70 placeholder-gray-400"
-              placeholder="Your Date of Birth"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-semibold text-gray-800 mb-1">
-              Address
-            </label>
-            <input
-              type="text"
-              name="address"
-              value={form.address}
-              onChange={handleChange}
-              disabled={!isEditing}
-              className="block w-full rounded-md border-0 bg-white/50 backdrop-blur-sm py-2 px-3 text-gray-900 focus:ring-2 focus:ring-orange-200 disabled:opacity-70 placeholder-gray-400"
-              placeholder="Your Address"
-            />
-          </div>
-          <button
-            type="button"
-            className={`${
-              isEditing
-                ? "mt-4 bg-[#FF7A5C] text-sm text-white px-6 py-2 rounded-md self-start disabled:opacity-60 hover:bg-[#ff6b4a] transition-colors cursor-pointer"
-                : "hidden"
-            }`}
-            disabled={!isEditing}
-            onClick={handleSave}
-          >
-            Save Changes
-          </button>
+          {isEditing && (
+            <div className="flex gap-4">
+              <button type="button" className="mt-4 bg-[#FF7A5C] text-sm text-white px-6 py-2 rounded-md disabled:opacity-60 hover:bg-[#ff6b4a] transition-colors cursor-pointer" onClick={handleSave}>
+                Save Changes
+              </button>
+              <button type="button" className="mt-4 bg-gray-300 text-sm text-gray-800 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors cursor-pointer" onClick={() => setIsEditing(false)}>
+                Cancel
+              </button>
+            </div>
+          )}
         </form>
       </div>
     </ProfileTemplate>

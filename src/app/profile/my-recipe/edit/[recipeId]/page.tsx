@@ -3,8 +3,9 @@
 import { useEffect, useState, useRef } from "react";
 import { FaPlus, FaTrash, FaArrowLeft, FaTimes } from "react-icons/fa";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import useSWR from "swr";
+import { useRouter, useParams } from "next/navigation";
+import useSWR, { mutate } from "swr";
+import EditRecipeSkeleton from "@/components/skeletons/EditRecipeSkeleton";
 
 interface Ingredient {
   id: number;
@@ -100,8 +101,11 @@ const compressImage = (file: File): Promise<string> => {
   });
 };
 
-export default function AddRecipePage() {
+export default function EditRecipePage() {
   const router = useRouter();
+  const params = useParams();
+  const resepId = Number(params.recipeId);
+
   const [formData, setFormData] = useState<FormData>({
     recipeName: "",
     categoryId: "",
@@ -114,6 +118,7 @@ export default function AddRecipePage() {
     note: "",
     ingredients: [{ id: 1, name: "", amount: "" }],
     steps: [{ id: 1, order: 1, description: "" }],
+    isApproved: "PENDING",
   });
   const [categories, setCategories] = useState<Kategori[]>([]);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -122,13 +127,60 @@ export default function AddRecipePage() {
   const modalButtonRef = useRef<HTMLButtonElement>(null);
 
   const { data: categoriesData, error: categoriesError } = useSWR("http://localhost:4000/v1/category", fetcher);
-  const { data: userData, error: userError } = useSWR("http://localhost:4000/v1/profile", fetcher);
+  const { data: userData } = useSWR("http://localhost:4000/v1/profile", fetcher);
+  const {
+    data: recipeData,
+    error: recipeError,
+    isLoading,
+  } = useSWR(resepId && !isNaN(resepId) ? `http://localhost:4000/v1/profile/recipe/${resepId}` : null, fetcher, {
+    onError: (error) => {
+      if (error.message === "No token found" || error.message.includes("401")) {
+        localStorage.removeItem("token");
+        router.push("/login");
+      }
+    },
+    revalidateOnFocus: false,
+    dedupingInterval: 60000,
+  });
 
   useEffect(() => {
     if (userData) {
       setUserId(userData.id);
     }
   }, [userData]);
+
+  useEffect(() => {
+    if (recipeData) {
+      setFormData({
+        recipeName: recipeData.nama || "",
+        categoryId: recipeData.kategoriId?.toString() || "",
+        thumbnail: null,
+        description: recipeData.description || "",
+        thumbnailPreview: recipeData.photoResep || null,
+        preparationTime: recipeData.preparationTime || "",
+        cookingTime: recipeData.cookingTime || "",
+        servingTime: recipeData.servingTime || "",
+        note: recipeData.note || "",
+        ingredients:
+          recipeData.bahanList?.length > 0
+            ? recipeData.bahanList.map((bahan: any) => ({
+                id: bahan.id,
+                name: bahan.nama,
+                amount: bahan.jumlah,
+              }))
+            : [{ id: 1, name: "", amount: "" }],
+        steps:
+          recipeData.langkahList?.length > 0
+            ? recipeData.langkahList.map((langkah: any) => ({
+                id: langkah.id,
+                order: langkah.urutan,
+                description: langkah.deskripsi,
+              }))
+            : [{ id: 1, order: 1, description: "" }],
+        isApproved: recipeData.isApproved || "PENDING",
+      });
+    }
+  }, [recipeData]);
 
   useEffect(() => {
     if (categoriesData) {
@@ -249,6 +301,7 @@ export default function AddRecipePage() {
       servingTime: formData.servingTime || undefined,
       note: formData.note || undefined,
       userId,
+      isApproved: formData.isApproved,
       bahan: filteredIngredients.length > 0 ? filteredIngredients.map((ing) => ({ nama: ing.name, jumlah: ing.amount })) : undefined,
       langkahPembuatan: filteredSteps.length > 0 ? filteredSteps.map((step) => ({ urutan: step.order, deskripsi: step.description })) : undefined,
     };
@@ -262,9 +315,8 @@ export default function AddRecipePage() {
     console.log("Request body:", body);
 
     try {
-      const response = await fetch("http://localhost:4000/v1/profile/recipes", {
-        method: "POST",
-        credentials: "include",
+      const response = await fetch(`http://localhost:4000/v1/profile/recipe/${resepId}`, {
+        method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -274,13 +326,15 @@ export default function AddRecipePage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || `Failed to create recipe (status: ${response.status})`);
+        throw new Error(errorData.message || "Failed to update recipe");
       }
 
+      mutate("/profile/my-recipe");
+      mutate(`http://localhost:4000/v1/recipe/${resepId}`);
       setShowSuccessModal(true);
     } catch (error: any) {
       console.error("Error submitting recipe:", error);
-      setSubmitError(error.message || "Failed to create recipe");
+      setSubmitError(error.message || "Failed to update recipe");
     }
   };
 
@@ -289,7 +343,33 @@ export default function AddRecipePage() {
     router.push("/profile/my-recipe");
   };
 
-  const isSubmitDisabled = !userId || !formData.recipeName || !formData.categoryId || !formData.description;
+  const isSubmitDisabled = isLoading || !userId || !formData.recipeName || !formData.categoryId || !formData.description;
+
+  if (!resepId || isNaN(resepId)) {
+    return (
+      <div className="container mx-auto p-8 bg-white">
+        <Link href="/profile/my-recipe" className="inline-flex items-center gap-2 mb-6">
+          <FaArrowLeft className="w-4 h-4" /> Back
+        </Link>
+        <div className="text-center py-4 text-red-500">Invalid recipe ID</div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return <EditRecipeSkeleton />;
+  }
+
+  if (recipeError) {
+    return (
+      <div className="container mx-auto p-8 bg-white">
+        <Link href="/profile/my-recipe" className="inline-flex items-center gap-2 mb-6">
+          <FaArrowLeft className="w-4 h-4" /> Back
+        </Link>
+        <div className="text-center py-4 text-red-500">{recipeError.message === "Resep not found" ? "Recipe not found. It may have been deleted or doesn’t exist." : `Error loading recipe: ${recipeError.message}`}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-8 bg-white min-h-screen">
@@ -297,8 +377,8 @@ export default function AddRecipePage() {
       {showSuccessModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center ">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4 shadow-xl">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">Recipe Created</h2>
-            <p className="text-gray-600 mb-6">Your recipe has been successfully created!</p>
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">Recipe Updated</h2>
+            <p className="text-gray-600 mb-6">Your recipe has been successfully updated!</p>
             <button
               ref={modalButtonRef}
               onClick={closeModal}
@@ -313,7 +393,7 @@ export default function AddRecipePage() {
           <FaArrowLeft className="w-4 h-4" />
           Back
         </Link>
-        <h1 className="text-2xl font-semibold text-slate-800 mb-6">Add New Recipe</h1>
+        <h1 className="text-2xl font-semibold text-slate-800 mb-6">Edit Recipe</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -530,7 +610,7 @@ export default function AddRecipePage() {
             <input
               type="text"
               id="note"
-              value={formData.note ?? ""}
+              value={formData.note}
               onChange={(e) => updateFormData({ note: e.target.value || undefined })}
               className="w-full px-3 py-2 border text-slate-700 text-xs border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent"
               placeholder="Enter note"
@@ -546,7 +626,7 @@ export default function AddRecipePage() {
             type="submit"
             disabled={isSubmitDisabled}
             className={`px-4 py-2 text-xs font-medium text-white rounded-lg transition-colors ${isSubmitDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-[var(--custom-orange)] hover:bg-orange-600"}`}>
-            Add Recipe
+            Update Recipe
           </button>
         </div>
       </form>

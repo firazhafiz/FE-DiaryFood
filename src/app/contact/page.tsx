@@ -1,46 +1,53 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "@/components/organisms/Navbar";
 import Footer from "@/components/organisms/Footer";
 import ContactForm from "@/components/molecules/ContactForm";
 import ContactInfoCard from "@/components/molecules/ContactInfoCard";
 import FaqSite from "@/components/molecules/FaqSite";
+import { useRouter } from "next/navigation";
 
 export default function Contact() {
   const [activeTab, setActiveTab] = useState("customer");
+  // const router = useRouter();
+
+  // useEffect(() => {
+  //   const createFeedback = async () => {
+  //     try {
+  //       const token = localStorage.getItem("token");
+  //       if (!token) {
+  //         router.push("/login");
+  //         return;
+  //       }
+  //       const response = await fetch("http://localhost:4000/v1/feedbacks", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
+  //       console.log(response);
+  //     } catch (error) {
+  //       throw error;
+  //     }
+  //   };
+  //   createFeedback();
+  // }, []);
 
   return (
     <div className="min-h-screen flex flex-col  ">
       <Navbar />
       <main className="bg-gray-100 flex-1 w-full pt-[115px] pb-16 px-2 mt-6">
         <div className="w-full max-w-4xl mx-auto backdrop-blur-sm rounded-lg">
-          <h1 className="text-2xl md:text-3xl font-bold text-center mb-2 text-[color:var(--custom-orange)]">
-            Contact
-          </h1>
-          <p className="text-center text-gray-500 mb-8 text-sm max-w-xl mx-auto">
-            Wherever you are, we are here to help you.
-          </p>
+          <h1 className="text-2xl md:text-3xl font-bold text-center mb-2 text-[color:var(--custom-orange)]">Contact</h1>
+          <p className="text-center text-gray-500 mb-8 text-sm max-w-xl mx-auto">Wherever you are, we are here to help you.</p>
           {/* Tabs */}
           <div className="flex justify-center mb-8">
-            <button
-              className={`px-6 py-2 font-semibold focus:outline-none transition-colors ${
-                activeTab === "customer"
-                  ? "text-blue-600 border-b-2 border-blue-500"
-                  : "text-gray-500"
-              }`}
-              onClick={() => setActiveTab("customer")}
-            >
+            <button className={`px-6 py-2 font-semibold focus:outline-none transition-colors ${activeTab === "customer" ? "text-blue-600 border-b-2 border-blue-500" : "text-gray-500"}`} onClick={() => setActiveTab("customer")}>
               Feedback & FAQ
             </button>
-            <button
-              className={`px-6 py-2 font-semibold focus:outline-none transition-colors ${
-                activeTab === "career"
-                  ? "text-blue-600 border-b-2 border-blue-500"
-                  : "text-gray-500"
-              }`}
-              onClick={() => setActiveTab("career")}
-            >
+            <button className={`px-6 py-2 font-semibold focus:outline-none transition-colors ${activeTab === "career" ? "text-blue-600 border-b-2 border-blue-500" : "text-gray-500"}`} onClick={() => setActiveTab("career")}>
               Contact & Location
             </button>
           </div>

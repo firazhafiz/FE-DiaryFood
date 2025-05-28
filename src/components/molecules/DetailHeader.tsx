@@ -4,14 +4,15 @@ import React, { useState } from "react";
 import getRelativeTime from "@/helper/relativeTime";
 import { FaArrowLeft } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { DefaultProfile } from "../../../public/assets";
 
 interface DetailHeaderProps {
   recipe: {
     id: number;
     nama: string;
     photoResep: string;
-    tanggalUnggahan
-: string;
+    tanggalUnggahan: string;
     category: string;
     isFree?: boolean;
     rating?: number;
@@ -73,25 +74,24 @@ const DetailHeader: React.FC<DetailHeaderProps> = ({ recipe }) => {
     }
   };
 
-  const handleBack =() =>{
+  const handleBack = () => {
     router.back();
-  }
+  };
 
   return (
     <div className="mb-8">
-     <button
-     onClick={handleBack}
-  className="px-4 py-1 flex gap-2 w-fit items-center rounded-lg border border-[var(--custom-orange)] text-slate-700 hover:bg-[var(--custom-orange)] hover:text-white transition-colors"
-  aria-label="Back to recipes"
->
-  <FaArrowLeft />
-  Back
-</button>
+      <button
+        onClick={handleBack}
+        className="px-4 py-1 flex gap-2 w-fit items-center rounded-lg border border-[var(--custom-orange)] text-slate-700 hover:bg-[var(--custom-orange)] hover:text-white transition-colors"
+        aria-label="Back to recipes">
+        <FaArrowLeft />
+        Back
+      </button>
       <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 leading-tight mt-8">{recipe.nama}</h1>
       <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 mb-4 justify-between">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
-            <img src={recipe.user?.photo} alt={recipe.nama} className="w-6 h-6 rounded-full object-cover" />
+            <Image src={recipe.user?.photo ? recipe.user.photo : DefaultProfile} alt={recipe.nama} className="w-6 h-6 rounded-full object-cover" width={100} height={100} />
             <span className="font-medium text-gray-700">{recipe.user?.name}</span>
           </div>
           <span>•</span>

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { FaSearch, FaSort } from "react-icons/fa";
 
 interface User {
-  id: string;
+  id: number;
   email: string;
   name: string;
   photo: string;
