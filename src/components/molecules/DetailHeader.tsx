@@ -25,23 +25,7 @@ interface DetailHeaderProps {
   };
 }
 
-const DetailHeader: React.FC<DetailHeaderProps> = ({ recipe }) => {
-  const [saved, setSaved] = useState(false);
-  const [rated, setRated] = useState(false);
-  const [saves, setSaves] = useState(recipe.saves);
-  const [rating, setRating] = useState(recipe.rating);
-  const [ratingCount, setRatingCount] = useState(recipe.ratingCount);
-  const router = useRouter();
-
-  const handleSave = () => {
-    if (saved) {
-      setSaves(saves - 1);
-    } else {
-      setSaves(saves + 1);
-    }
-    setSaved(!saved);
-  };
-
+const DetailHeader = ({ recipe }: DetailHeaderProps) => {
   const handleRate = () => {
     if (rated) {
       // If already rated, remove the rating
@@ -96,64 +80,52 @@ const DetailHeader: React.FC<DetailHeaderProps> = ({ recipe }) => {
           </div>
           <span>•</span>
           <span className="flex items-center gap-1">
-            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
-              <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" strokeWidth="2" />
-            </svg>
-            {getRelativeTime(recipe.tanggalUnggahan)}
+            {new Date(recipe.tanggalUnggahan).toLocaleDateString("en-GB", {
+              weekday: "short",
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })}
           </span>
+          <span>•</span>
+          <span className="flex items-center gap-1">0 comments</span>
+          <span>•</span>
+          <span className="flex items-center gap-1">0 saves</span>
           <span>•</span>
           <span className="flex items-center gap-1">
-            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-            </svg>
-            {/* {recipe.comments.length} comments */}
-          </span>
-          <span>•</span>
-          <span className={`flex items-center gap-1 cursor-pointer ${saved ? "text-[color:var(--custom-orange)]" : "text-gray-400 hover:text-[color:var(--custom-orange)]"}`} onClick={handleSave}>
-            <svg className="w-4 h-4" fill={saved ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-            </svg>
-            {saves} saves
-          </span>
-          <span>•</span>
-          <span className={`flex items-center gap-1 cursor-pointer ${rated ? "text-[color:var(--custom-orange)]" : "text-gray-500 hover:text-[color:var(--custom-orange)]"}`} onClick={handleRate}>
-            <svg width="16" height="16" fill={rated ? "currentColor" : "none"} stroke={rated ? "" : "currentColor"} viewBox="0 0 24 24">
-              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-            </svg>
-            {rating} <span className="text-gray-400 font-normal">({ratingCount} reviews)</span>
+            {recipe.rating ? (
+              <>
+                <span className="text-yellow-400">★</span>
+                {recipe.rating.toFixed(1)} ({recipe.reviewers} reviews)
+              </>
+            ) : (
+              <>
+                <span className="text-gray-400">★</span>
+                0.0 (0 reviews)
+              </>
+            )}
           </span>
         </div>
-        <button className="flex items-center cursor-pointer gap-1 px-3 py-1 rounded-md border border-gray-200 text-xs text-gray-600 hover:bg-gray-100 transition-colors" onClick={handleShare}>
-          <svg className="w-4 h-4 " fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7" />
-            <polyline points="16 6 12 2 8 6" />
-            <line x1="12" y1="2" x2="12" y2="15" />
-          </svg>
-          Share
-        </button>
+        <button className="flex items-center cursor-pointer gap-1 px-3 py-1 rounded-md border border-gray-200 text-xs text-gray-600 hover:bg-gray-100 transition-colors">Share</button>
       </div>
-      {/* Image */}
       <div className="rounded-2xl overflow-hidden mb-4 w-full max-w-2xl">
-        <img src={recipe.photoResep} alt={recipe.nama} className="w-full h-72 object-cover" />
+        <img src={recipe.photoResep} alt="Dummy Recipe" className="w-full h-72 object-cover" />
       </div>
-      {/* Time info - revert to previous version */}
       <div className="flex gap-8 mb-4 text-center">
         <div>
-          {/* <div className="font-bold text-gray-800 text-lg">{recipe.prepTime} Min</div> */}
-          <div className="text-xs text-gray-500">Prep time</div>
+          <div className="font-bold text-gray-800 text-lg">10 Min</div>
+          <div className="text-xs text-gray-500">Prep Time</div>
         </div>
         <div>
-          {/* <div className="font-bold text-gray-800 text-lg">{recipe.cookTime} Min</div> */}
-          <div className="text-xs text-gray-500">Cooking</div>
+          <div className="font-bold text-gray-800 text-lg">20 Min</div>
+          <div className="text-xs text-gray-500">Cooking Time</div>
         </div>
         <div>
-          {/* <div className="font-bold text-gray-800 text-lg">{recipe.serveTime} Min</div> */}
-          <div className="text-xs text-gray-500">Serving</div>
+          <div className="font-bold text-gray-800 text-lg">5 Min</div>
+          <div className="text-xs text-gray-500">Serving Time</div>
         </div>
       </div>
-      {/* Description */}
-      {/* <div className="text-gray-700 text-sm max-w-2xl mb-2">{recipe.description}</div> */}
+      <div className="text-gray-700 text-sm max-w-2xl mb-2">This is a dummy description for the recipe.</div>
     </div>
   );
 };

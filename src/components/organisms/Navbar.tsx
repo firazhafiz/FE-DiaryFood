@@ -2,11 +2,48 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import SearchBar from "../molecules/SearchBar";
 import { usePathname } from "next/navigation";
+import { Categories } from "@/types/categories";
+
+interface CategoryResponse {
+  data: { id: string; nama: string }[];
+}
 
 const Navbar: React.FC = () => {
   const [isSticky, setIsSticky] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const pathname = usePathname();
+  const [categories, setCategories] = useState<Categories[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/v1/category");
+        if (!response.ok) {
+          throw new Error("Gagal mengambil kategori");
+        }
+        const data: CategoryResponse = await response.json();
+        console.log("Raw API response:", data);
+
+        if (data?.data && Array.isArray(data.data)) {
+          const convertedCategories = data.data.map((item) => ({
+            id: parseInt(item.id),
+            nama: item.nama,
+          }));
+          const sortedCategories = convertedCategories.sort(
+            (a, b) => a.id - b.id
+          );
+          setCategories(sortedCategories);
+          console.log("Converted and sorted categories:", sortedCategories);
+        } else {
+          throw new Error("Format data kategori tidak valid");
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        setCategories([]);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   // Check if we're not on the home page
   const isPath = pathname !== "/";
@@ -41,8 +78,8 @@ const Navbar: React.FC = () => {
         isSticky
           ? "bg-slate-800 text-gray-800 border-b-gray-300"
           : isPath
-          ? "bg-white shadow-md" // Different background for non-home pages
-          : "text-gray-800" // Original background for home page
+          ? "bg-gray-100 shadow-md"
+          : "text-gray-800"
       }`}
     >
       <div className="max-w-7xl mx-auto flex flex-col gap-2">
@@ -146,21 +183,25 @@ const Navbar: React.FC = () => {
             isSticky ? "text-white" : "text-gray-600"
           }`}
         >
-          {["Breakfast", "Lunch", "Dinner", "Dessert", "Snacks", "Drinks"].map(
-            (category) => (
+          {categories.length > 0 ? (
+            categories.map((category) => (
               <Link
-                key={category}
-                href={`/recipes?category=${category.toLowerCase()}`}
-                onClick={() => setActiveCategory(category)}
+                key={category.id}
+                href={`/recipes?category=${category.nama}`} // Hapus toLowerCase()
+                onClick={() => setActiveCategory(category.nama)}
                 className={`transition-all rounded text-sm flex items-center justify-center h-8 ${
-                  activeCategory === category && !isSticky
+                  activeCategory === category.nama && !isSticky
                     ? ""
                     : "hover:text-[var(--custom-orange)]"
                 }`}
               >
-                {category}
+                {category.nama}
               </Link>
-            )
+            ))
+          ) : (
+            <span className="text-gray-500 text-sm">
+              No categories available
+            </span>
           )}
         </div>
       </div>

@@ -49,7 +49,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
   return (
     <>
-      <aside className="w-full md:w-64 bg-gradient-to-b from-gray-50 to-gray-100 rounded-2xl px-6 py-4 mb-6 md:mb-0">
+      <aside className="w-full md:w-64 bg-gradient-to-b from-gray-50 to-white rounded-2xl px-6 py-4 mb-6 md:mb-0">
         <h2
           className="text-lg font-bold mb-4 text-gray-800 cursor-pointer flex items-center transition-colors hover:text-[color:var(--custom-orange)]"
           onClick={openModal}

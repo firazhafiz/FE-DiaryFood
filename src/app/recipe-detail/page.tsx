@@ -1,7 +1,5 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import DetailHeader from "@/components/molecules/DetailHeader";
 import IngredientsSection from "@/components/molecules/IngredientsSection";
 import InstructionsSection from "@/components/molecules/InstructionsSection";
@@ -9,88 +7,134 @@ import CommentsSection from "@/components/molecules/CommentsSection";
 import RecipeSidebar from "@/components/molecules/RecipeSidebar";
 import Footer from "@/components/organisms/Footer";
 import Navbar from "@/components/organisms/Navbar";
+import React, { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { Recipe } from "@/types/recipe"; // Gunakan Recipe sebagai tipe sementara
+import Loading from "@/app/loading";
+import { RecipeDetail } from "@/types/recipe-detail";
 
-interface Recipe {
-  id: number;
-  nama: string;
-  photoResep: string;
-  time: string | number;
-  category: string;
-  isFree?: boolean;
-  rating?: number;
-  user?: {
-    name: string;
-    photo: string;
-  };
-  price?: number;
-  slug?: string;
-}
-// Interfaces for type safety
-interface Comment {
-  user: {
-    name: string;
-    avatar: string;
-  };
-  ingredients: string[];
-  instructions: string[];
-  status?: string;
-}
-
-interface RecipeData {
-  [key: string]: Recipe;
-}
-
-const DetailResep = () => {
+export default function DetailResep() {
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
-  console.log(id);
-  const [recipe, setRecipe] = useState<Recipe | null>(null);
+  const router = useRouter();
+  const recipeId = searchParams.get("recipeId"); // Ambil recipeId dari query parameter
+  const [recipe, setRecipe] = useState<RecipeDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
 
+  // Pastikan fetch data hanya berjalan di sisi klien
   useEffect(() => {
-    const recipeById = async () => {
-      const res = await fetch(`http://localhost:4000/v1/resep/1`);
+    if (!recipeId) {
+      setError("ID resep tidak ditemukan. Kembali ke halaman utama?");
+      setLoading(false);
+      return;
+    }
 
-      const data = await res.json();
-      console.log(data);
-      setRecipe(data.data);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const parsedRecipeId = parseInt(recipeId); // Pastikan recipeId adalah integer
+        if (isNaN(parsedRecipeId)) {
+          throw new Error("ID resep tidak valid");
+        }
+
+        // Fetch detail resep
+        const recipeResponse = await fetch(
+          `http://localhost:4000/v1/resep/${parsedRecipeId}`
+        );
+        if (!recipeResponse.ok) {
+          throw new Error("Resep tidak ditemukan di server");
+        }
+        const recipeData = await recipeResponse.json();
+        console.log("Recipe detail fetched:", recipeData);
+        if (!recipeData.data) {
+          throw new Error("Data resep tidak tersedia");
+        }
+        setRecipe(recipeData.data);
+
+        // Fetch daftar semua resep
+        const recipesResponse = await fetch("http://localhost:4000/v1/resep");
+        if (!recipesResponse.ok) {
+          throw new Error("Failed to fetch recipes");
+        }
+        const recipesData = await recipesResponse.json();
+        if (Array.isArray(recipesData.data.reseps)) {
+          // Filter untuk mengecualikan resep yang sedang ditampilkan
+          const filteredRecipes = recipesData.data.reseps.filter(
+            (r: Recipe) => r.id !== parsedRecipeId
+          );
+          // Batasi menjadi 2 resep untuk rekomendasi
+          setRecipes(filteredRecipes.slice(0, 2));
+        } else {
+          setRecipes([]);
+        }
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError(
+          err instanceof Error ? err.message : "Gagal mengambil detail resep"
+        );
+      } finally {
+        setLoading(false);
+      }
     };
-    recipeById();
-  }, [id]);
 
+    fetchData();
+  }, [recipeId]); // Dependency hanya pada recipeId
+
+  // Tampilkan loading state selama fetch
+  if (loading) {
+    return <Loading />;
+  }
+
+  // Tampilkan error jika ada dengan opsi kembali
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen flex-col gap-4">
+        <div className="text-red-500 text-lg">{error}</div>
+        <button
+          onClick={() => router.push("/")}
+          className="bg-[color:var(--custom-orange)] text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors"
+        >
+          Kembali ke Beranda
+        </button>
+      </div>
+    );
+  }
+
+  // Tampilkan pesan jika resep tidak ditemukan dengan opsi kembali
   if (!recipe) {
-    return <div className="text-center py-10">Loading recipe...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen flex-col gap-4">
+        <div className="text-gray-700 text-lg">Resep tidak ditemukan</div>
+        <button
+          onClick={() => router.push("/")}
+          className="bg-[color:var(--custom-orange)] text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors"
+        >
+          Kembali ke Beranda
+        </button>
+      </div>
+    );
   }
 
-  // Utility to add id to comments and replies if missing
-  function addIdsToComments(comments: any[]): any[] {
-    return comments.map((comment: any, idx: number) => ({
-      ...comment,
-      id: comment.id || `comment-${idx}-${Math.random().toString(36).slice(2, 8)}`,
-      replies: (comment.replies || []).map((reply: any, ridx: number) => ({
-        ...reply,
-        id: reply.id || `reply-${idx}-${ridx}-${Math.random().toString(36).slice(2, 8)}`,
-      })),
-    }));
-  }
-
-  const commentsWithIds = addIdsToComments(recipe.comments || []);
-
+  // Render konten dengan data resep
   return (
-    <>
+    <div className="bg-gray-100">
       <Navbar />
-      <div className="max-w-7xl mx-auto w-full px-4 py-8 flex flex-col md:flex-row gap-8 pt-34">
+      <div className="max-w-7xl mx-auto w-full px-4 py-8 flex flex-col md:flex-row gap-8 pt-[136px]">
         <div className="flex-1 min-w-0">
           <DetailHeader recipe={recipe} />
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-            <IngredientsSection ingredients={recipe.ingredients} />
-            <InstructionsSection instructions={recipe.instructions} notes={recipe.notes} />
+            <IngredientsSection recipe={recipe} />
+            <InstructionsSection recipe={recipe} />
           </div>
-          <CommentsSection comments={commentsWithIds} />
+          <CommentsSection />
         </div>
         <div className="w-full md:w-80 flex-shrink-0">
-          <RecipeSidebar recipes={recipe} />
+          <RecipeSidebar recipes={recipes} />
         </div>
       </div>
-    </>
+      <Footer />
+    </div>
   );
-};
+}
