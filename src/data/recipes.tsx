@@ -93,7 +93,7 @@ export const dummyRecipes = [
       {
         user: {
           name: "Anita Wijaya",
-          avatar: "/assets/images/image_login.png",
+          avatar: "/assets/images/image_login.jpg",
         },
         text: "Resepnya simple tapi rasanya amazing! Thanks for sharing!",
         time: "2 days ago",
@@ -109,8 +109,9 @@ export const dummyRecipes = [
     category: "Lunch",
     image: "/assets/images/image_curry.jpg",
     author: {
-      name: "Budi Speed",
-      avatar: "/assets/images/image_login.png",
+      name: "Gadang Jatu Mahiswara",
+      avatar: "/assets/images/image_login.jpg",
+
     },
     date: "15-04-2025",
     saves: 19,
@@ -151,7 +152,7 @@ export const dummyRecipes = [
       {
         user: {
           name: "Budi Hartono",
-          avatar: "/assets/images/image_login.png",
+          avatar: "/assets/images/image_login.jpg",
         },
         text: "Kari ayam terenak yang pernah saya coba. Bumbunya pas dan meresap sampai ke dalam daging!",
         time: "1 week ago",
@@ -160,7 +161,7 @@ export const dummyRecipes = [
           {
             user: {
               name: "Gadang Jatu Mahiswara",
-              avatar: "/assets/images/image_login.png",
+              avatar: "/assets/images/image_login.jpg",
             },
             text: "Terima kasih Budi! Senang resepnya bisa dinikmati.",
             time: "6 days ago",
@@ -237,8 +238,9 @@ export const dummyRecipes = [
     category: "Lunch",
     image: "/assets/images/image_pizza.jpg",
     author: {
-      name: "Ilham",
-      avatar: "/assets/images/image_login.png",
+      name: "Gadang Jatu Mahiswara",
+      avatar: "/assets/images/image_login.jpg",
+
     },
     date: "05-04-2025",
     saves: 32,
@@ -283,7 +285,7 @@ export const dummyRecipes = [
       {
         user: {
           name: "Olivia Putri",
-          avatar: "/assets/images/image_login.png",
+          avatar: "/assets/images/image_login.jpg",
         },
         text: "Ini resep pizza homemade terbaik! Adonannya mudah sekali dibuat dan hasilnya super enak seperti di restoran Italia.",
         time: "5 days ago",
@@ -293,7 +295,7 @@ export const dummyRecipes = [
       {
         user: {
           name: "Marco Rossi",
-          avatar: "/assets/images/image_login.png",
+          avatar: "/assets/images/image_login.jpg",
         },
         text: "As an Italian, I approve this recipe! Very authentic flavors.",
         time: "1 week ago",
@@ -302,7 +304,7 @@ export const dummyRecipes = [
           {
             user: {
               name: "Gadang Jatu Mahiswara",
-              avatar: "/assets/images/image_login.png",
+              avatar: "/assets/images/image_login.jpg",
             },
             text: "Thank you Marco! That's the ultimate compliment!",
             time: "6 days ago",

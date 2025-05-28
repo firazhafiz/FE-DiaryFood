@@ -7,15 +7,19 @@ import { useRouter } from "next/navigation";
 
 interface Recipe {
   id: number;
-  title: string;
-  author: {
+  nama: string;
+  photoResep: string;
+  user: {
     name: string;
-    avatar: string;
+    photo: string;
   };
   image: string;
   date: string;
-  category: string;
-  status: "published" | "draft";
+  kategori: {
+    id:number;
+nama: string;
+  },
+  isApproved: "APPROVED";
 }
 
 interface RecipeManagementProps {
@@ -29,40 +33,51 @@ export const RecipeManagement: React.FC<RecipeManagementProps> = ({ searchQuery 
   const router = useRouter();
 
   useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch("http://localhost:4000/v1/admin/dashboard/recipes", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await res.json();
+
+        console.log(data.data);
+
+        setRecipes(data.data.reseps);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     fetchRecipes();
   }, []);
-
-  const fetchRecipes = async () => {
-    try {
-      const response = await fetch("/api/recipes");
-      if (!response.ok) throw new Error("Failed to fetch recipes");
-      const data = await response.json();
-      setRecipes(data);
-    } catch (error) {
-      console.error("Error fetching recipes:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleShow = (id: number) => {
     router.push(`/dashboard/recipes/show?id=${id}`);
   };
 
   const handleDelete = async (id: number) => {
-    if (window.confirm("Are you sure you want to delete this recipe?")) {
       try {
-        const response = await fetch(`/api/recipes/${id}`, {
+        const token = localStorage.getItem("token");
+        const response = await fetch(`http://localhost:4000/v1/admin/dashboard/recipes/${id}`, {
           method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (response.ok) {
+          
           setRecipes(recipes.filter((recipe) => recipe.id !== id));
         }
       } catch (error) {
         console.error("Error deleting recipe:", error);
       }
-    }
   };
 
   // Filter and sort recipes
@@ -72,7 +87,7 @@ export const RecipeManagement: React.FC<RecipeManagementProps> = ({ searchQuery 
     // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      result = result.filter((recipe) => recipe.title.toLowerCase().includes(query) || recipe.category.toLowerCase().includes(query) || recipe.author.name.toLowerCase().includes(query));
+      result = result.filter((recipe) => recipe.nama.toLowerCase().includes(query) || recipe.kategori.nama.toLowerCase().includes(query) || recipe.user.name.toLowerCase().includes(query));
     }
 
     // Apply sorting
@@ -84,13 +99,13 @@ export const RecipeManagement: React.FC<RecipeManagementProps> = ({ searchQuery 
         result.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
         break;
       case "title-asc":
-        result.sort((a, b) => a.title.localeCompare(b.title));
+        result.sort((a, b) => a.nama.localeCompare(b.nama));
         break;
       case "title-desc":
-        result.sort((a, b) => b.title.localeCompare(a.title));
+        result.sort((a, b) => b.nama.localeCompare(a.nama));
         break;
       case "category":
-        result.sort((a, b) => a.category.localeCompare(b.category));
+        result.sort((a, b) => a.kategori.nama.localeCompare(b.kategori.nama));
         break;
       default:
         break;

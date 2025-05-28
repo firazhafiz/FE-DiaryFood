@@ -6,7 +6,7 @@ import { DashboardCard } from "../molecules/DashboardCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 interface User {
-  id: string;
+  id: number;
   email: string;
   name: string;
   photo: string;
@@ -82,7 +82,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({
   };
 
   // Fungsi untuk menghapus pengguna
-  const handleDeleteUser = async (id: string) => {
+  const handleDeleteUser = async (id: number) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -104,7 +104,6 @@ export const UserManagement: React.FC<UserManagementProps> = ({
 
       setUsers(users.filter((user) => user.id !== id));
       onUserSelect(null);
-      alert("User deleted successfully");
     } catch (error) {
       console.error("Error deleting user:", error);
       alert(error instanceof Error ? error.message : "Failed to delete user");
@@ -112,7 +111,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({
   };
 
   // Fungsi untuk memilih pengguna
-  const handleShow = (id: string) => {
+  const handleShow = (id: number) => {
     const selectedUser = users.find((user) => user.id === id);
     onUserSelect(selectedUser || null);
   };

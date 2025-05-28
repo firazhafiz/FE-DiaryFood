@@ -7,9 +7,89 @@ import RecipeCardGrid from "@/components/organisms/RecipeCardGrid";
 import FilterSidebar, { FilterItem } from "@/components/atoms/FilterSidebar";
 import SelectedFilters from "@/components/atoms/SelectedFilters";
 import FilterControlModal from "@/components/molecules/FilterControlModal";
+<<<<<<< HEAD
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Recipe } from "@/types/recipe";
 import Loading from "./loading";
+=======
+import { useSearchParams } from "next/navigation";
+import { getRecipes } from "@/services/recipeService";
+
+const dummyRecipes = [
+  {
+    title: "Spaghetti Carbonara",
+    image: "/assets/images/image_spaghetti.jpg",
+    time: "30",
+    category: "Italian",
+    isFree: true,
+    rating: 4.5,
+    author: {
+      name: "Gadang Jatu Mahiswara",
+      avatar: "/assets/images/image_login.jpg",
+    },
+    tags: ["Italia", "Bebas Gluten"],
+    slug: "spaghetti-carbonara",
+  },
+  {
+    title: "Chicken Curry",
+    image: "/assets/images/image_curry.jpg",
+    time: "45",
+    category: "Indian",
+    isFree: true,
+    rating: 4.5,
+    author: {
+      name: "Gadang Jatu Mahiswara",
+      avatar: "/assets/images/image_login.jpg",
+    },
+    tags: ["India", "Protein Aktif"],
+    slug: "chicken-curry",
+  },
+  {
+    title: "Beef Steak American",
+    image: "/assets/images/image_steak.jpg",
+    time: "25",
+    category: "American",
+    isFree: true,
+    rating: 4.5,
+    author: {
+      name: "Gadang Jatu Mahiswara",
+      avatar: "/assets/images/image_login.jpg",
+    },
+    tags: ["Protein Aktif"],
+    slug: "beef-steak-american",
+  },
+  {
+    title: "Pizza Margherita",
+    image: "/assets/images/image_pizza.jpg",
+    time: "35",
+    category: "Italian",
+    isFree: false,
+    price: 100000,
+    rating: 4.5,
+    author: {
+      name: "Gadang Jatu Mahiswara",
+      avatar: "/assets/images/image_login.jpg",
+    },
+    tags: ["Italia", "Vegetarian"],
+    slug: "pizza-margherita",
+  },
+  {
+    title: "Rendang Padang",
+    image: "/assets/images/image_pizza.jpg",
+    time: "120",
+    category: "Indonesian",
+    isFree: false,
+    price: 100000,
+    rating: 4.5,
+    author: {
+      name: "Gadang Jatu Mahiswara",
+      avatar: "/assets/images/image_login.jpg",
+    },
+    tags: ["Indonesia", "Jawa Timur"],
+    slug: "rendang-padang",
+  },
+];
+>>>>>>> 7b7066a501956835e8f7aff0f7f220656402602c
 
 const Resep = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -17,6 +97,7 @@ const Resep = () => {
   const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
   const [selectedFilters, setSelectedFilters] = useState<FilterItem[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+<<<<<<< HEAD
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState<string[]>([]);
@@ -24,9 +105,28 @@ const Resep = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+=======
+  const [recipes, setRecipes] = useState([]);
+
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/v1/resep");
+        const data = await response.json();
+        console.log(data.data.reseps);
+        setRecipes(data.data.reseps);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchRecipe();
+  }, []);
+>>>>>>> 7b7066a501956835e8f7aff0f7f220656402602c
 
   // Fetch categories
   useEffect(() => {
+<<<<<<< HEAD
     const fetchCategories = async () => {
       try {
         const response = await fetch("http://localhost:4000/v1/category");
@@ -54,6 +154,15 @@ const Resep = () => {
     };
     fetchCategories();
   }, []);
+=======
+    const categoryFromUrl = searchParams.get("category");
+    if (categoryFromUrl) {
+      // Convert category to proper case (e.g., "breakfast" -> "Breakfast")
+      const categoryValue = categoryFromUrl.charAt(0).toUpperCase() + categoryFromUrl.slice(1);
+      setSelectedFilters([{ category: "Category", value: categoryValue }]);
+    }
+  }, [searchParams]);
+>>>>>>> 7b7066a501956835e8f7aff0f7f220656402602c
 
   // Fetch recipes
   useEffect(() => {
@@ -200,6 +309,7 @@ const Resep = () => {
   };
 
   const handleRemoveFilter = (filterToRemove: FilterItem) => {
+<<<<<<< HEAD
     const newFilters = selectedFilters.filter(
       (filter) =>
         !(
@@ -212,6 +322,9 @@ const Resep = () => {
       router.replace("/recipes", { scroll: false });
       console.log("Removed filter, cleared URL");
     }
+=======
+    setSelectedFilters(selectedFilters.filter((filter) => !(filter.category === filterToRemove.category && filter.value === filterToRemove.value)));
+>>>>>>> 7b7066a501956835e8f7aff0f7f220656402602c
   };
 
   const handleClearAllFilters = () => {
@@ -226,21 +339,9 @@ const Resep = () => {
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 flex flex-col md:flex-row gap-6 mb-12 mt-6 pt-[120px]">
         {/* Mobile Filter Button */}
         <div className="md:hidden w-full mb-4">
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="w-full py-3 px-4 bg-gradient-to-r from-[color:var(--custom-orange)] to-orange-400 text-white rounded-xl flex items-center justify-center gap-2 font-medium"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm1 5a1 1 0 100 2h12a1 1 0 100-2H4z"
-                clipRule="evenodd"
-              />
+          <button onClick={() => setIsModalOpen(true)} className="w-full py-3 px-4 bg-gradient-to-r from-[color:var(--custom-orange)] to-orange-400 text-white rounded-xl flex items-center justify-center gap-2 font-medium">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm1 5a1 1 0 100 2h12a1 1 0 100-2H4z" clipRule="evenodd" />
             </svg>
             Filter Resep
           </button>
@@ -248,14 +349,12 @@ const Resep = () => {
 
         {/* Sidebar - hidden on mobile */}
         <div className="hidden md:block md:w-1/4">
-          <FilterSidebar
-            selectedFilters={selectedFilters}
-            onFilterChange={handleFilterChange}
-          />
+          <FilterSidebar selectedFilters={selectedFilters} onFilterChange={handleFilterChange} />
         </div>
 
         {/* Main content */}
         <div className="w-full md:w-3/4">
+<<<<<<< HEAD
           {isLoading ? (
             <Loading />
           ) : error ? (
@@ -301,6 +400,15 @@ const Resep = () => {
         selectedFilters={selectedFilters}
         onFilterChange={handleFilterChange}
       />
+=======
+          <SelectedFilters selectedFilters={selectedFilters} totalRecipes={filteredRecipes.length} onRemoveFilter={handleRemoveFilter} onClearAll={handleClearAllFilters} />
+          <RecipeCardGrid recipes={recipes} />
+        </div>
+      </main>
+
+      {/* Filter Modal for both mobile and desktop */}
+      <FilterControlModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} selectedFilters={selectedFilters} onFilterChange={handleFilterChange} />
+>>>>>>> 7b7066a501956835e8f7aff0f7f220656402602c
 
       <Footer />
     </div>

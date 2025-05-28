@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import CategoryManagement from "@/components/organisms/CategoryManagement";
+import { useDeferredValue, useEffect, useState } from "react";
 
 interface Category {
   id: string;
@@ -13,62 +12,95 @@ interface Category {
 }
 
 const CategoriesPage = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const deferredCategories = useDeferredValue(categories);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-      return;
-    }
-
     const getCategories = async () => {
+      setLoading(true);
       try {
-        setIsLoading(true);
-        const response = await fetch("http://localhost:4000/v1/category");
+        const res = await fetch("http://localhost:4000/v1/admin/dashboard/categories", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+          },
+        });
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch categories"); // DIUBAH: Perbaiki pesan error
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
         }
 
-        const data = await response.json();
-        console.log("API Response:", data);
-        setCategories(data.data.categories);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred");
-        console.error("Error fetching categories:", err); // DIUBAH: Perbaiki log error
+        const data = await res.json();
+        if (!data.data) {
+          throw new Error("Data kategori tidak ditemukan di respons API");
+        }
+
+        setCategories(data.data);
+        setError(null);
+      } catch (err: any) {
+        setError(err.message);
+        console.error("Error fetching categories:", err);
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
 
     getCategories();
-  }, [router]); // BARU: Tambahkan router sebagai dependency
+  }, []);
+
+  const handleAddCategory = async (newCategory: { nama: string }) => {
+    try {
+      const res = await fetch("http://localhost:4000/v1/admin/dashboard/categories", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+        },
+        body: JSON.stringify(newCategory),
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      setCategories((prev) => [...prev, data.data]);
+    } catch (err: any) {
+      setError(err.message);
+      console.error("Error adding category:", err);
+    }
+  };
+
+  const handleDeleteCategory = async (categoryId: number) => {
+    try {
+      const res = await fetch(`http://localhost:4000/v1/admin/dashboard/categories/${categoryId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+
+      setCategories((prev) => prev.filter((category: any) => category.id !== categoryId));
+    } catch (err: any) {
+      setError(err.message);
+      console.error("Error deleting category:", err);
+    }
+  };
 
   return (
     <div className="space-y-6 p-8 min-h-screen">
-      {isLoading ? ( // BARU: Tampilkan UI untuk loading
-        <div className="flex justify-center items-center min-h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--custom-orange)]"></div>
-        </div>
-      ) : error ? ( // BARU: Tampilkan UI untuk error
-        <div className="text-red-500 text-center">{error}</div>
-      ) : (
-        <>
-          <div className="flex justify-between items-center">
-            <h1 className="text-xl font-semibold text-slate-900">
-              Categories Management
-            </h1>
-          </div>
-          <CategoryManagement
-            categories={categories} // BARU: Kirim data categories ke child
-            setCategories={setCategories} // BARU: Kirim setCategories untuk update state
-          />
-        </>
-      )}
+      <div className="flex justify-between items-center">
+        <h1 className="text-xl font-semibold text-slate-900">Manajemen Kategori</h1>
+      </div>
+      <CategoryManagement categories={deferredCategories} onAddCategory={handleAddCategory} onDeleteCategory={handleDeleteCategory} />
     </div>
   );
 };

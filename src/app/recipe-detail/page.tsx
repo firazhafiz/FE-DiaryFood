@@ -25,8 +25,8 @@ export default function DetailResep() {
 
   // Pastikan render hanya terjadi di sisi klien
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    const recipeById = async () => {
+      const res = await fetch(`http://localhost:4000/v1/resep/1`);
 
   // Fetch data resep dan rekomendasi
   useEffect(() => {

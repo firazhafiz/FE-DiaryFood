@@ -15,7 +15,7 @@ const sampleRecipes = [
     rating: 4.5,
     author: {
       name: "Gadang Jatu Mahiswara",
-      avatar: "/assets/images/image_login.png",
+      avatar: "/assets/images/image_login.jpg",
     },
     slug: "spaghetti-carbonara",
   },
@@ -28,7 +28,7 @@ const sampleRecipes = [
     rating: 4.5,
     author: {
       name: "Gadang Jatu Mahiswara",
-      avatar: "/assets/images/image_login.png",
+      avatar: "/assets/images/image_login.jpg",
     },
     slug: "chicken-curry",
   },
@@ -41,7 +41,7 @@ const sampleRecipes = [
     rating: 4.5,
     author: {
       name: "Gadang Jatu Mahiswara",
-      avatar: "/assets/images/image_login.png",
+      avatar: "/assets/images/image_login.jpg",
     },
     slug: "beef-steak",
   },
@@ -55,7 +55,7 @@ const sampleRecipes = [
     rating: 4.5,
     author: {
       name: "Gadang Jatu Mahiswara",
-      avatar: "/assets/images/image_login.png",
+      avatar: "/assets/images/image_login.jpg",
     },
     slug: "pizza-margherita",
   },
@@ -69,7 +69,7 @@ const sampleRecipes = [
     rating: 4.5,
     author: {
       name: "Gadang Jatu Mahiswara",
-      avatar: "/assets/images/image_login.png",
+      avatar: "/assets/images/image_login.jpg",
     },
     slug: "pizza-margherita-2",
   },

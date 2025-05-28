@@ -2,7 +2,26 @@
 
 import React, { useRef } from "react";
 import Card from "../atoms/Card";
+<<<<<<< HEAD
 import { Recipe } from "@/types/recipe";
+=======
+
+interface Recipe {
+  id: number;
+  title: string;
+  image: string;
+  time: string;
+  category: string;
+  isFree?: boolean;
+  rating?: number;
+  author?: {
+    name: string;
+    avatar: string;
+  };
+  price?: number;
+  slug?: string;
+}
+>>>>>>> 7b7066a501956835e8f7aff0f7f220656402602c
 
 interface RecipeListProps {
   recipes: Recipe[];

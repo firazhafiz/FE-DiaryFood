@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { LoginContent } from "@/components/organisms/LoginContent";
 import { AuthTemplate } from "@/components/templates/AuthTemplate";
+
 import { FcGoogle } from "react-icons/fc";
 import { config } from "@/config";
 import Loading from "./loading";
@@ -52,6 +53,7 @@ export default function LoginPage() {
       // Redirect ke endpoint Google OAuth di backend Express
       window.location.href = `${config.apiUrl}/auth/google`;
     } catch (err) {
+
       setError("An error occurred during Google login");
     }
   };
