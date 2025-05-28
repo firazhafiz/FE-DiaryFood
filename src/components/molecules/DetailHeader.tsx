@@ -1,82 +1,112 @@
 "use client";
 
-import React, { useState } from "react";
-import getRelativeTime from "@/helper/relativeTime";
-import { FaArrowLeft } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { RecipeDetail } from "@/types/recipe-detail";
 import Image from "next/image";
-import { DefaultProfile } from "../../../public/assets";
 
 interface DetailHeaderProps {
-  recipe: {
-    id: number;
-    nama: string;
-    photoResep: string;
-    tanggalUnggahan: string;
-    category: string;
-    isFree?: boolean;
-    rating?: number;
-    user?: {
-      name: string;
-      photo: string;
-    };
-    price?: number;
-    slug?: string;
-  };
+  recipe: RecipeDetail;
+  loading: boolean;
 }
 
-const DetailHeader = ({ recipe }: DetailHeaderProps) => {
-  const handleRate = () => {
-    if (rated) {
-      // If already rated, remove the rating
-      const newCount = ratingCount - 1;
-      // If this was the only rating, reset to original rating
-      if (newCount === 0) {
-        setRating(0);
-      } else {
-        // Otherwise recalculate rating by removing the 5-star rating
-        const totalStars = rating * ratingCount;
-        const newRating = (totalStars - 5) / newCount;
-        setRating(parseFloat(newRating.toFixed(1)));
+const extractNumber = (timeString: string | undefined): string => {
+  if (!timeString) return "0";
+  const match = timeString.match(/\d+/);
+  return match ? match[0] : "0";
+};
+
+// Di DetailHeader.tsx
+const DetailHeader = ({ recipe, loading }: DetailHeaderProps) => {
+  const [savesCount, setSavesCount] = useState<number>(recipe?.savesCount || 0);
+  const [isSaved, setIsSaved] = useState<boolean>(
+    recipe?.isSavedByCurrentUser || false
+  );
+  const [error, setError] = useState<string | null>(null);
+
+  // Pastikan state diperbarui jika recipe berubah
+  useEffect(() => {
+    if (recipe) {
+      setSavesCount(recipe.savesCount || 0);
+      setIsSaved(recipe.isSavedByCurrentUser || false);
+    }
+  }, [recipe]);
+
+  const handleSaveToggle = async () => {
+    if (!recipe) return;
+    try {
+      setError(null);
+      const response = await fetch(
+        `http://localhost:4000/v1/resep/${recipe.id}/save`,
+        {
+          method: isSaved ? "DELETE" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: 1 }), // Ganti dengan userId nyata
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      setRatingCount(newCount);
-      setRated(false);
-    } else {
-      // Add a new 5-star rating
-      const newRating = (rating * ratingCount + 5) / (ratingCount + 1);
-      setRating(parseFloat(newRating.toFixed(1)));
-      setRatingCount(ratingCount + 1);
-      setRated(true);
+      setIsSaved(!isSaved);
+      setSavesCount(isSaved ? savesCount - 1 : savesCount + 1);
+    } catch (err) {
+      console.error("Error toggling save:", err);
+      setError("Failed to toggle save. Please try again later.");
     }
   };
 
-  // Function to handle share
-  const handleShare = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
-      alert("Link copied to clipboard!");
-    }
+  if (loading || !recipe) {
+    return (
+      <div className="mb-8 animate-pulse">
+        {/* Skeleton UI seperti sebelumnya */}
+      </div>
+    );
+  }
+
+  const author = {
+    name: recipe.user?.name || "Pengguna Tidak Diketahui",
+    avatar: recipe.user?.photo || "/assets/images/image_login.jpg",
   };
 
-  const handleBack = () => {
-    router.back();
-  };
+  const prepTime = extractNumber(recipe.preparationTime);
+  const cookTime = extractNumber(recipe.cookingTime);
+  const serving = extractNumber(recipe.servingTime);
 
   return (
     <div className="mb-8">
-      <button
-        onClick={handleBack}
-        className="px-4 py-1 flex gap-2 w-fit items-center rounded-lg border border-[var(--custom-orange)] text-slate-700 hover:bg-[var(--custom-orange)] hover:text-white transition-colors"
-        aria-label="Back to recipes">
-        <FaArrowLeft />
-        Back
-      </button>
-      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 leading-tight mt-8">{recipe.nama}</h1>
+      <div className="text-xs text-gray-400 mb-2 flex items-center gap-1">
+        <Link
+          href="/"
+          className="hover:text-[color:var(--custom-orange)] transition-colors"
+        >
+          Home
+        </Link>
+        <span className="mx-1">/</span>
+        <Link
+          href="/recipes"
+          className="hover:text-[color:var(--custom-orange)] transition-colors"
+        >
+          Recipes
+        </Link>
+        <span className="mx-1">/</span>
+        <span className="text-[color:var(--custom-orange)] font-semibold">
+          {recipe.nama}
+        </span>
+      </div>
+      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 leading-tight">
+        {recipe.nama}
+      </h1>
       <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 mb-4 justify-between">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
-            <Image src={recipe.user?.photo ? recipe.user.photo : DefaultProfile} alt={recipe.nama} className="w-6 h-6 rounded-full object-cover" width={100} height={100} />
-            <span className="font-medium text-gray-700">{recipe.user?.name}</span>
+            <Image
+              src={author.avatar}
+              alt="Author"
+              className="w-6 h-6 rounded-full object-cover"
+              width={24}
+              height={24}
+            />
+            <span className="font-medium text-gray-700">{author.name}</span>
           </div>
           <span>•</span>
           <span className="flex items-center gap-1">
@@ -90,7 +120,10 @@ const DetailHeader = ({ recipe }: DetailHeaderProps) => {
           <span>•</span>
           <span className="flex items-center gap-1">0 comments</span>
           <span>•</span>
-          <span className="flex items-center gap-1">0 saves</span>
+          <span className="flex items-center gap-1">
+            {savesCount} saves{" "}
+            {error && <span className="text-red-500 ml-1">{error}</span>}
+          </span>
           <span>•</span>
           <span className="flex items-center gap-1">
             {recipe.rating ? (
@@ -106,28 +139,54 @@ const DetailHeader = ({ recipe }: DetailHeaderProps) => {
             )}
           </span>
         </div>
-        <button className="flex items-center cursor-pointer gap-1 px-3 py-1 rounded-md border border-gray-200 text-xs text-gray-600 hover:bg-gray-100 transition-colors">Share</button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleSaveToggle}
+            className={`flex items-center bg-[color:var(--custom-orange)] cursor-pointer gap-1 px-3 py-1 rounded-sm border text-xs transition-colors ${
+              isSaved
+                ? "bg-white text-gray-700 border-[color:var(--custom-orange)]"
+                : "border-gray-200 text-white hover:bg-gray-700"
+            }`}
+            disabled={!!error}
+          >
+            {isSaved ? "Unsave" : "Save"}
+          </button>
+          <button
+            className={`flex items-center bg-[color:var(--custom-orange)] cursor-pointer gap-1 px-3 py-1 rounded-sm border text-xs transition-colors ${
+              isSaved
+                ? "bg-white text-gray-700 border-[color:var(--custom-orange)]"
+                : "border-gray-200 text-white hover:bg-gray-700"
+            }`}
+          >
+            Share
+          </button>
+        </div>
       </div>
       <div className="rounded-2xl overflow-hidden mb-4 w-full max-w-2xl">
-        <img src={recipe.photoResep} alt="Dummy Recipe" className="w-full h-72 object-cover" />
+        <img
+          src={recipe.photoResep}
+          alt={recipe.nama}
+          className="w-full h-72 object-cover"
+        />
       </div>
       <div className="flex gap-8 mb-4 text-center">
         <div>
-          <div className="font-bold text-gray-800 text-lg">10 Min</div>
+          <div className="font-bold text-gray-800 text-lg">{prepTime} Min</div>
           <div className="text-xs text-gray-500">Prep Time</div>
         </div>
         <div>
-          <div className="font-bold text-gray-800 text-lg">20 Min</div>
+          <div className="font-bold text-gray-800 text-lg">{cookTime} Min</div>
           <div className="text-xs text-gray-500">Cooking Time</div>
         </div>
         <div>
-          <div className="font-bold text-gray-800 text-lg">5 Min</div>
+          <div className="font-bold text-gray-800 text-lg">{serving} Min</div>
           <div className="text-xs text-gray-500">Serving Time</div>
         </div>
       </div>
-      <div className="text-gray-700 text-sm max-w-2xl mb-2">This is a dummy description for the recipe.</div>
+      <div className="text-gray-700 text-sm max-w-2xl mb-2">
+        {recipe.description}
+      </div>
     </div>
   );
 };
-
 export default DetailHeader;

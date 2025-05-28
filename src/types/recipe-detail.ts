@@ -1,5 +1,6 @@
+// Di types/recipe-detail.ts
 interface RecipeDetail {
-  id: string;
+  id: number;
   nama: string;
   photoResep: string;
   tanggalUnggahan: string;
@@ -7,11 +8,21 @@ interface RecipeDetail {
     name: string;
     photo: string;
   };
-  ingredients: string[];
+  bahanList: {
+    nama: string;
+    jumlah: string;
+  }[];
   langkahList: { deskripsi: string }[];
+  description: string;
+  cookingTime: string;
+  preparationTime: string;
+  servingTime: string;
+  note: string;
   catatan?: string;
   rating?: number;
   reviewers?: number;
+  savesCount: number;
+  isSavedByCurrentUser: boolean;
 }
 
 export type { RecipeDetail };

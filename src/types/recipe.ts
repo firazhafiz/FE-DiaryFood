@@ -9,6 +9,9 @@ interface Recipe {
   tanggalAcc: string | null;
   disetujuiOleh: number | null;
   kategori: { nama: string };
+  cookingTime: string;
+  preparationTime: string;
+  servingTime: string;
   user: { name: string; photo: string | null };
   tags: string[];
 }

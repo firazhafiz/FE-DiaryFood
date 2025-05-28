@@ -9,20 +9,20 @@ import Footer from "@/components/organisms/Footer";
 import Navbar from "@/components/organisms/Navbar";
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Recipe } from "@/types/recipe"; // Gunakan Recipe sebagai tipe sementara
-import Loading from "@/app/loading";
+import { Recipe } from "@/types/recipe";
 import { RecipeDetail } from "@/types/recipe-detail";
+import { Comments } from "@/types/comments";
 
 export default function DetailResep() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const recipeId = searchParams.get("recipeId"); // Ambil recipeId dari query parameter
+  const recipeId = searchParams.get("recipeId");
   const [recipe, setRecipe] = useState<RecipeDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [comments, setComments] = useState<Comments[]>([]);
 
-  // Pastikan fetch data hanya berjalan di sisi klien
   useEffect(() => {
     if (!recipeId) {
       setError("ID resep tidak ditemukan. Kembali ke halaman utama?");
@@ -34,12 +34,11 @@ export default function DetailResep() {
       try {
         setLoading(true);
         setError(null);
-        const parsedRecipeId = parseInt(recipeId); // Pastikan recipeId adalah integer
+        const parsedRecipeId = parseInt(recipeId);
         if (isNaN(parsedRecipeId)) {
           throw new Error("ID resep tidak valid");
         }
 
-        // Fetch detail resep
         const recipeResponse = await fetch(
           `http://localhost:4000/v1/resep/${parsedRecipeId}`
         );
@@ -53,21 +52,32 @@ export default function DetailResep() {
         }
         setRecipe(recipeData.data);
 
-        // Fetch daftar semua resep
         const recipesResponse = await fetch("http://localhost:4000/v1/resep");
         if (!recipesResponse.ok) {
           throw new Error("Failed to fetch recipes");
         }
         const recipesData = await recipesResponse.json();
         if (Array.isArray(recipesData.data.reseps)) {
-          // Filter untuk mengecualikan resep yang sedang ditampilkan
           const filteredRecipes = recipesData.data.reseps.filter(
             (r: Recipe) => r.id !== parsedRecipeId
           );
-          // Batasi menjadi 2 resep untuk rekomendasi
           setRecipes(filteredRecipes.slice(0, 2));
         } else {
           setRecipes([]);
+        }
+
+        const commentsResponse = await fetch(
+          `http://localhost:4000/v1/resep/${parsedRecipeId}/comment`
+        );
+        if (!commentsResponse.ok) {
+          throw new Error("Failed to fetch comments");
+        }
+        const commentsData = await commentsResponse.json();
+        console.log("Comments fetched:", commentsData);
+        if (Array.isArray(commentsData.data)) {
+          setComments(commentsData.data);
+        } else {
+          setComments([]);
         }
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -80,12 +90,7 @@ export default function DetailResep() {
     };
 
     fetchData();
-  }, [recipeId]); // Dependency hanya pada recipeId
-
-  // Tampilkan loading state selama fetch
-  if (loading) {
-    return <Loading />;
-  }
+  }, [recipeId]);
 
   // Tampilkan error jika ada dengan opsi kembali
   if (error) {
@@ -102,8 +107,8 @@ export default function DetailResep() {
     );
   }
 
-  // Tampilkan pesan jika resep tidak ditemukan dengan opsi kembali
-  if (!recipe) {
+  // Tampilkan pesan jika resep tidak ditemukan, tetapi hanya setelah loading selesai
+  if (!loading && !recipe) {
     return (
       <div className="flex items-center justify-center min-h-screen flex-col gap-4">
         <div className="text-gray-700 text-lg">Resep tidak ditemukan</div>
@@ -117,21 +122,21 @@ export default function DetailResep() {
     );
   }
 
-  // Render konten dengan data resep
+  // Render konten dengan data resep dan komentar
   return (
     <div className="bg-gray-100">
       <Navbar />
       <div className="max-w-7xl mx-auto w-full px-4 py-8 flex flex-col md:flex-row gap-8 pt-[136px]">
         <div className="flex-1 min-w-0">
-          <DetailHeader recipe={recipe} />
+          <DetailHeader recipe={recipe!} loading={loading} />
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-            <IngredientsSection recipe={recipe} />
-            <InstructionsSection recipe={recipe} />
+            <IngredientsSection recipe={recipe!} loading={loading} />
+            <InstructionsSection recipe={recipe!} loading={loading} />
           </div>
-          <CommentsSection />
+          <CommentsSection comments={comments} loading={loading} />
         </div>
         <div className="w-full md:w-80 flex-shrink-0">
-          <RecipeSidebar recipes={recipes} />
+          <RecipeSidebar recipes={recipes} loading={loading} />
         </div>
       </div>
       <Footer />

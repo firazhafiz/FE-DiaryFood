@@ -52,11 +52,18 @@ const RecipeList: React.FC<RecipeListProps> = ({ recipes }) => {
         className="flex overflow-x-auto gap-6 py-4 scrollbar-hide scroll-smooth"
         style={{ scrollBehavior: "smooth", scrollbarWidth: "none" }}
       >
-        {recipes.map((recipe, index) => (
-          <div key={index} className="flex-shrink-0 ">
-            <Card recipe={recipe} />
-          </div>
-        ))}
+        {recipes.length > 0
+          ? recipes.map((recipe, index) => (
+              <div key={index} className="flex-shrink-0">
+                <Card recipe={recipe} />
+              </div>
+            ))
+          : // Render skeleton cards when recipes are empty
+            Array.from({ length: 4 }).map((_, index) => (
+              <div key={`skeleton-${index}`} className="flex-shrink-0">
+                <Card loading={true} />
+              </div>
+            ))}
       </div>
 
       {/* Arrow right */}

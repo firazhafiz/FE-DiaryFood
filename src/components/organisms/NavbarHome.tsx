@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import SearchBar from "../molecules/SearchBar";
-import { Categories } from "@/types/categories";
-import Image from "next/image";
-
-interface CategoryResponse {
-  data: { id: string; nama: string }[];
-}
 
 const NavbarHome: React.FC = () => {
   const [isSticky, setIsSticky] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [categories, setCategories] = useState<Categories[]>([]);
+
+  // Static categories array
+  const staticCategories = [
+    { id: 1, nama: "Breakfast" },
+    { id: 2, nama: "Lunch" },
+    { id: 3, nama: "Dinner" },
+    { id: 4, nama: "Dessert" },
+    { id: 5, nama: "Snacks" },
+    { id: 6, nama: "Drinks" },
+  ];
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -47,41 +50,64 @@ const NavbarHome: React.FC = () => {
           </div>
           {/* Navigation Links */}
           <div className="flex gap-8 items-center text-sm">
-            <Link href="/" className={`hover:text-[color:var(--custom-orange)] hover:font-semibold  ${isSticky ? "text-gray-600" : "text-white"}`}>
+            <Link
+              href="/"
+              className={`min-w-[50px] px-2 py-1 text-center hover:text-[color:var(--custom-orange)] ${
+                isSticky ? "text-gray-600" : "text-white"
+              }`}
+            >
               Home
             </Link>
-            <Link href="/recipes" className={`hover:text-[color:var(--custom-orange)] hover:font-semibold ${isSticky ? "text-gray-600" : "text-white"}`}>
+            <Link
+              href="/recipes"
+              className={`min-w-[60px] px-2 py-1 text-center hover:text-[color:var(--custom-orange)] ${
+                isSticky ? "text-gray-600" : "text-white"
+              }`}
+            >
               Recipes
             </Link>
-
-            <Link href="/ask-ai" className={`hover:text-[color:var(--custom-orange)] hover:font-semibold ${isSticky ? "text-gray-600" : "text-white"}`}>
+            <Link
+              href="/ask-ai"
+              className={`min-w-[60px] px-2 py-1 text-center hover:text-[color:var(--custom-orange)] ${
+                isSticky ? "text-gray-600" : "text-white"
+              }`}
+            >
               Ask AI
             </Link>
           </div>
-          {isLogin ? (
-            <div className="h-12 w-12 rounded-full bg-white border-0">
-              <Image src={""} alt="test" height={50} width={50} className="border-0 object-cover" />
-            </div>
-          ) : (
-            <div className="text-xs flex gap-x-4">
-              <Link
-                href="/login"
-                className={`px-6 py-2 font-semibold border border-[var(--custom-orange)] rounded-sm transition-colors duration-200 ${
-                  isSticky ? "text-gray-600 hover:bg-gray-700 hover:text-white" : "text-white hover:bg-gray-100 hover:text-[var(--custom-orange)]"
-                }`}>
-                Login
-              </Link>
-              <Link href="/register" className={`px-6 py-2 rounded-sm text-white hover:opacity-90 ${isSticky ? "bg-[color:var(--custom-orange)]" : "bg-[color:var(--custom-orange)]"}`}>
-                Sign Up
-              </Link>
-            </div>
-          )}
+          {/* Auth Buttons */}
+          <div className="text-xs flex gap-x-4">
+            <Link
+              href="/login"
+              className={`px-6 py-2 font-semibold border border-[var(--custom-orange)] rounded-sm transition-colors duration-200 ${
+                isSticky
+                  ? "text-gray-600 hover:bg-gray-700 hover:text-white"
+                  : "text-white hover:bg-gray-100 hover:text-[var(--custom-orange)]"
+              }`}
+            >
+              Login
+            </Link>
+            <Link
+              href="/register"
+              className={`px-6 py-2 rounded-sm text-white hover:opacity-90 ${
+                isSticky
+                  ? "bg-[color:var(--custom-orange)]"
+                  : "bg-[color:var(--custom-orange)]"
+              }`}
+            >
+              Sign Up
+            </Link>
+          </div>
         </div>
 
         {/* Category Navigation */}
-        <div className={`flex justify-start gap-12 overflow-x-auto bg-cover py-2 ${isSticky ? "text-gray-600" : "text-white"}`}>
-          {categories.length > 0 ? (
-            categories.map((category) => (
+        <div
+          className={`flex justify-start gap-12 overflow-x-auto bg-cover py-2 ${
+            isSticky ? "text-gray-600" : "text-white"
+          }`}
+        >
+          {staticCategories.length > 0 ? (
+            staticCategories.map((category) => (
               <Link
                 key={category.id}
                 href={`/recipes?category=${category.nama}`}

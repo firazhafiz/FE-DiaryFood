@@ -4,6 +4,10 @@ const nextConfig: NextConfig = {
   experimental: {
     esmExternals: true,
   },
+
+  turbo: {
+    enabled: false, // Nonaktifkan Turbopack
+  },
   images: {
     remotePatterns: [
       {
@@ -34,15 +38,6 @@ const nextConfig: NextConfig = {
     ],
   },
   /* config options here */
-
-  images: {
-    domains: [
-      "lh3.googleusercontent.com",
-      "images.pexels.com",
-      "img-global.cpcdn.com",
-      "yaoxcisksxcoidwuqurx.supabase.co",
-    ], // Tambahkan domain yang digunakan
-  },
 };
 
 export default nextConfig;
