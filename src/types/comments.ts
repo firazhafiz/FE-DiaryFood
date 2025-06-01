@@ -1,13 +1,14 @@
-interface Comments {
+interface Comment {
   id: number;
   user: {
     id: number;
-    nama: string;
+    name: string;
     photo: string | null;
   };
+  rating?: number;
   resepId: number;
   comment: string;
   createdAt: Date;
 }
 
-export type { Comments };
+export type { Comment };

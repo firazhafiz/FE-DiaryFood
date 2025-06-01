@@ -1,4 +1,4 @@
-// Di types/recipe-detail.ts
+import { Comment } from "./comments";
 interface RecipeDetail {
   id: number;
   nama: string;
@@ -12,6 +12,7 @@ interface RecipeDetail {
     nama: string;
     jumlah: string;
   }[];
+  comment: Comment[];
   langkahList: { deskripsi: string }[];
   description: string;
   cookingTime: string;
@@ -22,6 +23,7 @@ interface RecipeDetail {
   rating?: number;
   reviewers?: number;
   savesCount: number;
+  totalComments: number;
   isSavedByCurrentUser: boolean;
 }
 

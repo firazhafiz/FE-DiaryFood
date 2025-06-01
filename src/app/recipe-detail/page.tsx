@@ -1,3 +1,4 @@
+// src/app/detail-resep/page.tsx
 "use client";
 
 import DetailHeader from "@/components/molecules/DetailHeader";
@@ -11,7 +12,6 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Recipe } from "@/types/recipe";
 import { RecipeDetail } from "@/types/recipe-detail";
-import { Comments } from "@/types/comments";
 
 export default function DetailResep() {
   const searchParams = useSearchParams();
@@ -21,7 +21,6 @@ export default function DetailResep() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [comments, setComments] = useState<Comments[]>([]);
 
   useEffect(() => {
     if (!recipeId) {
@@ -39,51 +38,27 @@ export default function DetailResep() {
           throw new Error("ID resep tidak valid");
         }
 
-        const recipeResponse = await fetch(
-          `http://localhost:4000/v1/resep/${parsedRecipeId}`
-        );
+        const recipeResponse = await fetch(`http://localhost:4000/v1/resep/${parsedRecipeId}`);
         if (!recipeResponse.ok) {
           throw new Error("Resep tidak ditemukan di server");
         }
         const recipeData = await recipeResponse.json();
-        console.log("Recipe detail fetched:", recipeData);
-        if (!recipeData.data) {
-          throw new Error("Data resep tidak tersedia");
-        }
         setRecipe(recipeData.data);
 
         const recipesResponse = await fetch("http://localhost:4000/v1/resep");
         if (!recipesResponse.ok) {
-          throw new Error("Failed to fetch recipes");
+          throw new Error("Failed to fetch related recipes");
         }
         const recipesData = await recipesResponse.json();
         if (Array.isArray(recipesData.data.reseps)) {
-          const filteredRecipes = recipesData.data.reseps.filter(
-            (r: Recipe) => r.id !== parsedRecipeId
-          );
-          setRecipes(filteredRecipes.slice(0, 2));
+          const filteredRecipes = recipesData.data.reseps.filter((r: Recipe) => r.id !== parsedRecipeId).slice(0, 2);
+          setRecipes(filteredRecipes);
         } else {
           setRecipes([]);
         }
-
-        const commentsResponse = await fetch(
-          `http://localhost:4000/v1/resep/${parsedRecipeId}/comment`
-        );
-        if (!commentsResponse.ok) {
-          throw new Error("Failed to fetch comments");
-        }
-        const commentsData = await commentsResponse.json();
-        console.log("Comments fetched:", commentsData);
-        if (Array.isArray(commentsData.data)) {
-          setComments(commentsData.data);
-        } else {
-          setComments([]);
-        }
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError(
-          err instanceof Error ? err.message : "Gagal mengambil detail resep"
-        );
+        setError(err instanceof Error ? err.message : "Gagal mengambil detail resep");
       } finally {
         setLoading(false);
       }
@@ -92,37 +67,39 @@ export default function DetailResep() {
     fetchData();
   }, [recipeId]);
 
-  // Tampilkan error jika ada dengan opsi kembali
+  const handleCommentAdded = (newComment: Comment, newTotal: number) => {
+    setRecipe((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        comment: [newComment, ...(prev.comment || [])],
+        totalComments: newTotal,
+      };
+    });
+  };
+
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-screen flex-col gap-4">
         <div className="text-red-500 text-lg">{error}</div>
-        <button
-          onClick={() => router.push("/")}
-          className="bg-[color:var(--custom-orange)] text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors"
-        >
+        <button onClick={() => router.push("/")} className="bg-[color:var(--custom-orange)] text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors">
           Kembali ke Beranda
         </button>
       </div>
     );
   }
 
-  // Tampilkan pesan jika resep tidak ditemukan, tetapi hanya setelah loading selesai
   if (!loading && !recipe) {
     return (
       <div className="flex items-center justify-center min-h-screen flex-col gap-4">
         <div className="text-gray-700 text-lg">Resep tidak ditemukan</div>
-        <button
-          onClick={() => router.push("/")}
-          className="bg-[color:var(--custom-orange)] text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors"
-        >
+        <button onClick={() => router.push("/")} className="bg-[color:var(--custom-orange)] text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors">
           Kembali ke Beranda
         </button>
       </div>
     );
   }
 
-  // Render konten dengan data resep dan komentar
   return (
     <div className="bg-gray-100">
       <Navbar />
@@ -133,7 +110,7 @@ export default function DetailResep() {
             <IngredientsSection recipe={recipe!} loading={loading} />
             <InstructionsSection recipe={recipe!} loading={loading} />
           </div>
-          <CommentsSection comments={comments} loading={loading} />
+          <CommentsSection comments={recipe?.comment} loading={loading} recipeId={recipeId || ""} onCommentAdded={handleCommentAdded} />
         </div>
         <div className="w-full md:w-80 flex-shrink-0">
           <RecipeSidebar recipes={recipes} loading={loading} />

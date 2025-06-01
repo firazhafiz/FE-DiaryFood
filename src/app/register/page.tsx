@@ -15,11 +15,7 @@ export default function RegisterPage() {
     setMounted(true);
   }, []);
 
-  const handleRegister = async (formData: {
-    name: string;
-    email: string;
-    password: string;
-  }) => {
+  const handleRegister = async (formData: { name: string; email: string; password: string }) => {
     try {
       const response = await fetch("http://localhost:4000/v1/auth/register", {
         method: "POST",
@@ -29,10 +25,11 @@ export default function RegisterPage() {
         body: JSON.stringify(formData),
       });
 
+      console.log(formData);
       const data = await response.json();
       console.log(data);
 
-      if (data.success) {
+      if (response.ok) {
         router.push("/login");
       } else {
         setError(data.message);
