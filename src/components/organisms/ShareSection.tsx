@@ -8,27 +8,27 @@ import Link from "next/link";
 
 const ShareSection = () => (
   <div className="flex flex-col md:flex-row items-center justify-between rounded-2xl p-6 md:p-10 gap-8 md:gap-0">
-    <div className="absolute left-[255px] z-1  w-[320px] h-[320px] rounded-full bg-gradient-to-r from-orange-300 to-orange-400 blur-3xl opacity-50"></div>
+    {" "}
     {/* Images */}
     <div className="flex z-2 flex-row md:flex-col gap-4 md:gap-0 md:mr-8 relative w-full md:w-auto md:min-w-[320px] md:max-w-[340px]">
       <TiltCard>
-        <div className="relative w-[160px] h-[180px] md:w-[250px] md:h-[300px] rounded-2xl overflow-hidden shadow-lg">
+        <div className="relative w-[160px] h-[180px] md:w-[250px] md:h-[300px] rounded-xl overflow-hidden shadow-lg">
           <Image
             src={FoodShare}
             alt="Share 1"
             fill
-            className="object-cover rounded-2xl"
+            className="object-cover rounded-xl"
             sizes="(max-width: 900px) 160px, 220px"
           />
         </div>
       </TiltCard>
       <TiltCard>
-        <div className="relative w-[120px] h-[100px] md:w-[180px] md:h-[120px] rounded-2xl overflow-hidden shadow-lg md:absolute md:bottom-[-32px] md:left-[120px] border-4 border-white">
+        <div className="relative w-[120px] h-[100px] md:w-[180px] md:h-[120px] rounded-xl overflow-hidden shadow-lg md:absolute md:bottom-[-32px] md:left-[120px] border-2 border-white">
           <Image
             src={DrinkShare}
             alt="Share 2"
             fill
-            className="object-cover rounded-2xl"
+            className="object-cover rounded-xl"
             sizes="(max-width: 768px) 120px, 180px"
           />
         </div>
