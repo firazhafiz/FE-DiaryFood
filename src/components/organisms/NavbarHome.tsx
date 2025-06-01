@@ -4,7 +4,7 @@ import SearchBar from "../molecules/SearchBar";
 
 const NavbarHome: React.FC = () => {
   const [isSticky, setIsSticky] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   // Static categories array
@@ -20,7 +20,7 @@ const NavbarHome: React.FC = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      setIsAuthenticated(true);
+      setIsLogin(true);
     }
 
     const handleScroll = () => {
@@ -31,11 +31,7 @@ const NavbarHome: React.FC = () => {
   }, []);
 
   return (
-    <nav
-      className={`pt-4 px-6 transition-all duration-300 w-full shadow-none fixed top-0 left-0 z-30 ${
-        isSticky ? "bg-gray-200 border-b-gray-300" : "text-white"
-      }`}
-    >
+    <nav className={`pt-4 px-6 transition-all duration-300 w-full shadow-none fixed top-0 left-0 z-30 ${isSticky ? "bg-gray-200 border-b-gray-300" : "text-white"}`}>
       <div className="max-w-7xl mx-auto flex flex-col gap-2">
         {/* Top Section: Logo, Search, Navigation, Auth */}
         <div className="flex items-center justify-between gap-4">
@@ -44,13 +40,7 @@ const NavbarHome: React.FC = () => {
             <Link href="/">
               <h1 className="font-bold text-2xl text-[color:var(--custom-orange)]">
                 Diary
-                <span
-                  className={`font-bold text-2xl ${
-                    isSticky ? "text-gray-800" : "text-white"
-                  }`}
-                >
-                  Food
-                </span>
+                <span className={`font-bold text-2xl ${isSticky ? "text-gray-800" : "text-white"}`}>Food</span>
               </h1>
             </Link>
           </div>
@@ -122,19 +112,12 @@ const NavbarHome: React.FC = () => {
                 key={category.id}
                 href={`/recipes?category=${category.nama}`}
                 onClick={() => setActiveCategory(category.nama)}
-                className={`transition-all rounded text-sm flex items-center justify-center h-8 ${
-                  activeCategory === category.nama && !isSticky
-                    ? ""
-                    : "hover:text-[var(--custom-orange)]"
-                }`}
-              >
+                className={`transition-all rounded text-sm flex items-center justify-center h-8 ${activeCategory === category.nama && !isSticky ? "" : "hover:text-[var(--custom-orange)]"}`}>
                 {category.nama}
               </Link>
             ))
           ) : (
-            <span className="text-gray-500 text-sm">
-              No categories available
-            </span>
+            <span className="text-gray-500 text-sm">No categories available</span>
           )}
         </div>
       </div>

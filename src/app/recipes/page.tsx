@@ -29,14 +29,10 @@ const Resep = () => {
     const fetchCategories = async () => {
       try {
         const response = await fetch("http://localhost:4000/v1/category");
-        console.log("Category API status:", response.status);
         if (!response.ok) {
-          throw new Error(
-            `HTTP error ${response.status}: Gagal mengambil kategori`
-          );
+          throw new Error(`HTTP error ${response.status}: Gagal mengambil kategori`);
         }
         const data = await response.json();
-        console.log("Category API response:", JSON.stringify(data, null, 2));
         if (data?.data && Array.isArray(data.data)) {
           setCategories(data.data.map((cat: { nama: string }) => cat.nama));
         } else {
@@ -45,9 +41,7 @@ const Resep = () => {
         }
       } catch (error) {
         console.error("Error fetching categories:", error);
-        setError(
-          error instanceof Error ? error.message : "Gagal mengambil kategori"
-        );
+        setError(error instanceof Error ? error.message : "Gagal mengambil kategori");
         setCategories([]);
       }
     };
@@ -62,12 +56,9 @@ const Resep = () => {
         setError(null);
         const response = await fetch("http://localhost:4000/v1/resep");
         if (!response.ok) {
-          throw new Error(
-            `HTTP error ${response.status}: Gagal mengambil resep`
-          );
+          throw new Error(`HTTP error ${response.status}: Gagal mengambil resep`);
         }
         const data = await response.json();
-        console.log("Recipes API response:", JSON.stringify(data, null, 2));
         if (!data?.data?.reseps || !Array.isArray(data.data.reseps)) {
           throw new Error("Format data resep tidak valid");
         }
@@ -77,9 +68,7 @@ const Resep = () => {
         setFilteredRecipes(fetchedRecipes);
       } catch (error) {
         console.error("Error fetching recipes:", error);
-        setError(
-          error instanceof Error ? error.message : "Gagal mengambil resep"
-        );
+        setError(error instanceof Error ? error.message : "Gagal mengambil resep");
         setRecipes([]);
         setAllRecipes([]);
         setFilteredRecipes([]);
@@ -102,14 +91,7 @@ const Resep = () => {
     if (!isInitialLoad) return;
 
     const categoryFromUrl = searchParams.get("category");
-    console.log(
-      "Reset useEffect - URL category:",
-      categoryFromUrl,
-      "isInitialLoad:",
-      isInitialLoad,
-      "pathname:",
-      pathname
-    );
+    console.log("Reset useEffect - URL category:", categoryFromUrl, "isInitialLoad:", isInitialLoad, "pathname:", pathname);
 
     const isNavigating = sessionStorage.getItem("isNavigating") === "true";
     if (!isNavigating && categoryFromUrl) {
@@ -127,27 +109,15 @@ const Resep = () => {
     if (isInitialLoad) return;
 
     const categoryFromUrl = searchParams.get("category");
-    console.log(
-      "Filter sync useEffect - URL category:",
-      categoryFromUrl,
-      "isInitialLoad:",
-      isInitialLoad,
-      "pathname:",
-      pathname
-    );
+    console.log("Filter sync useEffect - URL category:", categoryFromUrl, "isInitialLoad:", isInitialLoad, "pathname:", pathname);
 
     if (categoryFromUrl && categories.length > 0) {
-      const matchedCategory = categories.find(
-        (cat) => cat.toLowerCase() === categoryFromUrl.toLowerCase()
-      );
+      const matchedCategory = categories.find((cat) => cat.toLowerCase() === categoryFromUrl.toLowerCase());
       if (matchedCategory) {
         setSelectedFilters([{ category: "Category", value: matchedCategory }]);
         console.log("Applied filter for category:", matchedCategory);
       } else {
-        console.warn(
-          `Category "${categoryFromUrl}" not found in categories:`,
-          categories
-        );
+        console.warn(`Category "${categoryFromUrl}" not found in categories:`, categories);
         setSelectedFilters([]);
         router.replace("/recipes", { scroll: false });
         console.log("Cleared URL: Category not found");
@@ -184,10 +154,7 @@ const Resep = () => {
     console.log("handleFilterChange:", filters);
     setSelectedFilters(filters);
     if (filters.length > 0 && filters[0].category === "Category") {
-      router.replace(
-        `/recipes?category=${encodeURIComponent(filters[0].value)}`,
-        { scroll: false }
-      );
+      router.replace(`/recipes?category=${encodeURIComponent(filters[0].value)}`, { scroll: false });
       console.log("Updated URL to:", `/recipes?category=${filters[0].value}`);
     } else {
       router.replace("/recipes", { scroll: false });
@@ -196,13 +163,7 @@ const Resep = () => {
   };
 
   const handleRemoveFilter = (filterToRemove: FilterItem) => {
-    const newFilters = selectedFilters.filter(
-      (filter) =>
-        !(
-          filter.category === filterToRemove.category &&
-          filter.value === filterToRemove.value
-        )
-    );
+    const newFilters = selectedFilters.filter((filter) => !(filter.category === filterToRemove.category && filter.value === filterToRemove.value));
     setSelectedFilters(newFilters);
     if (newFilters.length === 0) {
       router.replace("/recipes", { scroll: false });
@@ -222,21 +183,9 @@ const Resep = () => {
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 flex flex-col md:flex-row gap-6 mb-12 mt-6 pt-[120px]">
         {/* Mobile Filter Button */}
         <div className="md:hidden w-full mb-4">
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="w-full py-3 px-4 bg-gradient-to-r from-[color:var(--custom-orange)] to-orange-400 text-white rounded-xl flex items-center justify-center gap-2 font-medium"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm1 5a1 1 0 100 2h12a1 1 0 100-2H4z"
-                clipRule="evenodd"
-              />
+          <button onClick={() => setIsModalOpen(true)} className="w-full py-3 px-4 bg-gradient-to-r from-[color:var(--custom-orange)] to-orange-400 text-white rounded-xl flex items-center justify-center gap-2 font-medium">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm1 5a1 1 0 100 2h12a1 1 0 100-2H4z" clipRule="evenodd" />
             </svg>
             Filter Resep
           </button>
@@ -244,10 +193,7 @@ const Resep = () => {
 
         {/* Sidebar - hidden on mobile */}
         <div className="hidden md:block md:w-1/4">
-          <FilterSidebar
-            selectedFilters={selectedFilters}
-            onFilterChange={handleFilterChange}
-          />
+          <FilterSidebar selectedFilters={selectedFilters} onFilterChange={handleFilterChange} />
         </div>
 
         {/* Main content */}
@@ -255,23 +201,11 @@ const Resep = () => {
           {error ? (
             <div className="text-center py-8">
               <div className="text-red-500 mb-2">
-                <svg
-                  className="w-12 h-12 mx-auto"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                  />
+                <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Error Loading Data
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Data</h3>
               <p className="text-gray-600">{error}</p>
             </div>
           ) : (
@@ -295,12 +229,7 @@ const Resep = () => {
       </main>
 
       {/* Filter Modal */}
-      <FilterControlModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        selectedFilters={selectedFilters}
-        onFilterChange={handleFilterChange}
-      />
+      <FilterControlModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} selectedFilters={selectedFilters} onFilterChange={handleFilterChange} />
 
       <Footer />
     </div>

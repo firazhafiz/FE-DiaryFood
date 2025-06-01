@@ -56,8 +56,6 @@ const RecipeRow: React.FC<RecipeRowProps> = ({ id, nama, user, kategori, isAppro
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  console.log(photoResep);
-
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

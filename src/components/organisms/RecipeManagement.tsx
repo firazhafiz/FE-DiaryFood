@@ -16,9 +16,9 @@ interface Recipe {
   image: string;
   date: string;
   kategori: {
-    id:number;
-nama: string;
-  },
+    id: number;
+    nama: string;
+  };
   isApproved: "APPROVED";
 }
 
@@ -45,8 +45,6 @@ export const RecipeManagement: React.FC<RecipeManagementProps> = ({ searchQuery 
 
         const data = await res.json();
 
-        console.log(data.data);
-
         setRecipes(data.data.reseps);
         setLoading(false);
       } catch (error) {
@@ -61,23 +59,22 @@ export const RecipeManagement: React.FC<RecipeManagementProps> = ({ searchQuery 
   };
 
   const handleDelete = async (id: number) => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await fetch(`http://localhost:4000/v1/admin/dashboard/recipes/${id}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`http://localhost:4000/v1/admin/dashboard/recipes/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-        if (response.ok) {
-          
-          setRecipes(recipes.filter((recipe) => recipe.id !== id));
-        }
-      } catch (error) {
-        console.error("Error deleting recipe:", error);
+      if (response.ok) {
+        setRecipes(recipes.filter((recipe) => recipe.id !== id));
       }
+    } catch (error) {
+      console.error("Error deleting recipe:", error);
+    }
   };
 
   // Filter and sort recipes

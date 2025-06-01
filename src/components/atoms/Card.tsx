@@ -29,6 +29,7 @@ function formatRupiah(price?: number) {
   return "Rp. " + price.toLocaleString("id-ID", { minimumFractionDigits: 0 });
 }
 
+
 const Card: React.FC<CardProps> = ({ recipe, loading = false }) => {
   if (loading || !recipe) {
     return (
@@ -82,25 +83,11 @@ const Card: React.FC<CardProps> = ({ recipe, loading = false }) => {
         <div className="flex-1 flex flex-col justify-between p-4 pb-2 h-full">
           <div>
             <div className="flex items-center justify-between mb-1">
-              <span
-                className={
-                  isFree
-                    ? "text-green-500 font-semibold text-xs"
-                    : "text-red-500 font-semibold text-xs"
-                }
-              >
-                {isFree ? "Free" : "Paid"}
-              </span>
-              {!isFree && (
-                <span className="text-red-500 font-semibold text-xs">
-                  {formatRupiah(undefined)}
-                </span>
-              )}
+              <span className={isFree ? "text-green-500 font-semibold text-xs" : "text-red-500 font-semibold text-xs"}>{isFree ? "Free" : "Paid"}</span>
+              {!isFree && <span className="text-red-500 font-semibold text-xs">{formatRupiah(undefined)}</span>}
               <div className="flex items-center gap-1 text-yellow-500 text-sm">
                 <FiStar className="inline" fill="#FFD700" />
-                <span className="text-gray-700 font-medium text-xs">
-                  {rating}
-                </span>
+                <span className="text-gray-700 font-medium text-xs">{rating}</span>
               </div>
             </div>
             <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-3">
