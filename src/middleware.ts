@@ -2,14 +2,51 @@ import { NextRequest, NextResponse } from "next/server";
 
 const protectedPaths = ["/dashboard", "/profile", "/ask-ai"];
 
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+export async function middleware(request: NextRequest) {
+  const { pathname, search } = request.nextUrl;
+
+  // Cek apakah rute dilindungi
   const isProtected = protectedPaths.some((path) => pathname.startsWith(path));
 
   if (isProtected) {
     const token = request.cookies.get("token")?.value;
+
     if (!token) {
-      return NextResponse.redirect(new URL("/login", request.url));
+      // Simpan URL asal (termasuk query params) untuk redirect setelah login
+      const returnUrl = encodeURIComponent(`${pathname}${search}`);
+      const loginUrl = new URL(`/login?returnUrl=${returnUrl}`, request.url);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    // Validasi token dengan memanggil API
+    try {
+      const response = await fetch("http://localhost:4000/v1/profile", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        // Token tidak valid, hapus cookie dan redirect ke login
+        const returnUrl = encodeURIComponent(`${pathname}${search}`);
+        const loginUrl = new URL(`/login?returnUrl=${returnUrl}`, request.url);
+        const response = NextResponse.redirect(loginUrl);
+        response.cookies.delete("token");
+        return response;
+      }
+
+      // Token valid, lanjutkan
+      return NextResponse.next();
+    } catch (error) {
+      console.error("Middleware token validation error:", error);
+      // Jika error jaringan atau lainnya, redirect ke login
+      const returnUrl = encodeURIComponent(`${pathname}${search}`);
+      const loginUrl = new URL(`/login?returnUrl=${returnUrl}`, request.url);
+      const response = NextResponse.redirect(loginUrl);
+      response.cookies.delete("token");
+      return response;
     }
   }
 

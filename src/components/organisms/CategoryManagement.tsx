@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react"; // BARU: Tambahkan useMemo untuk optimasi
 import AddCategoryModal from "../molecules/AddCategoryModal";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import Cookies from "js-cookie";
 
 interface Category {
   id: number;
@@ -38,7 +39,7 @@ const CategoryManagement: React.FC<CategoryManagementProps> = ({
     if (window.confirm("Are you sure you want to delete this category?")) {
       // DIUBAH: Perbaiki pesan konfirmasi
       try {
-        const token = localStorage.getItem("token");
+        const token = Cookies.get("token");
         const response = await fetch(`http://localhost:4000/v1/category/${id}`, {
           // BARU: Panggil API DELETE
           method: "DELETE",
@@ -62,7 +63,7 @@ const CategoryManagement: React.FC<CategoryManagementProps> = ({
   // Fungsi untuk menambah kategori
   const handleAddCategory = async (newCategory: { name: string }) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       const response = await fetch("http://localhost:4000/v1/category", {
         // BARU: Panggil API POST
         method: "POST",

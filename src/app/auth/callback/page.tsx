@@ -4,6 +4,7 @@
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import Cookies from "js-cookie";
 
 export default function AuthCallback() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export default function AuthCallback() {
           login(parsedTokens.access.token)
             .then(() => {
               if (parsedTokens.refresh?.token) {
-                localStorage.setItem("refreshToken", parsedTokens.refresh.token);
+                Cookies.set("refreshToken", parsedTokens.refresh.token);
               }
               router.push("/");
             })

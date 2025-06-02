@@ -8,6 +8,7 @@ import { DefaultProfile } from "../../../public/assets";
 import useSWR from "swr";
 import ProfileSkeleton from "@/components/skeletons/ProfileSkeleton";
 import { FaCheck } from "react-icons/fa";
+import Cookies from "js-cookie";
 
 interface UserProfile {
   id: number;
@@ -19,7 +20,7 @@ interface UserProfile {
 }
 
 const fetcher = async (url: string) => {
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
   if (!token) {
     throw new Error("No token found");
   }
@@ -57,7 +58,6 @@ const ProfilePage = () => {
   const { data, error, isLoading } = useSWR("http://localhost:4000/v1/profile", fetcher, {
     onError: (error) => {
       if (error.message === "No token found" || error.message.includes("401")) {
-        localStorage.removeItem("token");
         router.push("/login");
       }
     },
@@ -90,7 +90,7 @@ const ProfilePage = () => {
 
   const handleSave = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) {
         router.push("/login");
         return;

@@ -1,4 +1,4 @@
-const getRelativeTime = (dateString: string) => {
+const getRelativeTime = (dateString: Date) => {
   const now = new Date();
   const past = new Date(dateString);
   const diffMs = now.getTime() - past.getTime();

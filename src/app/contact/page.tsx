@@ -6,34 +6,9 @@ import Footer from "@/components/organisms/Footer";
 import ContactForm from "@/components/molecules/ContactForm";
 import ContactInfoCard from "@/components/molecules/ContactInfoCard";
 import FaqSite from "@/components/molecules/FaqSite";
-import { useRouter } from "next/navigation";
 
 export default function Contact() {
   const [activeTab, setActiveTab] = useState("customer");
-  // const router = useRouter();
-
-  // useEffect(() => {
-  //   const createFeedback = async () => {
-  //     try {
-  //       const token = localStorage.getItem("token");
-  //       if (!token) {
-  //         router.push("/login");
-  //         return;
-  //       }
-  //       const response = await fetch("http://localhost:4000/v1/feedbacks", {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-  //       console.log(response);
-  //     } catch (error) {
-  //       throw error;
-  //     }
-  //   };
-  //   createFeedback();
-  // }, []);
 
   return (
     <div className="min-h-screen flex flex-col  ">

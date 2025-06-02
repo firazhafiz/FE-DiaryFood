@@ -6,7 +6,7 @@ import { FaChevronLeft, FaChevronRight, FaSearch, FaSort } from "react-icons/fa"
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { FaEllipsis } from "react-icons/fa6";
-
+import Cookies from "js-cookie";
 interface Recipe {
   id: string;
   nama: string;
@@ -37,7 +37,7 @@ export default function ApproveRecipesPage() {
 
   useEffect(() => {
     const getPendingRecipe = async () => {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) {
         router.push("/login"); // Redirect ke halaman login jika tidak ada token
         return;
@@ -56,11 +56,11 @@ export default function ApproveRecipesPage() {
       setRecipes(data.data.data);
     };
     getPendingRecipe();
-  }, []);
+  }, [recipes]);
 
   const handleAccept = async (id: string) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) {
         router.push("/login");
         return;
@@ -102,7 +102,7 @@ export default function ApproveRecipesPage() {
   };
   const handleReject = async (id: string) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) {
         router.push("/login");
         return;

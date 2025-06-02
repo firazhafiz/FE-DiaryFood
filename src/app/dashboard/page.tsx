@@ -8,7 +8,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, 
 import { Bar, Line } from "react-chartjs-2";
 import { useRouter } from "next/navigation";
 import getRelativeTime from "@/helper/relativeTime";
-
+import Cookies from "js-cookie";
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend);
 
 export default function DashboardPage() {
@@ -30,9 +30,8 @@ export default function DashboardPage() {
     const getDashboardData = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem("token");
+        const token = Cookies.get("token");
         if (!token) {
-          setError("Tidak ada token. Silakan login kembali.");
           router.push("/login"); // Redirect ke halaman login jika tidak ada token
           return;
         }
@@ -69,7 +68,6 @@ export default function DashboardPage() {
         });
 
         console.log(data.data);
-
       } catch (err: unknown) {
         console.error("Error fetching dashboard data:", err);
       } finally {

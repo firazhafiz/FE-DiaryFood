@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Input } from "../atoms/Input";
 import { Label } from "../atoms/Label";
 import { Button } from "../atoms/Button";
-
+import Cookies from "js-cookie";
 interface FormState {
   fullname: string;
   email: string;
@@ -73,7 +73,7 @@ const ContactForm: React.FC = () => {
     setApiError(null);
 
     try {
-      const token = localStorage.getItem("token"); // Adjust based on your auth setup
+      const token = Cookies.get("token");
       if (!token) {
         throw new Error("Please log in to submit feedback");
       }

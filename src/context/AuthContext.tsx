@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { DefaultProfile } from "../../public/assets";
 import Cookies from "js-cookie";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface User {
   id: number;
@@ -26,6 +27,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const fetchUser = async (token: string) => {
     try {
@@ -36,13 +39,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
       });
       if (!response.ok) {
-        throw new Error(`Failed to fetch user data: ${response.status} ${response.statusText}`);
+        throw new Error(`Gagal mengambil data pengguna: ${response.status} ${response.statusText}`);
       }
       const data = await response.json();
       console.log("fetchUser response:", data);
       const user = data.data || data;
       if (!user.id || !user.email) {
-        throw new Error("Incomplete user data");
+        throw new Error("Data pengguna tidak lengkap");
       }
       const userData: User = {
         id: user.id,
@@ -52,64 +55,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       setCurrentUser(userData);
       setIsLoggedIn(true);
-      localStorage.setItem("currentUser", JSON.stringify(userData));
     } catch (error) {
-      console.error("Error in fetchUser:", error);
-      localStorage.removeItem("token");
-      localStorage.removeItem("refreshToken");
-      localStorage.removeItem("currentUser");
+      console.error("Error di fetchUser:", error);
+      Cookies.remove("token");
       setCurrentUser(null);
       setIsLoggedIn(false);
       throw error;
     } finally {
-      setLoading(false); // Always set loading to false
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     const token = Cookies.get("token");
 
-    const cachedUser = localStorage.getItem("currentUser");
-    console.log("Token from localStorage:", token);
-    console.log("Cached user from localStorage:", cachedUser);
-    if (token && cachedUser) {
-      try {
-        const parsedUser = JSON.parse(cachedUser);
-        setCurrentUser(parsedUser);
-        setIsLoggedIn(true);
-        fetchUser(token); // Refresh in background
-      } catch (error) {
-        console.error("Error parsing cached user:", error);
-        localStorage.removeItem("currentUser");
-        fetchUser(token);
-      }
-    } else if (token) {
-      fetchUser(token);
+    if (token) {
+      fetchUser(token).catch(() => {
+        // Jika token tidak valid, redirect ke login
+        router.push("/login");
+      });
     } else {
       setIsLoggedIn(false);
       setCurrentUser(null);
       setLoading(false);
     }
-  }, []);
+  }, [router]);
 
   const login = async (token: string) => {
-    // Simpan token di cookie, bukan localStorage
     Cookies.set("token", token, {
       expires: 1, // 1 hari
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
     await fetchUser(token);
+
+    // Redirect ke returnUrl jika ada, atau ke dashboard
+    const returnUrl = searchParams.get("returnUrl") || "/dashboard";
+    router.push(decodeURIComponent(returnUrl));
   };
 
   const logout = () => {
     Cookies.remove("token");
-    Cookies.remove("refreshToken");
-    Cookies.remove("currentUser");
-
     setCurrentUser(null);
     setIsLoggedIn(false);
     setLoading(false);
+    router.push("/login");
   };
 
   return <AuthContext.Provider value={{ currentUser, setCurrentUser, isLoggedIn, login, logout, loading }}>{children}</AuthContext.Provider>;
@@ -118,7 +108,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error("useAuth harus digunakan di dalam AuthProvider");
   }
   return context;
 };

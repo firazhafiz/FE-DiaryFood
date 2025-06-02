@@ -21,6 +21,7 @@ export default function DetailResep() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  console.log(recipe);
 
   useEffect(() => {
     if (!recipeId) {

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ProfileRecipeTable } from "../molecules/ProfileRecipeTable";
 import useSWR from "swr";
 import RecipeTableSkeleton from "@/components/skeletons/RecipeTableSkeleton";
+import Cookies from "js-cookie";
 
 interface Recipe {
   id: number;
@@ -26,7 +27,7 @@ interface Recipe {
 
 // Fetcher function for SWR
 const fetcher = async (url: string) => {
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
   if (!token) {
     throw new Error("No token found");
   }
@@ -61,7 +62,8 @@ export const ProfileRecipeManagement: React.FC = () => {
   const { data, error, isLoading } = useSWR("http://localhost:4000/v1/profile/recipes", fetcher, {
     onError: (error) => {
       if (error.message === "No token found" || error.message.includes("401")) {
-        localStorage.removeItem("token");
+        Cookies.remove("token");
+
         router.push("/login");
       }
     },
@@ -81,7 +83,7 @@ export const ProfileRecipeManagement: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) {
         router.push("/login");
         return;

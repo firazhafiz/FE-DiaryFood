@@ -9,6 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 import Loading from "./loading";
 import { formatPlanText } from "../../lib/formatPlanText.js";
 import { DefaultProfile } from "../../../public/assets";
+import Cookies from "js-cookie";
 
 interface Message {
   id: number;
@@ -53,7 +54,7 @@ export default function TanyaAIPage() {
 
   const fetchThreads = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) {
         router.push("/login");
         return;
@@ -81,7 +82,7 @@ export default function TanyaAIPage() {
 
   const fetchMessages = async (threadId: number) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) {
         router.push("/login");
         return;
@@ -102,7 +103,7 @@ export default function TanyaAIPage() {
 
   const deleteThread = async (threadId: number) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) {
         router.push("/login");
         return;
@@ -140,7 +141,7 @@ export default function TanyaAIPage() {
     e.preventDefault();
     if (!input.trim()) return;
 
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) {
       router.push("/login");
       return;

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { UserManagement } from "@/components/organisms/UserManagement";
 import { useRouter } from "next/navigation";
 import { FaSearch, FaSort } from "react-icons/fa";
-
+import Cookies from "js-cookie";
 interface User {
   id: number;
   email: string;
@@ -25,7 +25,7 @@ export default function UsersPage() {
   const [sortBy, setSortBy] = useState("newest");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) {
       // BARU: Validasi token
       router.push("/login");

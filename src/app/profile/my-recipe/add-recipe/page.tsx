@@ -5,6 +5,7 @@ import { FaPlus, FaTrash, FaArrowLeft, FaTimes } from "react-icons/fa";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
+import Cookies from "js-cookie";
 
 interface Ingredient {
   id: number;
@@ -38,7 +39,7 @@ interface FormData {
 }
 
 const fetcher = async (url: string) => {
-  const token = localStorage.getItem("token");
+   const token = Cookies.get("token");
   if (!token) throw new Error("No token found");
 
   const response = await fetch(url, {
@@ -134,6 +135,7 @@ export default function AddRecipePage() {
     if (categoriesData) {
       setCategories(categoriesData);
     }
+    console.log(categoriesData);
   }, [categoriesData]);
 
   useEffect(() => {
@@ -219,7 +221,7 @@ export default function AddRecipePage() {
     e.preventDefault();
     setSubmitError(null);
 
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) {
       setSubmitError("No token found. Please log in.");
       router.push("/login");
@@ -384,9 +386,16 @@ export default function AddRecipePage() {
                 disabled={!categoriesData}>
                 <option value="">Select category</option>
                 {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.nama}
-                  </option>
+                  <optgroup key={category.id} label={category.nama}>
+                    <option value={category.id}>{category.nama}</option>
+                    {category.subcategories &&
+                      category.subcategories.length > 0 &&
+                      category.subcategories.map((subcategory) => (
+                        <option key={subcategory.id} value={subcategory.id}>
+                          — {subcategory.nama}
+                        </option>
+                      ))}
+                  </optgroup>
                 ))}
               </select>
               {!categoriesData && <p className="mt-1 text-xs text-slate-500">Loading categories...</p>}

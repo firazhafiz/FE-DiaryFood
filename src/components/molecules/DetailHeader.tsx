@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { RecipeDetail } from "@/types/recipe-detail";
 import Image from "next/image";
+import { FaComment, FaCommentAlt, FaRegSave, FaSave } from "react-icons/fa";
+import Cookies from "js-cookie";
 
 interface DetailHeaderProps {
   recipe: RecipeDetail;
@@ -32,7 +34,7 @@ const DetailHeader = ({ recipe, loading }: DetailHeaderProps) => {
       setIsSaved(true);
       setTotalSaved((prev) => prev + 1);
 
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("No authentication token found");
 
       const response = await fetch(`http://localhost:4000/v1/resep/${recipe.id}/save`, {
@@ -66,7 +68,7 @@ const DetailHeader = ({ recipe, loading }: DetailHeaderProps) => {
       setIsSaved(false);
       setTotalSaved((prev) => prev - 1);
 
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) throw new Error("No authentication token found");
 
       const response = await fetch(`http://localhost:4000/v1/resep/${recipe.id}/unsave`, {
@@ -149,23 +151,39 @@ const DetailHeader = ({ recipe, loading }: DetailHeaderProps) => {
           </span>
           <span>•</span>
           <span className="flex items-center gap-1">
-            <span>{recipe.totalComments}</span> comments
+            <span>{recipe.totalComments}</span>
+            <FaCommentAlt />
           </span>
           <span>•</span>
           <span className="flex items-center gap-1">
-            <span>{totalSaved}</span> Saved
+            <span>{totalSaved}</span>
+            <FaSave />
           </span>
           <span>•</span>
           <span className="flex items-center gap-1">
-            {recipe.rating ? (
+            {recipe.averageRating > 0 ? (
               <>
-                <span className="text-yellow-400">★</span>
-                {recipe.rating.toFixed(1)} ({recipe.reviewers} reviews)
+                <span className="flex">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <span key={star} className={`text-lg ${star <= Math.floor(recipe.averageRating) ? "text-yellow-400" : "text-gray-400"}`}>
+                      ★
+                    </span>
+                  ))}
+                </span>
+                <span>
+                  {recipe.averageRating} ({recipe.totalReviews} Reviews)
+                </span>
               </>
             ) : (
               <>
-                <span className="text-gray-400">★</span>
-                0.0 (0 reviews)
+                <span className="flex">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <span key={star} className="text-lg text-gray-400">
+                      ★
+                    </span>
+                  ))}
+                </span>
+                <span>0.0 (0 ulasan)</span>
               </>
             )}
           </span>
@@ -182,7 +200,7 @@ const DetailHeader = ({ recipe, loading }: DetailHeaderProps) => {
         </div>
       </div>
       <div className="rounded-2xl overflow-hidden mb-4 w-full max-w-2xl">
-        <img src={recipe.photoResep} alt={recipe.nama} className="w-full h-72 object-cover" />
+        <Image src={recipe.photoResep} alt={recipe.nama} height={100} width={200} className="w-full h-[350px] object-cover" />
       </div>
       <div className="flex gap-8 mb-4 text-center">
         <div>

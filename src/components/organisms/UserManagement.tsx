@@ -4,6 +4,7 @@ import React, { useState, useMemo } from "react"; // DIUBAH: Hapus useEffect yan
 import { UserTable } from "../molecules/UserTable";
 import { DashboardCard } from "../molecules/DashboardCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import Cookies from "js-cookie";
 
 interface User {
   id: number;
@@ -23,23 +24,13 @@ interface UserManagementProps {
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
 }
 
-export const UserManagement: React.FC<UserManagementProps> = ({
-  users,
-  onUserSelect,
-  searchQuery,
-  sortBy,
-  setUsers,
-}) => {
+export const UserManagement: React.FC<UserManagementProps> = ({ users, onUserSelect, searchQuery, sortBy, setUsers }) => {
   const [currentPage, setCurrentPage] = useState(1); // BARU: State untuk paginasi
   const itemsPerPage = 7;
 
   // Filter pengguna berdasarkan pencarian
   const filteredUsers = useMemo(() => {
-    return users.filter(
-      (user) =>
-        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    return users.filter((user) => user.name.toLowerCase().includes(searchQuery.toLowerCase()) || user.email.toLowerCase().includes(searchQuery.toLowerCase()));
   }, [users, searchQuery]); // BARU: Gunakan useMemo untuk optimasi
 
   // Urutkan pengguna berdasarkan sortBy
@@ -47,15 +38,9 @@ export const UserManagement: React.FC<UserManagementProps> = ({
     return [...filteredUsers].sort((a, b) => {
       switch (sortBy) {
         case "newest":
-          return (
-            new Date(b.createdAt || "").getTime() -
-            new Date(a.createdAt || "").getTime()
-          );
+          return new Date(b.createdAt || "").getTime() - new Date(a.createdAt || "").getTime();
         case "oldest":
-          return (
-            new Date(a.createdAt || "").getTime() -
-            new Date(b.createdAt || "").getTime()
-          );
+          return new Date(a.createdAt || "").getTime() - new Date(b.createdAt || "").getTime();
         case "name-asc":
           return a.name.localeCompare(b.name);
         case "name-desc":
@@ -68,10 +53,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({
 
   // Hitung total halaman dan pengguna untuk halaman saat ini
   const totalPages = Math.ceil(sortedUsers.length / itemsPerPage); // BARU: Definisikan totalPages
-  const paginatedUsers = sortedUsers.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  ); // BARU: Ambil pengguna untuk halaman saat ini
+  const paginatedUsers = sortedUsers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage); // BARU: Ambil pengguna untuk halaman saat ini
 
   // Fungsi untuk mengubah halaman
   const handlePageChange = (page: number) => {
@@ -84,7 +66,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({
   // Fungsi untuk menghapus pengguna
   const handleDeleteUser = async (id: number) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       if (!token) {
         throw new Error("No authentication token found");
       }
@@ -133,12 +115,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`p-2 rounded-lg ${
-                  currentPage === 1
-                    ? "text-gray-400 cursor-not-allowed"
-                    : "text-slate-700 hover:bg-white/60 transition-colors"
-                }`}
-              >
+                className={`p-2 rounded-lg ${currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "text-slate-700 hover:bg-white/60 transition-colors"}`}>
                 <FaChevronLeft />
               </button>
 
@@ -146,12 +123,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({
                 <button
                   key={index + 1}
                   onClick={() => handlePageChange(index + 1)}
-                  className={`w-8 h-8 rounded-lg text-sm font-medium ${
-                    currentPage === index + 1
-                      ? "bg-[#FF7A5C] text-white"
-                      : "text-slate-700 hover:bg-white/60 transition-colors"
-                  }`}
-                >
+                  className={`w-8 h-8 rounded-lg text-sm font-medium ${currentPage === index + 1 ? "bg-[#FF7A5C] text-white" : "text-slate-700 hover:bg-white/60 transition-colors"}`}>
                   {index + 1}
                 </button>
               ))}
@@ -159,12 +131,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`p-2 rounded-lg ${
-                  currentPage === totalPages
-                    ? "text-gray-400 cursor-not-allowed"
-                    : "text-slate-700 hover:bg-white/60 transition-colors"
-                }`}
-              >
+                className={`p-2 rounded-lg ${currentPage === totalPages ? "text-gray-400 cursor-not-allowed" : "text-slate-700 hover:bg-white/60 transition-colors"}`}>
                 <FaChevronRight />
               </button>
             </div>

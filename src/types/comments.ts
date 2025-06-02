@@ -5,7 +5,7 @@ interface Comment {
     name: string;
     photo: string | null;
   };
-  rating?: number;
+  rating: number;
   resepId: number;
   comment: string;
   createdAt: Date;

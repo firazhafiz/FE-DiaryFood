@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { RecipeTable } from "../molecules/RecipeTable";
 import { DashboardCard } from "../molecules/DashboardCard";
 import { useRouter } from "next/navigation";
-
+import Cookies from "js-cookie";
 interface Recipe {
   id: number;
   nama: string;
@@ -35,7 +35,7 @@ export const RecipeManagement: React.FC<RecipeManagementProps> = ({ searchQuery 
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = Cookies.get("token");
         const res = await fetch("http://localhost:4000/v1/admin/dashboard/recipes", {
           headers: {
             "Content-Type": "application/json",
@@ -60,7 +60,7 @@ export const RecipeManagement: React.FC<RecipeManagementProps> = ({ searchQuery 
 
   const handleDelete = async (id: number) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       const response = await fetch(`http://localhost:4000/v1/admin/dashboard/recipes/${id}`, {
         method: "DELETE",
         headers: {

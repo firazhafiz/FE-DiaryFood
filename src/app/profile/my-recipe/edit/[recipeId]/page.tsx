@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import useSWR, { mutate } from "swr";
 import EditRecipeSkeleton from "@/components/skeletons/EditRecipeSkeleton";
-
+import Cookies from "js-cookie";
 interface Ingredient {
   id: number;
   name: string;
@@ -39,7 +39,7 @@ interface FormData {
 }
 
 const fetcher = async (url: string) => {
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
   if (!token) throw new Error("No token found");
 
   const response = await fetch(url, {
@@ -135,7 +135,7 @@ export default function EditRecipePage() {
   } = useSWR(resepId && !isNaN(resepId) ? `http://localhost:4000/v1/profile/recipe/${resepId}` : null, fetcher, {
     onError: (error) => {
       if (error.message === "No token found" || error.message.includes("401")) {
-        localStorage.removeItem("token");
+        
         router.push("/login");
       }
     },
@@ -271,7 +271,7 @@ export default function EditRecipePage() {
     e.preventDefault();
     setSubmitError(null);
 
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (!token) {
       setSubmitError("No token found. Please log in.");
       router.push("/login");

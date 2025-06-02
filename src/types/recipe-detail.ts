@@ -24,6 +24,8 @@ interface RecipeDetail {
   reviewers?: number;
   savesCount: number;
   totalComments: number;
+  totalReviews: number;
+  averageRating: number;
   isSavedByCurrentUser: boolean;
 }
 

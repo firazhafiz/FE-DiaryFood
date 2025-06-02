@@ -5,6 +5,8 @@ import IngredientsSection from "@/components/molecules/IngredientsSection";
 import InstructionsSection from "@/components/molecules/InstructionsSection";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Cookies from "js-cookie";
+
 interface Recipe {
   id: number;
   nama: string;
@@ -51,7 +53,7 @@ const DetailMyRecipe = () => {
         return;
       }
       try {
-        const token = localStorage.getItem("token");
+        const token = Cookies.get("token");
         if (!token) {
           router.push("/login");
           return;

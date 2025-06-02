@@ -55,7 +55,7 @@ const DetailMyRecipe = () => {
       }
 
       try {
-        const token = localStorage.getItem("token");
+        const token =  Coo;
         const response = await fetch(`http://localhost:4000/v1/admin/dashboard/recipes/${id}`, {
           headers: {
             "Content-Type": "application/json",

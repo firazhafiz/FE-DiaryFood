@@ -6,6 +6,7 @@ import useSWR from "swr";
 import { FaUser, FaEnvelope, FaCalendarAlt } from "react-icons/fa";
 import FeedbackSkeleton from "@/components/skeletons/FeedbackSkeleton";
 import Image from "next/image";
+import Cookies from "js-cookie";
 
 interface Feedback {
   id: string;
@@ -24,7 +25,7 @@ interface Feedback {
 
 // SWR fetcher function with Bearer token
 const fetcher = async (url: string) => {
-  const token = localStorage.getItem("token"); // Adjust based on your auth setup
+  const token = Cookies.get("token");
   if (!token) {
     throw new Error("No authentication token found");
   }

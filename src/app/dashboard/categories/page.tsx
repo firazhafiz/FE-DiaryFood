@@ -2,6 +2,7 @@
 
 import CategoryManagement from "@/components/organisms/CategoryManagement";
 import { useDeferredValue, useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 interface Category {
   id: string;
@@ -25,7 +26,7 @@ const CategoriesPage = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+            Authorization: `Bearer ${Cookies.get("token") || ""}`,
           },
         });
 
@@ -57,7 +58,7 @@ const CategoriesPage = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+          Authorization: `Bearer ${Cookies.get("token") || ""}`,
         },
         body: JSON.stringify(newCategory),
       });
@@ -80,7 +81,7 @@ const CategoriesPage = () => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+          Authorization: `Bearer ${Cookies.get("token") || ""}`,
         },
       });
 
