@@ -1,13 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import {
-  FaPlus,
-  FaTrash,
-  FaArrowLeft,
-  FaTimes,
-  FaAngleDown,
-} from "react-icons/fa";
+import {FaPlus, FaTrash, FaArrowLeft, FaTimes, FaAngleDown} from "react-icons/fa";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
@@ -317,16 +311,10 @@ export default function AddRecipePage() {
       return;
     }
 
-    // Filter out invalid category IDs before mapping to numbers
-    const validCategoryIds = formData.categoryId.filter((id) => {
-      const numId = Number(id);
-      return !isNaN(numId) && numId > 0;
-    }).map(Number);
-
     const body = {
       nama: formData.recipeName,
       photoResep: formData.thumbnailPreview || undefined,
-      kategoriId: validCategoryIds.length > 0 ? validCategoryIds : undefined,
+      kategoriId: formData.categoryId.map(Number),
       description: formData.description,
       preparationTime: formData.preparationTime || undefined,
       cookingTime: formData.cookingTime || undefined,
@@ -415,35 +403,33 @@ export default function AddRecipePage() {
     });
 
   const handleCategoryChange = (id: string) => {
-    if (!isNaN(Number(id)) && Number(id) > 0) {
-      if (formData.categoryId.includes(id)) {
-        const subCategoryIds = categories
-          .filter((cat) => cat.parentId === Number(id))
-          .map((cat) => String(cat.id));
-        const newCatIds = formData.categoryId.filter(
-          (catId) => catId !== id && !subCategoryIds.includes(catId)
-        );
-        updateFormData({ categoryId: newCatIds });
-      } else {
-        updateFormData({ categoryId: [...formData.categoryId, id] });
-      }
+    if (formData.categoryId.includes(id)) {
+      // Remove the category and its sub-categories
+      const subCategoryIds = categories
+        .filter((cat) => cat.parentId === Number(id))
+        .map((cat) => String(cat.id));
+      const newCatIds = formData.categoryId.filter(
+        (catId) => catId !== id && !subCategoryIds.includes(catId)
+      );
+      updateFormData({ categoryId: newCatIds });
+    } else {
+      // Add the category
+      updateFormData({ categoryId: [...formData.categoryId, id] });
     }
   };
 
   const handleSubCategoryChange = (id: string, parentId: number | null) => {
-    if (!isNaN(Number(id)) && Number(id) > 0) {
-      if (formData.categoryId.includes(id)) {
+    if (formData.categoryId.includes(id)) {
+      updateFormData({
+        categoryId: formData.categoryId.filter((catId) => catId !== id),
+      });
+    } else {
+      if (parentId && !formData.categoryId.includes(String(parentId))) {
         updateFormData({
-          categoryId: formData.categoryId.filter((catId) => catId !== id),
+          categoryId: [...formData.categoryId, String(parentId), id],
         });
       } else {
-        if (parentId && !isNaN(Number(parentId)) && !formData.categoryId.includes(String(parentId))) {
-          updateFormData({
-            categoryId: [...formData.categoryId, String(parentId), id],
-          });
-        } else {
-          updateFormData({ categoryId: [...formData.categoryId, id] });
-        }
+        updateFormData({ categoryId: [...formData.categoryId, id] });
       }
     }
   };
@@ -591,20 +577,29 @@ export default function AddRecipePage() {
                 Category
               </label>
               <div className="relative" ref={mainCategoryDropdownRef}>
-                <input
-                  type="text"
-                  value={selectedCategories || "Select category (multiple)"}
-                  readOnly
-                  className={`w-full px-3 py-2 border text-slate-700 text-xs border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent pr-10 ${
-                    mainCategoryDropdownOpen ? "ring-2 ring-[var(--custom-orange)]" : ""
+                <div
+                  className={`w-full px-3 py-2 border text-slate-700 text-xs border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent text-left flex justify-between items-center cursor-pointer ${
+                    mainCategoryDropdownOpen
+                      ? "ring-2 ring-[var(--custom-orange)]"
+                      : ""
                   }`}
                   onClick={() => setMainCategoryDropdownOpen((open) => !open)}
-                />
-                <FaAngleDown
-                  className={`absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 ml-2 transition-transform ${
-                    mainCategoryDropdownOpen ? "rotate-180" : "rotate-0"
-                  }`}
-                />
+                >
+                  <span
+                    className={
+                      selectedCategories
+                        ? "font-normal text-slate-700"
+                        : "font-normal text-slate-400"
+                    }
+                  >
+                    {selectedCategories || "Select category (multiple)"}
+                  </span>
+                  <FaAngleDown
+                    className={`w-4 h-4 ml-2 transition-transform ${
+                      mainCategoryDropdownOpen ? "rotate-180" : "rotate-0"
+                    }`}
+                  />
+                </div>
                 {mainCategoryDropdownOpen && (
                   <div className="absolute z-20 mt-1 w-full bg-white border border-slate-300 rounded-lg shadow-lg max-h-60 overflow-auto animate-fade-in">
                     {mainCategories.length === 0 && (
@@ -640,20 +635,29 @@ export default function AddRecipePage() {
                 Sub Category
               </label>
               <div className="relative" ref={subCategoryDropdownRef}>
-                <input
-                  type="text"
-                  value={selectedSubCategories || "Select sub category (multiple)"}
-                  readOnly
-                  className={`w-full px-3 py-2 border text-slate-700 text-xs border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent pr-10 ${
-                    subCategoryDropdownOpen ? "ring-2 ring-[var(--custom-orange)]" : ""
+                <div
+                  className={`w-full px-3 py-2 border text-slate-700 text-xs border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent text-left flex justify-between items-center cursor-pointer ${
+                    subCategoryDropdownOpen
+                      ? "ring-2 ring-[var(--custom-orange)]"
+                      : ""
                   }`}
                   onClick={() => setSubCategoryDropdownOpen((open) => !open)}
-                />
-                <FaAngleDown
-                  className={`absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 ml-2 transition-transform ${
-                    subCategoryDropdownOpen ? "rotate-180" : "rotate-0"
-                  }`}
-                />
+                >
+                  <span
+                    className={
+                      selectedSubCategories
+                        ? "font-normal text-slate-700"
+                        : "font-normal text-slate-400"
+                    }
+                  >
+                    {selectedSubCategories || "Select sub category (multiple)"}
+                  </span>
+                  <FaAngleDown
+                    className={`w-4 h-4 ml-2 transition-transform ${
+                      subCategoryDropdownOpen ? "rotate-180" : "rotate-0"
+                    }`}
+                  />
+                </div>
                 {subCategoryDropdownOpen && (
                   <div className="absolute z-20 mt-1 w-full bg-white border border-slate-300 rounded-lg shadow-lg max-h-60 overflow-auto animate-fade-in">
                     {mainCategories
