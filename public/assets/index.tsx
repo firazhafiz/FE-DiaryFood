@@ -23,7 +23,7 @@ import IlustrasiCategories from "./icons/category.png";
 import HeroImage from "./images/hero.jpg";
 import HeroImage2 from "./images/hero2.jpg";
 import ArrowLeft from "./images/arrow_left.png";
-import DefaultProfile from "./images/defaultProfile.jpg"
+import DefaultProfile from "./images/defaultProfile.jpg";
 
 export {
   ImageLogin,
@@ -53,3 +53,8 @@ export {
   ArrowLeft,
   DefaultProfile,
 };
+
+// public/assets/index.tsx
+export { default as CategoryIcon } from "./icons/category.png";
+export { default as RecipesIcon } from "./icons/recipes.png";
+export { default as UsersIcon } from "./icons/users.png";

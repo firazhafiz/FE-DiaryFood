@@ -1,7 +1,7 @@
 "use client";
 
 import { DashboardTemplate } from "@/components/templates/DashboardTemplate";
-import { IlustrasiCategories, IlustrasiCooking, IlustrasiRecipes, IlustrasiUsers } from "../../../public/assets/index";
+import { CategoryIcon, IlustrasiCategories, IlustrasiCooking, IlustrasiRecipes, IlustrasiUsers, RecipesIcon, UsersIcon } from "../../../public/assets/index";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend } from "chart.js";
@@ -137,21 +137,21 @@ export default function DashboardPage() {
         {/* Stats Section */}
         <div className="grid grid-cols-3 gap-6">
           <div className="bg-white/50 rounded-3xl p-6 flex items-center justify-center gap-6 border-2 border-white/60">
-            <Image src={IlustrasiUsers} alt="ilustrasi pengguna" className="w-[100px] object-cover" />
+            <Image src={UsersIcon} alt="ilustrasi pengguna" className="w-[100px] object-cover" />
             <div className="flex flex-col items-center justify-center">
               <h2 className="text-3xl text-center font-semibold text-slate-700 mb-2">{stats.totalUsers}</h2>
               <p className="text-slate-500 text-sm">Active Users</p>
             </div>
           </div>
           <div className="bg-white/50 rounded-3xl p-6 flex items-center justify-center gap-6 border-2 border-white/60">
-            <Image src={IlustrasiRecipes} alt="ilustrasi resep" className="w-[100px] object-cover" />
+            <Image src={RecipesIcon} alt="ilustrasi resep" className="w-[100px] object-cover" />
             <div className="flex flex-col items-center justify-center">
               <h2 className="text-3xl text-center font-semibold text-slate-700 mb-2">{stats.totalRecipes}</h2>
               <p className="text-slate-500 text-sm">Recipes</p>
             </div>
           </div>
           <div className="bg-white/50 rounded-3xl p-6 flex items-center justify-center gap-6 border-2 border-white/60">
-            <Image src={IlustrasiCategories} alt="ilustrasi kategori" className="w-[100px] object-cover" />
+            <Image src={CategoryIcon} alt="ilustrasi kategori" className="w-[100px] object-cover" />
             <div className="flex flex-col items-center justify-center">
               <h2 className="text-3xl text-center font-semibold text-slate-700 mb-2">{stats.totalCategories}</h2>
 
