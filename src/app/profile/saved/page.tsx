@@ -1,104 +1,291 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaClock, FaStar, FaLock, FaBookmark } from "react-icons/fa";
-import { useState } from "react";
+import { FaClock, FaStar, FaBookmark } from "react-icons/fa";
+import { GoSearch } from "react-icons/go";
+import Cookies from "js-cookie";
+import { RecipeDetail } from "@/types/recipe-detail";
+
+const extractNumber = (timeString: string | undefined): string => {
+  if (!timeString) return "0";
+  const match = timeString.match(/\d+/);
+  return match ? match[0] : "0";
+};
+
+const formatTime = (time: string | number): string => {
+  let t = String(time)
+    .replace(/\s*mins?\s*$/i, "")
+    .trim();
+  return `${t} Min`;
+};
 
 const SavedPage = () => {
+  const [recipes, setRecipes] = useState<RecipeDetail[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [selectedRecipe, setSelectedRecipe] = useState<string | null>(null);
+  const [selectedRecipeId, setSelectedRecipeId] = useState<number | null>(null);
 
-  const handleRemoveSave = (slug: string) => {
-    setSelectedRecipe(slug);
+  const fetchSavedRecipes = async () => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) {
+        throw new Error("No authentication token.");
+      }
+      const response = await fetch("http://localhost:4000/v1/resep/saved", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      const mappedRecipes: RecipeDetail[] = data.data.map((saved: any) => {
+        const resep = saved.resep;
+        return {
+          id: resep.id,
+          nama: resep.nama,
+          photoResep: resep.photoResep,
+          kategoriId: resep.kategoriId,
+          tanggalUnggah: resep.createdAt,
+          user: { name: resep.user.name, photo: resep.user.photo },
+          bahanList: resep.bahanList,
+          langkahList: resep.langkahList,
+          description: resep.description,
+          cookingTime: resep.cookingTime || "0 min",
+          preparationTime: resep.preparationTime || "0 min",
+          servingTime: resep.servingTime || "0",
+          note: resep.note || "",
+          totalComments: 0,
+          savesCount: 0,
+          totalReviews: 0,
+          averageRating: 0,
+          isSavedByCurrentUser: true,
+          kategori: resep.kategori ? { nama: resep.kategori.nama } : undefined,
+        };
+      });
+      setRecipes(mappedRecipes);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching saved recipes:", error);
+      setError("Failed to load saved recipes. Please try again.");
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSavedRecipes();
+    const handleRecipeUnsaved = (event: CustomEvent) => {
+      const { recipeId } = event.detail;
+      setRecipes((prev) => prev.filter((recipe) => recipe.id !== recipeId));
+    };
+    const handleRecipeSaved = () => {
+      fetchSavedRecipes();
+    };
+    window.addEventListener("recipeUnsaved", handleRecipeUnsaved as any);
+    window.addEventListener("recipeSaved", handleRecipeSaved as any);
+    return () => {
+      window.removeEventListener("recipeUnsaved", handleRecipeUnsaved as any);
+      window.removeEventListener("recipeSaved", handleRecipeSaved as any);
+    };
+  }, []);
+
+  const handleRemoveSave = (recipeId: number) => {
+    setSelectedRecipeId(recipeId);
     setShowConfirmModal(true);
   };
 
-  const confirmRemove = () => {
-    // TODO: Implement remove from saved list logic
-    console.log("Removing recipe:", selectedRecipe);
-    setShowConfirmModal(false);
-    setSelectedRecipe(null);
+  const confirmRemove = async () => {
+    if (!selectedRecipeId) return;
+    try {
+      const token = Cookies.get("token");
+      if (!token) {
+        throw new Error("No authentication token.");
+      }
+      const response = await fetch(
+        `http://localhost:4000/v1/resep/${selectedRecipeId}/unsave`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      setRecipes((prev) =>
+        prev.filter((recipe) => recipe.id !== selectedRecipeId)
+      );
+      setShowConfirmModal(false);
+      setSelectedRecipeId(null);
+      window.dispatchEvent(
+        new CustomEvent("recipeUnsaved", {
+          detail: { recipeId: selectedRecipeId },
+        })
+      );
+    } catch (error) {
+      console.error("Error unsaving recipe:", error);
+      setError("Failed to unsave recipe. Please try again.");
+      setShowConfirmModal(false);
+      setSelectedRecipeId(null);
+    }
   };
 
+  if (loading) {
+    return (
+      <div className="p-8">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6" />
+          <div className="space-y-4">
+            {[...Array(3)].map((_, index) => (
+              <div
+                key={index}
+                className="bg-white/60 rounded-3xl shadow-sm border-2 border-white/60 p-4"
+              >
+                <div className="flex gap-4">
+                  <div className="w-48 h-32 bg-gray-200 rounded-2xl" />
+                  <div className="flex-grow">
+                    <div className="h-6 bg-gray-200 rounded w-3/4 mb-2" />
+                    <div className="h-4 bg-gray-200 rounded w-1/2 mb-3" />
+                    <div className="flex gap-4">
+                      <div className="h-4 bg-gray-200 rounded w-16" />
+                      <div className="h-4 bg-gray-200 rounded w-16" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="p-8">
+    <div className="p-4">
       <div className="mb-6 flex justify-between">
-        <h1 className="text-2xl font-semibold text-slate-700">Saved</h1>
+        <h1 className="text-2xl font-semibold text-slate-700">Saved Recipes</h1>
         <div className="relative">
           <input
             type="text"
             placeholder="Search recipes..."
-            className="pl-4 pr-10 py-2 text-slate-500 text-sm border border-white rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] placeholder:text-slate-500 placeholder:text-sm"
+            className="text-sm pl-4 pr-10 py-2 border-white text-slate-500 border rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] placeholder:text-slate-500 placeholder:text-sm"
           />
           <span className="absolute right-3 top-2.5 text-gray-400">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+            <GoSearch />
           </span>
         </div>
       </div>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
       <div className="space-y-4">
-        {sampleRecipes.map((recipe) => (
-          <div key={recipe.slug} className="bg-white/60 rounded-3xl shadow-sm border-2 border-white/60 p-4 hover:shadow-md transition-shadow">
-            <div className="flex gap-4">
-              <div className="relative w-48 h-32 rounded-2xl overflow-hidden flex-shrink-0">
-                <Image src={recipe.image} alt={recipe.title} fill className="object-cover" />
-                {!recipe.isFree && (
-                  <div className="absolute top-2 right-2 bg-white/90 rounded-full p-1">
-                    <FaLock className="text-[#FF7A5C] w-4 h-4" />
+        {recipes.length === 0 ? (
+          <p className="text-slate-600 text-center">No saved recipes found.</p>
+        ) : (
+          recipes.map((recipe) => {
+            const prepTime = extractNumber(recipe.preparationTime);
+            const cookTime = extractNumber(recipe.cookingTime);
+            const servingTime = extractNumber(recipe.servingTime);
+            const totalTime =
+              Number(prepTime) + Number(cookTime) + Number(servingTime);
+            return (
+              <div
+                key={recipe.id}
+                className="bg-white/60 rounded-3xl shadow-sm border-2 border-white/60 p-4 hover:shadow-md transition-shadow"
+              >
+                <div className="flex gap-4">
+                  <div className="relative w-48 h-32 rounded-2xl overflow-hidden flex-shrink-0">
+                    <Image
+                      src={recipe.photoResep}
+                      alt={recipe.nama}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
-                )}
-              </div>
-              <div className="flex-grow">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-lg font-semibold text-slate-900 mb-1">{recipe.title}</h3>
-                    <p className="text-sm text-slate-600 mb-2">{recipe.category}</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-1 text-yellow-500">
-                      <FaStar className="w-4 h-4" />
-                      <span className="text-sm font-medium">{recipe.rating}</span>
+                  <div className="flex-grow">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="text-lg font-semibold text-slate-900 mb-1">
+                          {recipe.nama}
+                        </h3>
+                        <p className="text-sm text-gray-600 mb-2">
+                          {recipe.kategori?.nama || "Unknown Category"}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1 text-yellow-500">
+                          <FaStar className="w-4 h-4" />
+                          <span className="text-sm font-medium">
+                            {recipe.averageRating || 0}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => handleRemoveSave(recipe.id)}
+                          className="text-[#FF7a5C] hover:text-[#ff6b4a] transition-colors cursor-pointer"
+                        >
+                          <FaBookmark className="w-5 h-5" />
+                        </button>
+                      </div>
                     </div>
-                    <button onClick={() => handleRemoveSave(recipe.slug)} className="text-[#FF7A5C] hover:text-[#ff6b4a] transition-colors cursor-pointer">
-                      <FaBookmark className="w-5 h-5" />
-                    </button>
+                    <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                      <div className="flex items-center gap-1">
+                        <FaClock className="w-4 h-4" />
+                        <span>{formatTime(totalTime)}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Image
+                          src={
+                            recipe.user?.photo ||
+                            "/assets/images/image_login.jpg"
+                          }
+                          alt={recipe.user?.name || "Unknown User"}
+                          width={20}
+                          height={20}
+                          className="rounded-full"
+                        />
+                        <span>{recipe.user?.name || "Unknown User"}</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <Link
+                        href={`/detail_resep?recipe=${recipe.id}`}
+                        className="text-[#FF7A5C] hover:text-[#ff6b4a] font-medium text-sm"
+                      >
+                        View Recipe →
+                      </Link>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-4 text-sm text-slate-600 mb-3">
-                  <div className="flex items-center gap-1">
-                    <FaClock className="w-4 h-4" />
-                    <span>{recipe.time} mins</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Image src={recipe.author.avatar} alt={recipe.author.name} width={20} height={20} className="rounded-full" />
-                    <span>{recipe.author.name}</span>
-                  </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  {!recipe.isFree && <div className="text-[#FF7A5C] font-semibold">Rp {recipe.price?.toLocaleString()}</div>}
-                  <Link href={`/detail_resep?recipe=${recipe.slug}`} className="text-[#FF7A5C] hover:text-[#ff6b4a] font-medium text-sm">
-                    View Recipe →
-                  </Link>
                 </div>
               </div>
-            </div>
-          </div>
-        ))}
+            );
+          })
+        )}
       </div>
-
-      {/* Confirmation Modal */}
       {showConfirmModal && (
         <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Remove from Saved</h3>
-            <p className="text-gray-600 mb-6">Are you sure you want to remove this recipe from your saved list?</p>
+            <h3 className="font-semibold text-lg text-gray-900 mb-4">
+              Remove from Saved
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to remove this recipe from your saved list?
+            </p>
             <div className="flex justify-end gap-3">
-              <button onClick={() => setShowConfirmModal(false)} className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg"
+              >
                 Cancel
               </button>
-              <button onClick={confirmRemove} className="px-4 py-2 text-sm font-medium text-white bg-[#FF7A5C] hover:bg-[#ff6b4a] rounded-lg">
+              <button
+                onClick={confirmRemove}
+                className="px-4 py-2 text-sm font-medium text-white bg-[#FF7A5C] hover:bg-[#ff6b4a] rounded-lg"
+              >
                 Remove
               </button>
             </div>

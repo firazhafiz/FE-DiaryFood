@@ -23,7 +23,9 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -39,7 +41,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
       });
       if (!response.ok) {
-        throw new Error(`Gagal mengambil data pengguna: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `Gagal mengambil data pengguna: ${response.status} ${response.statusText}`
+        );
       }
       const data = await response.json();
       console.log("fetchUser response:", data);
@@ -51,7 +55,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         id: user.id,
         name: user.name || "Anonymous",
         email: user.email,
-        photo: user.photo && user.photo.trim() !== "" ? user.photo : DefaultProfile.src,
+        photo:
+          user.photo && user.photo.trim() !== ""
+            ? user.photo
+            : DefaultProfile.src,
       };
       setCurrentUser(userData);
       setIsLoggedIn(true);
@@ -72,7 +79,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (token) {
       fetchUser(token).catch(() => {
         // Jika token tidak valid, redirect ke login
-        router.push("/login");
+        router.push("/");
       });
     } else {
       setIsLoggedIn(false);
@@ -99,10 +106,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCurrentUser(null);
     setIsLoggedIn(false);
     setLoading(false);
-    router.push("/login");
   };
 
-  return <AuthContext.Provider value={{ currentUser, setCurrentUser, isLoggedIn, login, logout, loading }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        currentUser,
+        setCurrentUser,
+        isLoggedIn,
+        login,
+        logout,
+        loading,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {

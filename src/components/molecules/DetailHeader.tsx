@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { RecipeDetail } from "@/types/recipe-detail";
 import Image from "next/image";
-import { FaComment, FaCommentAlt, FaRegSave, FaSave } from "react-icons/fa";
+import { FaCommentAlt, FaSave } from "react-icons/fa";
 import Cookies from "js-cookie";
 
 interface DetailHeaderProps {
-  recipe: RecipeDetail;
+  recipe: RecipeDetail | null;
   loading: boolean;
 }
 
@@ -19,80 +19,116 @@ const extractNumber = (timeString: string | undefined): string => {
 };
 
 const DetailHeader = ({ recipe, loading }: DetailHeaderProps) => {
-  const [isSaved, setIsSaved] = useState<boolean>(recipe?.isSavedByCurrentUser || false);
-  const [totalSaved, setTotalSaved] = useState<number>(recipe?.savesCount || 0); // Initialize with savesCount
+  const [isSaved, setIsSaved] = useState<boolean>(
+    recipe?.isSavedByCurrentUser || false
+  );
+  const [totalSaved, setTotalSaved] = useState<number>(recipe?.savesCount || 0);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Update state when recipe prop changes
-    setIsSaved(recipe?.isSavedByCurrentUser || false);
-    setTotalSaved(recipe?.savesCount || 0);
-  }, [recipe]);
+    const checkSavedStatus = async () => {
+      if (!recipe?.id) return;
+      try {
+        const token = Cookies.get("token");
+        if (!token) return;
+        const response = await fetch(
+          `http://localhost:4000/v1/resep/${recipe.id}/saved-status`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setIsSaved(data.data.isSaved || false);
+        setTotalSaved(data.data.savesCount || 0);
+      } catch (err) {
+        console.error("Error checking saved status:", err);
+        setError("Gagal memeriksa status simpan.");
+      }
+    };
+    checkSavedStatus();
+  }, [recipe?.id]);
+
+  useEffect(() => {
+    if (recipe) {
+      setTotalSaved(recipe.savesCount || 0);
+    }
+  }, [recipe?.savesCount]);
 
   const handleSaveToggle = async () => {
+    if (!recipe?.id) return;
     try {
-      // Optimistic update
+      setError(null);
       setIsSaved(true);
       setTotalSaved((prev) => prev + 1);
-
       const token = Cookies.get("token");
       if (!token) throw new Error("No authentication token found");
-
-      const response = await fetch(`http://localhost:4000/v1/resep/${recipe.id}/save`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      const response = await fetch(
+        `http://localhost:4000/v1/resep/${recipe.id}/save`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
       const data = await response.json();
-      // Update with backend response if it includes savesCount
       if (data.data && typeof data.data.savesCount === "number") {
         setTotalSaved(data.data.savesCount);
       }
+      window.dispatchEvent(
+        new CustomEvent("recipeSaved", { detail: { recipeId: recipe.id } })
+      );
     } catch (err) {
       console.error("Error saving recipe:", err);
-      // Revert optimistic update
       setIsSaved(false);
       setTotalSaved((prev) => prev - 1);
+      setError("Gagal menyimpan resep.");
     }
   };
 
   const handleUnsaved = async () => {
+    if (!recipe?.id) return;
     try {
-      // Optimistic update
+      setError(null);
       setIsSaved(false);
       setTotalSaved((prev) => prev - 1);
-
       const token = Cookies.get("token");
       if (!token) throw new Error("No authentication token found");
-
-      const response = await fetch(`http://localhost:4000/v1/resep/${recipe.id}/unsave`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      const response = await fetch(
+        `http://localhost:4000/v1/resep/${recipe.id}/unsave`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
       const data = await response.json();
-      // Update with backend response if it includes savesCount
       if (data.data && typeof data.data.savesCount === "number") {
         setTotalSaved(data.data.savesCount);
       }
+      window.dispatchEvent(
+        new CustomEvent("recipeUnsaved", { detail: { recipeId: recipe.id } })
+      );
     } catch (err) {
       console.error("Error unsaving recipe:", err);
-      // Revert optimistic update
       setIsSaved(true);
       setTotalSaved((prev) => prev + 1);
+      setError("Gagal menghapus resep dari simpanan.");
     }
   };
 
@@ -122,27 +158,44 @@ const DetailHeader = ({ recipe, loading }: DetailHeaderProps) => {
 
   return (
     <div className="mb-8">
+      {error && <p className="text-red-500 text-xs mb-2">{error}</p>}
       <div className="text-xs text-gray-400 mb-2 flex items-center gap-1">
-        <Link href="/" className="hover:text-[color:var(--custom-orange)] transition-colors">
+        <Link
+          href="/"
+          className="hover:text-[color:var(--custom-orange)] transition-colors"
+        >
           Home
         </Link>
         <span className="mx-1">/</span>
-        <Link href="/recipes" className="hover:text-[color:var(--custom-orange)] transition-colors">
+        <Link
+          href="/recipes"
+          className="hover:text-[color:var(--custom-orange)] transition-colors"
+        >
           Recipes
         </Link>
         <span className="mx-1">/</span>
-        <span className="text-[color:var(--custom-orange)] font-semibold">{recipe.nama}</span>
+        <span className="text-[color:var(--custom-orange)] font-semibold">
+          {recipe.nama}
+        </span>
       </div>
-      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 leading-tight">{recipe.nama}</h1>
+      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 leading-tight">
+        {recipe.nama}
+      </h1>
       <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 mb-4 justify-between">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
-            <Image src={author.avatar} alt="Author" className="w-6 h-6 rounded-full object-cover" width={24} height={24} />
+            <Image
+              src={author.avatar}
+              alt="Author"
+              className="w-6 h-6 rounded-full object-cover"
+              width={24}
+              height={24}
+            />
             <span className="font-medium text-gray-700">{author.name}</span>
           </div>
           <span>•</span>
           <span className="flex items-center gap-1">
-            {new Date(recipe.tanggalUnggahan).toLocaleDateString("en-GB", {
+            {new Date(recipe.tanggalUnggahan).toLocaleDateString("en-US", {
               weekday: "short",
               day: "2-digit",
               month: "short",
@@ -165,7 +218,14 @@ const DetailHeader = ({ recipe, loading }: DetailHeaderProps) => {
               <>
                 <span className="flex">
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <span key={star} className={`text-lg ${star <= Math.floor(recipe.averageRating) ? "text-yellow-400" : "text-gray-400"}`}>
+                    <span
+                      key={star}
+                      className={`text-lg ${
+                        star <= Math.floor(recipe.averageRating)
+                          ? "text-yellow-400"
+                          : "text-gray-400"
+                      }`}
+                    >
                       ★
                     </span>
                   ))}
@@ -191,16 +251,28 @@ const DetailHeader = ({ recipe, loading }: DetailHeaderProps) => {
         <div className="flex items-center gap-2">
           <button
             onClick={isSaved ? handleUnsaved : handleSaveToggle}
-            className={`flex items-center gap-1 px-3 py-1 rounded-sm border text-xs transition-colors ${
-              isSaved ? "bg-white text-gray-700 border-[color:var(--custom-orange)]" : "bg-[color:var(--custom-orange)] text-white border-gray-200 hover:bg-orange-600"
-            }`}>
+            className={`flex items-center gap-1 px-3 py-1 rounded-sm border text-xs transition-colors cursor-pointer ${
+              isSaved
+                ? "bg-white text-gray-700 border-[color:var(--custom-orange)]"
+                : "bg-[color:var(--custom-orange)] text-white border-gray-200 hover:bg-orange-600"
+            }`}
+            disabled={!recipe.id}
+          >
             {isSaved ? "Unsave" : "Save"}
           </button>
-          <button className="flex items-center bg-[color:var(--custom-orange)] text-white cursor-pointer gap-1 px-3 py-1 rounded-sm border text-xs border-gray-200 hover:bg-orange-600 transition-colors">Share</button>
+          <button className="flex items-center bg-[color:var(--custom-orange)] text-white cursor-pointer gap-1 px-3 py-1 rounded-sm border text-xs border-gray-200 hover:bg-orange-600 transition-colors">
+            Share
+          </button>
         </div>
       </div>
       <div className="rounded-2xl overflow-hidden mb-4 w-full max-w-2xl">
-        <Image src={recipe.photoResep} alt={recipe.nama} height={100} width={200} className="w-full h-[350px] object-cover" />
+        <Image
+          src={recipe.photoResep}
+          alt={recipe.nama}
+          height={200}
+          width={400}
+          className="w-full h-[350px] object-cover"
+        />
       </div>
       <div className="flex gap-8 mb-4 text-center">
         <div>
@@ -216,7 +288,9 @@ const DetailHeader = ({ recipe, loading }: DetailHeaderProps) => {
           <div className="text-xs text-gray-500">Serving Time</div>
         </div>
       </div>
-      <div className="text-gray-700 text-sm max-w-2xl mb-2">{recipe.description}</div>
+      <div className="text-gray-700 text-sm max-w-2xl mb-2">
+        {recipe.description}
+      </div>
     </div>
   );
 };

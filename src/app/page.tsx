@@ -27,7 +27,7 @@ export default function Home() {
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+  }, []); 
 
   if (!mounted) {
     return null; // or a loading spinner if needed globally

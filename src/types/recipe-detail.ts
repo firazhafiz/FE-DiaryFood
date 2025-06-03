@@ -1,4 +1,5 @@
 import { Comment } from "./comments";
+
 interface RecipeDetail {
   id: number;
   nama: string;
@@ -27,6 +28,10 @@ interface RecipeDetail {
   totalReviews: number;
   averageRating: number;
   isSavedByCurrentUser: boolean;
+  kategori?: {
+    nama: string;
+  };
+  kategoriId?: number; // Added to support kategoriId
 }
 
 export type { RecipeDetail };
