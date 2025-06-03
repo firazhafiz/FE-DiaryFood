@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { FaPlus, FaTrash, FaArrowLeft, FaTimes } from "react-icons/fa";
+import {
+  FaPlus,
+  FaTrash,
+  FaArrowLeft,
+  FaTimes,
+  FaAngleDown,
+} from "react-icons/fa";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
@@ -22,11 +28,12 @@ interface Step {
 interface Kategori {
   id: number;
   nama: string;
+  parentId: number | null;
 }
 
 interface FormData {
   recipeName: string;
-  categoryId: string;
+  categoryId: string[];
   thumbnail: File | null;
   description: string;
   thumbnailPreview: string | null;
@@ -39,7 +46,7 @@ interface FormData {
 }
 
 const fetcher = async (url: string) => {
-   const token = Cookies.get("token");
+  const token = Cookies.get("token");
   if (!token) throw new Error("No token found");
 
   const response = await fetch(url, {
@@ -105,7 +112,7 @@ export default function AddRecipePage() {
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     recipeName: "",
-    categoryId: "",
+    categoryId: [],
     thumbnail: null,
     description: "",
     thumbnailPreview: null,
@@ -121,9 +128,20 @@ export default function AddRecipePage() {
   const [userId, setUserId] = useState<number | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const modalButtonRef = useRef<HTMLButtonElement>(null);
+  const [mainCategoryDropdownOpen, setMainCategoryDropdownOpen] =
+    useState(false);
+  const [subCategoryDropdownOpen, setSubCategoryDropdownOpen] = useState(false);
+  const mainCategoryDropdownRef = useRef<HTMLDivElement>(null);
+  const subCategoryDropdownRef = useRef<HTMLDivElement>(null);
 
-  const { data: categoriesData, error: categoriesError } = useSWR("http://localhost:4000/v1/category", fetcher);
-  const { data: userData, error: userError } = useSWR("http://localhost:4000/v1/profile", fetcher);
+  const { data: categoriesData, error: categoriesError } = useSWR(
+    "http://localhost:4000/v1/category",
+    fetcher
+  );
+  const { data: userData, error: userError } = useSWR(
+    "http://localhost:4000/v1/profile",
+    fetcher
+  );
 
   useEffect(() => {
     if (userData) {
@@ -133,9 +151,9 @@ export default function AddRecipePage() {
 
   useEffect(() => {
     if (categoriesData) {
+      console.log("categoriesData", categoriesData);
       setCategories(categoriesData);
     }
-    console.log(categoriesData);
   }, [categoriesData]);
 
   useEffect(() => {
@@ -144,11 +162,38 @@ export default function AddRecipePage() {
     }
   }, [showSuccessModal]);
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        mainCategoryDropdownRef.current &&
+        !mainCategoryDropdownRef.current.contains(event.target as Node)
+      ) {
+        setMainCategoryDropdownOpen(false);
+      }
+      if (
+        subCategoryDropdownRef.current &&
+        !subCategoryDropdownRef.current.contains(event.target as Node)
+      ) {
+        setSubCategoryDropdownOpen(false);
+      }
+    }
+    if (mainCategoryDropdownOpen || subCategoryDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [mainCategoryDropdownOpen, subCategoryDropdownOpen]);
+
   const updateFormData = (updates: Partial<FormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
   };
 
-  const handleThumbnailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleThumbnailChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       if (file.size > 10 * 1024 * 1024) {
@@ -172,31 +217,54 @@ export default function AddRecipePage() {
   };
 
   const addIngredient = () => {
-    const newId = formData.ingredients.length > 0 ? Math.max(...formData.ingredients.map((i) => i.id)) + 1 : 1;
+    const newId =
+      formData.ingredients.length > 0
+        ? Math.max(...formData.ingredients.map((i) => i.id)) + 1
+        : 1;
     updateFormData({
-      ingredients: [...formData.ingredients, { id: newId, name: "", amount: "" }],
+      ingredients: [
+        ...formData.ingredients,
+        { id: newId, name: "", amount: "" },
+      ],
     });
   };
 
   const removeIngredient = (id: number) => {
     if (formData.ingredients.length > 1) {
       updateFormData({
-        ingredients: formData.ingredients.filter((ingredient) => ingredient.id !== id),
+        ingredients: formData.ingredients.filter(
+          (ingredient) => ingredient.id !== id
+        ),
       });
     }
   };
 
-  const handleIngredientChange = (id: number, field: "name" | "amount", value: string) => {
+  const handleIngredientChange = (
+    id: number,
+    field: "name" | "amount",
+    value: string
+  ) => {
     updateFormData({
-      ingredients: formData.ingredients.map((ingredient) => (ingredient.id === id ? { ...ingredient, [field]: value } : ingredient)),
+      ingredients: formData.ingredients.map((ingredient) =>
+        ingredient.id === id ? { ...ingredient, [field]: value } : ingredient
+      ),
     });
   };
 
   const addStep = () => {
-    const newOrder = formData.steps.length > 0 ? Math.max(...formData.steps.map((s) => s.order)) + 1 : 1;
-    const newId = formData.steps.length > 0 ? Math.max(...formData.steps.map((s) => s.id)) + 1 : 1;
+    const newOrder =
+      formData.steps.length > 0
+        ? Math.max(...formData.steps.map((s) => s.order)) + 1
+        : 1;
+    const newId =
+      formData.steps.length > 0
+        ? Math.max(...formData.steps.map((s) => s.id)) + 1
+        : 1;
     updateFormData({
-      steps: [...formData.steps, { id: newId, order: newOrder, description: "" }],
+      steps: [
+        ...formData.steps,
+        { id: newId, order: newOrder, description: "" },
+      ],
     });
   };
 
@@ -213,7 +281,9 @@ export default function AddRecipePage() {
 
   const handleStepChange = (id: number, value: string) => {
     updateFormData({
-      steps: formData.steps.map((step) => (step.id === id ? { ...step, description: value } : step)),
+      steps: formData.steps.map((step) =>
+        step.id === id ? { ...step, description: value } : step
+      ),
     });
   };
 
@@ -233,26 +303,50 @@ export default function AddRecipePage() {
       return;
     }
 
-    const filteredIngredients = formData.ingredients.filter((ing) => ing.name.trim() !== "");
-    const filteredSteps = formData.steps.filter((step) => step.description.trim() !== "");
+    const filteredIngredients = formData.ingredients.filter(
+      (ing) => ing.name.trim() !== ""
+    );
+    const filteredSteps = formData.steps.filter(
+      (step) => step.description.trim() !== ""
+    );
 
     if (!formData.recipeName || !formData.categoryId || !formData.description) {
-      setSubmitError("Please fill in required fields: recipe name, category, and description.");
+      setSubmitError(
+        "Please fill in required fields: recipe name, category, and description."
+      );
       return;
     }
+
+    // Filter out invalid category IDs before mapping to numbers
+    const validCategoryIds = formData.categoryId.filter((id) => {
+      const numId = Number(id);
+      return !isNaN(numId) && numId > 0;
+    }).map(Number);
 
     const body = {
       nama: formData.recipeName,
       photoResep: formData.thumbnailPreview || undefined,
-      kategoriId: Number(formData.categoryId),
+      kategoriId: validCategoryIds.length > 0 ? validCategoryIds : undefined,
       description: formData.description,
       preparationTime: formData.preparationTime || undefined,
       cookingTime: formData.cookingTime || undefined,
       servingTime: formData.servingTime || undefined,
       note: formData.note || undefined,
       userId,
-      bahan: filteredIngredients.length > 0 ? filteredIngredients.map((ing) => ({ nama: ing.name, jumlah: ing.amount })) : undefined,
-      langkahPembuatan: filteredSteps.length > 0 ? filteredSteps.map((step) => ({ urutan: step.order, deskripsi: step.description })) : undefined,
+      bahan:
+        filteredIngredients.length > 0
+          ? filteredIngredients.map((ing) => ({
+              nama: ing.name,
+              jumlah: ing.amount,
+            }))
+          : undefined,
+      langkahPembuatan:
+        filteredSteps.length > 0
+          ? filteredSteps.map((step) => ({
+              urutan: step.order,
+              deskripsi: step.description,
+            }))
+          : undefined,
     };
 
     const bodySize = new Blob([JSON.stringify(body)]).size;
@@ -276,7 +370,10 @@ export default function AddRecipePage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || `Failed to create recipe (status: ${response.status})`);
+        throw new Error(
+          errorData.message ||
+            `Failed to create recipe (status: ${response.status})`
+        );
       }
 
       setShowSuccessModal(true);
@@ -291,54 +388,163 @@ export default function AddRecipePage() {
     router.push("/profile/my-recipe");
   };
 
-  const isSubmitDisabled = !userId || !formData.recipeName || !formData.categoryId || !formData.description;
+  const isSubmitDisabled =
+    !userId ||
+    !formData.recipeName ||
+    !formData.categoryId ||
+    !formData.description;
+
+  const mainCategoryNames = [
+    "Main Course",
+    "Allergies",
+    "Internasional Cuisine",
+    "Regional Cuisine",
+    "Goals",
+    "Preparation Time",
+    "Dietary Pattern",
+  ];
+
+  const mainCategories = categories
+    .filter(
+      (cat) => cat.parentId === null && mainCategoryNames.includes(cat.nama)
+    )
+    .sort((a, b) => {
+      const indexA = mainCategoryNames.indexOf(a.nama);
+      const indexB = mainCategoryNames.indexOf(b.nama);
+      return indexA - indexB;
+    });
+
+  const handleCategoryChange = (id: string) => {
+    if (!isNaN(Number(id)) && Number(id) > 0) {
+      if (formData.categoryId.includes(id)) {
+        const subCategoryIds = categories
+          .filter((cat) => cat.parentId === Number(id))
+          .map((cat) => String(cat.id));
+        const newCatIds = formData.categoryId.filter(
+          (catId) => catId !== id && !subCategoryIds.includes(catId)
+        );
+        updateFormData({ categoryId: newCatIds });
+      } else {
+        updateFormData({ categoryId: [...formData.categoryId, id] });
+      }
+    }
+  };
+
+  const handleSubCategoryChange = (id: string, parentId: number | null) => {
+    if (!isNaN(Number(id)) && Number(id) > 0) {
+      if (formData.categoryId.includes(id)) {
+        updateFormData({
+          categoryId: formData.categoryId.filter((catId) => catId !== id),
+        });
+      } else {
+        if (parentId && !isNaN(Number(parentId)) && !formData.categoryId.includes(String(parentId))) {
+          updateFormData({
+            categoryId: [...formData.categoryId, String(parentId), id],
+          });
+        } else {
+          updateFormData({ categoryId: [...formData.categoryId, id] });
+        }
+      }
+    }
+  };
+
+  const selectedCategories = mainCategories
+    .filter((cat) => formData.categoryId.includes(String(cat.id)))
+    .map((cat) => cat.nama)
+    .join(", ");
+
+  const selectedSubCategories = categories
+    .filter(
+      (cat) =>
+        formData.categoryId.includes(String(cat.id)) && cat.parentId !== null
+    )
+    .map((cat) => cat.nama)
+    .join(", ");
 
   return (
     <div className="container mx-auto p-8 bg-white min-h-screen">
-      {submitError && <div className="text-center py-4 text-red-500">{submitError}</div>}
+      {submitError && (
+        <div className="text-center py-4 text-red-500">{submitError}</div>
+      )}
       {showSuccessModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center ">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4 shadow-xl">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">Recipe Created</h2>
-            <p className="text-gray-600 mb-6">Your recipe has been successfully created!</p>
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">
+              Recipe Created
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Your recipe has been successfully created!
+            </p>
             <button
               ref={modalButtonRef}
               onClick={closeModal}
-              className="w-full bg-[var(--custom-orange)] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-200">
+              className="w-full bg-[var(--custom-orange)] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-200"
+            >
               Close
             </button>
           </div>
         </div>
       )}
       <div>
-        <Link href="/profile/my-recipe" className="inline-flex items-center gap-2 backdrop-blur-lg bg-white/30 border border-white/50 mb-6 py-2 rounded-xl text-slate-700 hover:bg-white/40 transition-all duration-300">
+        <Link
+          href="/profile/my-recipe"
+          className="inline-flex items-center gap-2 backdrop-blur-lg bg-white/30 border border-white/50 mb-6 py-2 rounded-xl text-slate-700 hover:bg-white/40 transition-all duration-300"
+        >
           <FaArrowLeft className="w-4 h-4" />
           Back
         </Link>
-        <h1 className="text-2xl font-semibold text-slate-800 mb-6">Add New Recipe</h1>
+        <h1 className="text-2xl font-semibold text-slate-800 mb-6">
+          Add New Recipe
+        </h1>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-xs mb-4 font-medium text-slate-700">Recipe Thumbnail</label>
-            <label htmlFor="file-upload" className="cursor-pointer bg-white/80 rounded-lg hover:bg-gray-50 transition-colors">
+            <label className="block text-xs mb-4 font-medium text-slate-700">
+              Recipe Thumbnail
+            </label>
+            <label
+              htmlFor="file-upload"
+              className="cursor-pointer bg-white/80 rounded-lg hover:bg-gray-50 transition-colors"
+            >
               <div
                 className="relative flex justify-center items-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-lg h-64 overflow-hidden"
                 style={{
-                  backgroundImage: formData.thumbnailPreview ? `url(${formData.thumbnailPreview})` : "none",
+                  backgroundImage: formData.thumbnailPreview
+                    ? `url(${formData.thumbnailPreview})`
+                    : "none",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
-                }}>
+                }}
+              >
                 {formData.thumbnailPreview && (
-                  <button type="button" onClick={removeThumbnail} className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors" title="Remove image">
+                  <button
+                    type="button"
+                    onClick={removeThumbnail}
+                    className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                    title="Remove image"
+                  >
                     <FaTimes size={16} />
                   </button>
                 )}
                 {!formData.thumbnailPreview && (
                   <div className="space-y-1 text-center">
-                    <input id="file-upload" name="file-upload" type="file" className="sr-only" accept="image/*" onChange={handleThumbnailChange} />
-                    <svg className="mx-auto h-12 w-12 text-slate-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                    <input
+                      id="file-upload"
+                      name="file-upload"
+                      type="file"
+                      className="sr-only"
+                      accept="image/*"
+                      onChange={handleThumbnailChange}
+                    />
+                    <svg
+                      className="mx-auto h-12 w-12 text-slate-400"
+                      stroke="currentColor"
+                      fill="none"
+                      viewBox="0 0 48 48"
+                      aria-hidden="true"
+                    >
                       <path
                         d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
                         strokeWidth={2}
@@ -347,10 +553,14 @@ export default function AddRecipePage() {
                       />
                     </svg>
                     <div className="flex text-xs text-slate-600 justify-center">
-                      <span className="relative cursor-pointer bg-white rounded-md font-medium text-[var(--custom-orange)] hover:text-orange-500">Upload a file</span>
+                      <span className="relative cursor-pointer bg-white rounded-md font-medium text-[var(--custom-orange)] hover:text-orange-500">
+                        Upload a file
+                      </span>
                       <p className="pl-1">or drag and drop</p>
                     </div>
-                    <p className="text-xs text-slate-500">PNG, JPG, GIF up to 10MB</p>
+                    <p className="text-xs text-slate-500">
+                      PNG, JPG, GIF up to 10MB
+                    </p>
                   </div>
                 )}
               </div>
@@ -359,7 +569,10 @@ export default function AddRecipePage() {
 
           <div className="space-y-6">
             <div>
-              <label htmlFor="recipe-name" className="block text-xs font-medium text-slate-700 mb-1">
+              <label
+                htmlFor="recipe-name"
+                className="block text-xs font-medium text-slate-700 mb-1"
+              >
                 Recipe Name
               </label>
               <input
@@ -374,41 +587,127 @@ export default function AddRecipePage() {
             </div>
 
             <div>
-              <label htmlFor="category" className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-xs font-medium text-slate-700 mb-1">
                 Category
               </label>
-              <select
-                id="category"
-                value={formData.categoryId}
-                onChange={(e) => updateFormData({ categoryId: e.target.value })}
-                className="w-full px-3 text-xs py-2 border text-slate-700 border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent"
-                required
-                disabled={!categoriesData}>
-                <option value="">Select category</option>
-                {categories.map((category) => (
-                  <optgroup key={category.id} label={category.nama}>
-                    <option value={category.id}>{category.nama}</option>
-                    {category.subcategories &&
-                      category.subcategories.length > 0 &&
-                      category.subcategories.map((subcategory) => (
-                        <option key={subcategory.id} value={subcategory.id}>
-                          — {subcategory.nama}
-                        </option>
-                      ))}
-                  </optgroup>
-                ))}
-              </select>
-              {!categoriesData && <p className="mt-1 text-xs text-slate-500">Loading categories...</p>}
-              {categoriesError && <p className="mt-1 text-xs text-red-500">Error loading categories</p>}
+              <div className="relative" ref={mainCategoryDropdownRef}>
+                <input
+                  type="text"
+                  value={selectedCategories || "Select category (multiple)"}
+                  readOnly
+                  className={`w-full px-3 py-2 border text-slate-700 text-xs border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent pr-10 ${
+                    mainCategoryDropdownOpen ? "ring-2 ring-[var(--custom-orange)]" : ""
+                  }`}
+                  onClick={() => setMainCategoryDropdownOpen((open) => !open)}
+                />
+                <FaAngleDown
+                  className={`absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 ml-2 transition-transform ${
+                    mainCategoryDropdownOpen ? "rotate-180" : "rotate-0"
+                  }`}
+                />
+                {mainCategoryDropdownOpen && (
+                  <div className="absolute z-20 mt-1 w-full bg-white border border-slate-300 rounded-lg shadow-lg max-h-60 overflow-auto animate-fade-in">
+                    {mainCategories.length === 0 && (
+                      <div className="px-3 py-2 text-xs text-slate-400">
+                        No categories available
+                      </div>
+                    )}
+                    {mainCategories.map((category) => (
+                      <label
+                        key={category.id}
+                        className="flex items-center px-3 py-2 hover:bg-orange-50 cursor-pointer text-xs"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={formData.categoryId.includes(
+                            String(category.id)
+                          )}
+                          onChange={() =>
+                            handleCategoryChange(String(category.id))
+                          }
+                          className="mr-2 w-4 h-4 accent-[var(--custom-orange)] rounded bg-[var(--custom-orange)]"
+                        />
+                        <span className="text-black">{category.nama}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
+
             <div>
-              <label htmlFor="description" className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-xs font-medium text-slate-700 mb-1">
+                Sub Category
+              </label>
+              <div className="relative" ref={subCategoryDropdownRef}>
+                <input
+                  type="text"
+                  value={selectedSubCategories || "Select sub category (multiple)"}
+                  readOnly
+                  className={`w-full px-3 py-2 border text-slate-700 text-xs border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent pr-10 ${
+                    subCategoryDropdownOpen ? "ring-2 ring-[var(--custom-orange)]" : ""
+                  }`}
+                  onClick={() => setSubCategoryDropdownOpen((open) => !open)}
+                />
+                <FaAngleDown
+                  className={`absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 ml-2 transition-transform ${
+                    subCategoryDropdownOpen ? "rotate-180" : "rotate-0"
+                  }`}
+                />
+                {subCategoryDropdownOpen && (
+                  <div className="absolute z-20 mt-1 w-full bg-white border border-slate-300 rounded-lg shadow-lg max-h-60 overflow-auto animate-fade-in">
+                    {mainCategories
+                      .filter((cat) =>
+                        formData.categoryId.includes(String(cat.id))
+                      )
+                      .map((parent) => (
+                        <div key={parent.id}>
+                          <div className="px-3 py-2 text-xs font-semibold text-slate-700">
+                            {parent.nama}
+                          </div>
+                          {categories
+                            .filter((sub) => sub.parentId === parent.id)
+                            .map((sub) => (
+                              <label
+                                key={sub.id}
+                                className="flex items-center px-6 py-2 hover:bg-orange-50 cursor-pointer text-xs"
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={formData.categoryId.includes(
+                                    String(sub.id)
+                                  )}
+                                  onChange={() =>
+                                    handleSubCategoryChange(
+                                      String(sub.id),
+                                      parent.id
+                                    )
+                                  }
+                                  className="mr-2 w-4 h-4 accent-[var(--custom-orange)] rounded bg-[var(--custom-orange)]"
+                                />
+                                <span className="text-black">{sub.nama}</span>
+                              </label>
+                            ))}
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="description"
+                className="block text-xs font-medium text-slate-700 mb-1"
+              >
                 Description
               </label>
               <textarea
                 id="description"
                 value={formData.description}
-                onChange={(e) => updateFormData({ description: e.target.value })}
+                onChange={(e) =>
+                  updateFormData({ description: e.target.value })
+                }
                 className="w-full px-3 py-2 border text-slate-700 text-xs border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent"
                 placeholder="Enter description"
                 required
@@ -420,40 +719,55 @@ export default function AddRecipePage() {
         <div className="pt-4 border-t border-slate-200">
           <div className="grid grid-cols-3 gap-8 mb-4">
             <div>
-              <label htmlFor="preparationTime" className="block text-xs font-medium text-slate-700 mb-1">
+              <label
+                htmlFor="preparationTime"
+                className="block text-xs font-medium text-slate-700 mb-1"
+              >
                 Preparation time
               </label>
               <input
                 type="text"
                 id="preparationTime"
                 value={formData.preparationTime}
-                onChange={(e) => updateFormData({ preparationTime: e.target.value })}
+                onChange={(e) =>
+                  updateFormData({ preparationTime: e.target.value })
+                }
                 className="w-full px-3 py-2 border text-slate-700 text-xs border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent"
                 placeholder="Enter prep time"
               />
             </div>
             <div>
-              <label htmlFor="cookingTime" className="block text-xs font-medium text-slate-700 mb-1">
+              <label
+                htmlFor="cookingTime"
+                className="block text-xs font-medium text-slate-700 mb-1"
+              >
                 Cooking time
               </label>
               <input
                 type="text"
                 id="cookingTime"
                 value={formData.cookingTime}
-                onChange={(e) => updateFormData({ cookingTime: e.target.value })}
+                onChange={(e) =>
+                  updateFormData({ cookingTime: e.target.value })
+                }
                 className="w-full px-3 py-2 border text-slate-700 text-xs border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent"
                 placeholder="Enter cooking time"
               />
             </div>
             <div>
-              <label htmlFor="servingTime" className="block text-xs font-medium text-slate-700 mb-1">
+              <label
+                htmlFor="servingTime"
+                className="block text-xs font-medium text-slate-700 mb-1"
+              >
                 Serving time
               </label>
               <input
                 type="text"
                 id="servingTime"
                 value={formData.servingTime}
-                onChange={(e) => updateFormData({ servingTime: e.target.value })}
+                onChange={(e) =>
+                  updateFormData({ servingTime: e.target.value })
+                }
                 className="w-full px-3 py-2 border text-slate-700 text-xs border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent"
                 placeholder="Enter serving time"
               />
@@ -461,7 +775,11 @@ export default function AddRecipePage() {
           </div>
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-xs font-medium text-slate-800">Ingredients</h3>
-            <button type="button" onClick={addIngredient} className="inline-flex items-center px-3 py-1 text-xs font-medium text-[var(--custom-orange)] bg-gray-50 rounded-md hover:bg-orange-100 transition-colors">
+            <button
+              type="button"
+              onClick={addIngredient}
+              className="inline-flex items-center px-3 py-1 text-xs font-medium text-[var(--custom-orange)] bg-gray-50 rounded-md hover:bg-orange-100 transition-colors"
+            >
               <FaPlus className="mr-1" /> Add Ingredient
             </button>
           </div>
@@ -470,13 +788,21 @@ export default function AddRecipePage() {
             {formData.ingredients.map((ingredient) => (
               <div key={ingredient.id} className="flex items-center gap-3">
                 <div className="flex items-start pt-2">
-                  <span className="w-6 h-6 rounded-full bg-[var(--custom-orange)] text-white flex items-center justify-center text-xs font-medium">{ingredient.id}</span>
+                  <span className="w-6 h-6 rounded-full bg-[var(--custom-orange)] text-white flex items-center justify-center text-xs font-medium">
+                    {ingredient.id}
+                  </span>
                 </div>
                 <div className="flex-grow">
                   <input
                     type="text"
                     value={ingredient.name}
-                    onChange={(e) => handleIngredientChange(ingredient.id, "name", e.target.value)}
+                    onChange={(e) =>
+                      handleIngredientChange(
+                        ingredient.id,
+                        "name",
+                        e.target.value
+                      )
+                    }
                     placeholder="Ingredient name"
                     className="w-full px-3 py-2 border text-xs text-slate-700 border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent"
                     required
@@ -486,14 +812,30 @@ export default function AddRecipePage() {
                   <input
                     type="text"
                     value={ingredient.amount}
-                    onChange={(e) => handleIngredientChange(ingredient.id, "amount", e.target.value)}
+                    onChange={(e) =>
+                      handleIngredientChange(
+                        ingredient.id,
+                        "amount",
+                        e.target.value
+                      )
+                    }
                     placeholder="Amount (e.g., 2 tbsp, 300g)"
                     className="w-full px-3 py-2 text-xs border text-slate-700 border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent"
                     required
                   />
                 </div>
-                <button type="button" onClick={() => removeIngredient(ingredient.id)} className="text-red-500 hover:text-red-700 p-2" disabled={formData.ingredients.length === 1}>
-                  <FaTrash size={16} className={formData.ingredients.length === 1 ? "text-red-300" : ""} />
+                <button
+                  type="button"
+                  onClick={() => removeIngredient(ingredient.id)}
+                  className="text-red-500 hover:text-red-700 p-2"
+                  disabled={formData.ingredients.length === 1}
+                >
+                  <FaTrash
+                    size={16}
+                    className={
+                      formData.ingredients.length === 1 ? "text-red-300" : ""
+                    }
+                  />
                 </button>
               </div>
             ))}
@@ -502,8 +844,14 @@ export default function AddRecipePage() {
 
         <div className="pt-4 border-t border-slate-200">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xs font-medium text-slate-800">Preparation Steps</h3>
-            <button type="button" onClick={addStep} className="inline-flex items-center px-3 py-1 text-xs font-medium text-[var(--custom-orange)] bg-gray-50 rounded-md hover:bg-orange-100 transition-colors">
+            <h3 className="text-xs font-medium text-slate-800">
+              Preparation Steps
+            </h3>
+            <button
+              type="button"
+              onClick={addStep}
+              className="inline-flex items-center px-3 py-1 text-xs font-medium text-[var(--custom-orange)] bg-gray-50 rounded-md hover:bg-orange-100 transition-colors"
+            >
               <FaPlus className="mr-1" /> Add Step
             </button>
           </div>
@@ -512,7 +860,9 @@ export default function AddRecipePage() {
             {formData.steps.map((step) => (
               <div key={step.id} className="flex gap-3">
                 <div className="flex items-start pt-2">
-                  <span className="w-6 h-6 rounded-full bg-[var(--custom-orange)] text-white flex items-center justify-center text-xs font-medium">{step.order}</span>
+                  <span className="w-6 h-6 rounded-full bg-[var(--custom-orange)] text-white flex items-center justify-center text-xs font-medium">
+                    {step.order}
+                  </span>
                 </div>
                 <div className="flex-grow">
                   <textarea
@@ -525,22 +875,37 @@ export default function AddRecipePage() {
                   />
                 </div>
                 <div className="flex items-start pt-2">
-                  <button type="button" onClick={() => removeStep(step.id)} className="text-red-500 hover:text-red-700 p-1" disabled={formData.steps.length === 1}>
-                    <FaTrash size={16} className={formData.steps.length === 1 ? "text-red-300" : ""} />
+                  <button
+                    type="button"
+                    onClick={() => removeStep(step.id)}
+                    className="text-red-500 hover:text-red-700 p-1"
+                    disabled={formData.steps.length === 1}
+                  >
+                    <FaTrash
+                      size={16}
+                      className={
+                        formData.steps.length === 1 ? "text-red-300" : ""
+                      }
+                    />
                   </button>
                 </div>
               </div>
             ))}
           </div>
           <div className="pt-4">
-            <label htmlFor="note" className="block text-xs font-medium text-slate-700 mb-1">
+            <label
+              htmlFor="note"
+              className="block text-xs font-medium text-slate-700 mb-1"
+            >
               Note (optional)
             </label>
             <input
               type="text"
               id="note"
               value={formData.note ?? ""}
-              onChange={(e) => updateFormData({ note: e.target.value || undefined })}
+              onChange={(e) =>
+                updateFormData({ note: e.target.value || undefined })
+              }
               className="w-full px-3 py-2 border text-slate-700 text-xs border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)] focus:border-transparent"
               placeholder="Enter note"
             />
@@ -548,13 +913,22 @@ export default function AddRecipePage() {
         </div>
 
         <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
-          <button type="button" onClick={() => router.push("/profile/my-recipe")} className="px-4 py-2 text-xs font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors">
+          <button
+            type="button"
+            onClick={() => router.push("/profile/my-recipe")}
+            className="px-4 py-2 text-xs font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
+          >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isSubmitDisabled}
-            className={`px-4 py-2 text-xs font-medium text-white rounded-lg transition-colors ${isSubmitDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-[var(--custom-orange)] hover:bg-orange-600"}`}>
+            className={`px-4 py-2 text-xs font-medium text-white rounded-lg transition-colors ${
+              isSubmitDisabled
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[var(--custom-orange)] hover:bg-orange-600"
+            }`}
+          >
             Add Recipe
           </button>
         </div>

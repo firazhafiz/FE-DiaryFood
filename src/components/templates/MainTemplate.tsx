@@ -75,7 +75,7 @@ const MainTemplate: React.FC<MainTemplateProps> = ({ recipes }) => {
           <section className="mb-10">
             <div className="flex justify-between items-center">
               <h3 className="font-bold text-[color:var(--custom-orange)] text-xl">
-                Featured Recipes
+                Regional Cuisine
               </h3>
               <Link href="/recipes">
                 <h2 className="text-sm text-gray-800 font-semibold hover:text-[color:var(--custom-orange)] cursor-pointer">
