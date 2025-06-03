@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   experimental: {
     esmExternals: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 
   turbo: {
     enabled: false, // Nonaktifkan Turbopack

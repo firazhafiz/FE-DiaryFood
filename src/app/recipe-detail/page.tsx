@@ -1,4 +1,3 @@
-// src/app/detail-resep/page.tsx
 "use client";
 
 import DetailHeader from "@/components/molecules/DetailHeader";
@@ -11,7 +10,7 @@ import Navbar from "@/components/organisms/Navbar";
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Recipe } from "@/types/recipe";
-import { RecipeDetail } from "@/types/recipe-detail";
+import { RecipeDetail, Comment } from "@/types/recipe-detail";
 
 export default function DetailResep() {
   const searchParams = useSearchParams();
@@ -21,7 +20,6 @@ export default function DetailResep() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  console.log(recipe);
 
   useEffect(() => {
     if (!recipeId) {
@@ -44,7 +42,45 @@ export default function DetailResep() {
           throw new Error("Resep tidak ditemukan di server");
         }
         const recipeData = await recipeResponse.json();
-        setRecipe(recipeData.data);
+        const mappedRecipe: RecipeDetail = {
+          id: recipeData.data.id,
+          nama: recipeData.data.nama,
+          photoResep: recipeData.data.photoResep,
+          kategoriId: recipeData.data.kategoriId,
+          tanggalUnggah: recipeData.data.createdAt,
+          user: {
+            name: recipeData.data.user?.name || "Anonymous",
+            photo: recipeData.data.user?.photo || "",
+          },
+          bahanList: recipeData.data.bahanList || [],
+          langkahList: recipeData.data.langkahList || [],
+          description: recipeData.data.description || "",
+          cookingTime: recipeData.data.cookingTime || "0 min",
+          preparationTime: recipeData.data.preparationTime || "0 min",
+          servingTime: recipeData.data.servingTime || "0",
+          note: recipeData.data.note || "",
+          totalComments: recipeData.data.totalComments || 0,
+          savesCount: recipeData.data.savesCount || 0,
+          totalReviews: recipeData.data.totalReviews || 0,
+          averageRating: recipeData.data.averageRating || 0,
+          isSavedByCurrentUser: recipeData.data.isSavedByCurrentUser || false,
+          kategori: recipeData.data.kategori ? { nama: recipeData.data.kategori.nama } : undefined,
+          comment: recipeData.data.comments
+            ? recipeData.data.comments.map((c: any) => ({
+                id: c.id.toString(),
+                content: c.comment,
+                rating: c.rating,
+                createdAt: c.createdAt,
+                resepId: c.resepId,
+                user: {
+                  id: c.user.id,
+                  name: c.user.name || "Anonymous",
+                  photo: c.user.photo || "",
+                },
+              }))
+            : [],
+        };
+        setRecipe(mappedRecipe);
 
         const recipesResponse = await fetch("http://localhost:4000/v1/resep");
         if (!recipesResponse.ok) {
@@ -71,9 +107,10 @@ export default function DetailResep() {
   const handleCommentAdded = (newComment: Comment, newTotal: number) => {
     setRecipe((prev) => {
       if (!prev) return prev;
+      const prevComments = Array.isArray(prev.comment) ? prev.comment : [];
       return {
         ...prev,
-        comment: [newComment, ...(prev.comment || [])],
+        comment: [newComment, ...prevComments] as Comment[], // Explicit type assertion
         totalComments: newTotal,
       };
     });
@@ -111,7 +148,7 @@ export default function DetailResep() {
             <IngredientsSection recipe={recipe!} loading={loading} />
             <InstructionsSection recipe={recipe!} loading={loading} />
           </div>
-          <CommentsSection comments={recipe?.comment} loading={loading} recipeId={recipeId || ""} onCommentAdded={handleCommentAdded} />
+          <CommentsSection recipeId={recipeId || ""} onCommentAdded={handleCommentAdded} />
         </div>
         <div className="w-full md:w-80 flex-shrink-0">
           <RecipeSidebar recipes={recipes} loading={loading} />

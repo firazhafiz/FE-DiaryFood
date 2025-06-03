@@ -14,7 +14,6 @@ interface Recipe {
   };
   photoResep: string;
   date: string;
-
   isApproved: "APPROVED";
 }
 
@@ -27,8 +26,8 @@ interface RecipeTableProps {
 export const RecipeTable: React.FC<RecipeTableProps> = ({ recipes, onShow, onDelete }) => {
   return (
     <div className="w-full">
-      <div className="rounded-xl ">
-        <div className="grid grid-cols-5 py-4 px-6 ">
+      <div className="rounded-xl">
+        <div className="grid grid-cols-5 py-4 px-6">
           <p className="text-slate-700 font-medium text-sm col-span-2">Recipe</p>
           <p className="text-slate-700 font-medium text-sm">Category</p>
           <p className="text-slate-700 font-medium text-sm">Status</p>
@@ -47,8 +46,8 @@ export const RecipeTable: React.FC<RecipeTableProps> = ({ recipes, onShow, onDel
 
 interface RecipeRowProps extends Recipe {
   index: number;
-  onDelete?: (id: string) => void;
-  onShow?: (id: string) => void;
+  onDelete?: (id: number) => void; // Changed from string to number
+  onShow?: (id: number) => void; // Changed from string to number
 }
 
 const RecipeRow: React.FC<RecipeRowProps> = ({ id, nama, user, kategori, isApproved, photoResep, onDelete, onShow }) => {
@@ -74,7 +73,7 @@ const RecipeRow: React.FC<RecipeRowProps> = ({ id, nama, user, kategori, isAppro
   // Handle showing recipe details
   const handleShow = () => {
     if (onShow) {
-      onShow(id);
+      onShow(id); // id is number
       setIsOpen(false);
     }
   };
@@ -83,7 +82,7 @@ const RecipeRow: React.FC<RecipeRowProps> = ({ id, nama, user, kategori, isAppro
   const handleDelete = () => {
     if (isConfirmingDelete) {
       if (onDelete) {
-        onDelete(id);
+        onDelete(id); // id is number
       }
       setIsOpen(false);
       setIsConfirmingDelete(false);
@@ -99,13 +98,15 @@ const RecipeRow: React.FC<RecipeRowProps> = ({ id, nama, user, kategori, isAppro
   };
 
   return (
-    <div id={id} className="grid grid-cols-5 items-center py-2 px-2 border-2 bg-white/60 rounded-xl   border-white/60 hover:bg-gray-50">
+    <div
+      id={id.toString()} // Convert number to string for HTML attribute
+      className="grid grid-cols-5 items-center py-2 px-2 border-2 bg-white/60 rounded-xl border-white/60 hover:bg-gray-50">
       <div className="flex items-center gap-3 col-span-2">
         <div className="relative w-44 h-28 rounded-lg overflow-hidden">
           <img src={photoResep} alt={nama} className="object-cover w-full h-full" />
         </div>
         <div>
-          <p className="text-slate-700 font-medium  text-md">{nama}</p>
+          <p className="text-slate-700 font-medium text-md">{nama}</p>
           <p className="text-slate-500 text-xs">{user.name}</p>
         </div>
       </div>

@@ -2,12 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { Comment } from "@/types/comments";
+import { Comment } from "@/types/recipe-detail"; // Use RecipeDetail's Comment type
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
-
 import "react-toastify/dist/ReactToastify.css";
 import getRelativeTime from "@/helper/relativeTime";
 import { DefaultProfile } from "../../../public/assets";
@@ -29,16 +28,19 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ recipeId, onCommentAd
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [visibleCommentCount, setVisibleCommentCount] = useState(5);
 
-  // Fetch comments on component mount
   useEffect(() => {
     const fetchComments = async () => {
       try {
         setIsLoading(true);
+        const token = Cookies.get("token");
+        if (!token) {
+          throw new Error("Authentication token is missing");
+        }
         const response = await fetch(`http://localhost:4000/v1/resep/${recipeId}/comment`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${Cookies.get("token") || ""}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -49,22 +51,21 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ recipeId, onCommentAd
             router.push("/login");
             return;
           }
-          throw new Error("Gagal mengambil komentar");
+          throw new Error(`Failed to fetch comments: ${response.status}`);
         }
 
         const result = await response.json();
-        console.log("Fetched comments:", result.data);
         setLocalComments(
-          result.data.map((comment: any) => ({
-            id: comment.id.toString(),
-            content: comment.comment, // Backend uses 'comment', frontend expects 'content'
-            rating: comment.rating,
-            createdAt: comment.createdAt,
-            resepId: comment.resepId,
+          result.data.map((c: any) => ({
+            id: c.id.toString(),
+            content: c.comment,
+            rating: c.rating,
+            createdAt: c.createdAt,
+            resepId: c.resepId,
             user: {
-              id: comment.user.id,
-              name: comment.user.name || "Anonymous",
-              photo: comment.user.photo || DefaultProfile.src,
+              id: c.user.id,
+              name: c.user.name || "Anonymous",
+              photo: c.user.photo || DefaultProfile.src,
             },
           }))
         );
@@ -82,7 +83,6 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ recipeId, onCommentAd
 
   const handleRatingChange = (value: number) => {
     setRating(value);
-    console.log("Rating selected:", value);
   };
 
   const handleLoginRedirect = () => {
@@ -114,7 +114,6 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ recipeId, onCommentAd
     setSubmitError(null);
     setIsSubmitting(true);
 
-    // Optimistic update
     const optimisticComment: Comment = {
       id: Date.now().toString(),
       content: comment,
@@ -127,7 +126,6 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ recipeId, onCommentAd
         photo: currentUser.photo || DefaultProfile.src,
       },
     };
-    console.log("Optimistic comment:", optimisticComment);
     setLocalComments([optimisticComment, ...localComments]);
     setComment("");
     setRating(0);
@@ -135,7 +133,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ recipeId, onCommentAd
     try {
       const token = Cookies.get("token");
       if (!token) {
-        throw new Error("Token tidak ditemukan");
+        throw new Error("Authentication token is missing");
       }
       const response = await fetch(`http://localhost:4000/v1/resep/${recipeId}/comment`, {
         method: "POST",
@@ -143,7 +141,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ recipeId, onCommentAd
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ comment, rating }), // Backend expects 'comment'
+        body: JSON.stringify({ comment, rating }),
       });
 
       if (!response.ok) {
@@ -154,11 +152,11 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ recipeId, onCommentAd
           router.push("/login");
           throw new Error("Unauthorized");
         }
-        throw new Error("Gagal mengirim komentar");
+        throw new Error(`Failed to post comment: ${response.status}`);
       }
 
       const result = await response.json();
-      const newComment = {
+      const newComment: Comment = {
         id: result.data.id.toString(),
         content: result.data.comment,
         rating: result.data.rating,
@@ -190,7 +188,6 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ recipeId, onCommentAd
     return <div className="mt-8 max-w-xl text-red-500 text-sm">{fetchError}</div>;
   }
 
-  // Urutkan komentar berdasarkan createdAt (terbaru) dan ambil hingga visibleCommentCount
   const displayedComments = [...localComments].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, visibleCommentCount);
 
   return (
@@ -255,7 +252,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ recipeId, onCommentAd
                   <div className="flex justify-between items-start">
                     <div>
                       <h4 className="font-semibold text-sm text-gray-900">{comment.user?.name || "Anonymous"}</h4>
-                      <p className="text-xs text-gray-500">{getRelativeTime(comment.createdAt)}</p>
+                      <p className="text-xs text-gray-500">{getRelativeTime(new Date(comment.createdAt))}</p>
                     </div>
                   </div>
                   <p className="mt-1 text-sm text-gray-700">{comment.content}</p>

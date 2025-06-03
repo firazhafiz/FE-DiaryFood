@@ -5,10 +5,13 @@ import { useRouter } from "next/navigation";
 import { RegisterContent } from "@/components/organisms/RegisterContent";
 import { AuthTemplate } from "@/components/templates/AuthTemplate";
 import Loading from "./loading";
+import { config } from "@/config";
+import { toast } from "react-toastify"; // Import toast for error handling
+import "react-toastify/dist/ReactToastify.css";
+import { Suspense } from "react";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [error, setError] = useState<string>("");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -25,17 +28,28 @@ export default function RegisterPage() {
         body: JSON.stringify(formData),
       });
 
-      console.log(formData);
       const data = await response.json();
-      console.log(data);
+      console.log("Register response:", data);
 
       if (response.ok) {
+        toast.success("Registration successful! Please log in.");
         router.push("/login");
       } else {
-        setError(data.message);
+        const errorMessage = data.message || "Failed to register. Please try again.";
+        toast.error(errorMessage);
+        throw new Error(errorMessage);
       }
     } catch (error) {
-      setError("An error occurred during registration");
+      console.error("Error during registration:", error);
+      toast.error(error instanceof Error ? error.message : "An unexpected error occurred.");
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      window.location.href = `${config.apiUrl}/auth/google`;
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -45,7 +59,10 @@ export default function RegisterPage() {
 
   return (
     <AuthTemplate>
-      <RegisterContent onSubmit={handleRegister} />
+<Suspense fallback={null}>
+
+      <RegisterContent onSubmit={handleRegister} googleLogin={handleGoogleLogin} />
+</Suspense>
     </AuthTemplate>
   );
 }

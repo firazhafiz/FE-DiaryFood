@@ -48,7 +48,7 @@ export const terms: { title: string; content: ReactNode }[] = [
         <li>
           Prohibited from uploading, sharing, or publishing content that
           violates laws, promotes discrimination, contains pornography, or
-          infringes on others' copyrights.
+          infringes on others&apos; copyrights.
         </li>
         <li>
           Users are fully responsible for content uploaded or shared through

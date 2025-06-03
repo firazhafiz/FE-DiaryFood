@@ -21,14 +21,12 @@ export default function DashboardPage() {
     userGrowth: [] as { date: string; count: number }[],
     recipeCategories: [] as { category: string; count: number }[],
   });
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   console.log(stats.pendingRecipes);
 
   useEffect(() => {
     const getDashboardData = async () => {
-      setLoading(true);
       try {
         const token = Cookies.get("token");
         if (!token) {
@@ -70,8 +68,6 @@ export default function DashboardPage() {
         console.log(data.data);
       } catch (err: unknown) {
         console.error("Error fetching dashboard data:", err);
-      } finally {
-        setLoading(false);
       }
     };
 

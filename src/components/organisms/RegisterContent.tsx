@@ -8,10 +8,11 @@ import { GlassmorphismCard } from "../molecules/GlassmorphismCard";
 import Link from "next/link";
 
 interface RegisterContentProps {
-  onSubmit: (data: { name: string; email: string }) => void;
+  onSubmit: (data: { name: string; email: string; password: string }) => Promise<void>;
+  googleLogin: () => Promise<void>;
 }
 
-export const RegisterContent: React.FC<RegisterContentProps> = ({ onSubmit }) => {
+export const RegisterContent: React.FC<RegisterContentProps> = ({ onSubmit, googleLogin }) => {
   return (
     <div className="w-full max-w-md" style={{ marginLeft: "100px" }}>
       <GlassmorphismCard className="mt-8">
@@ -27,7 +28,7 @@ export const RegisterContent: React.FC<RegisterContentProps> = ({ onSubmit }) =>
           </div>
 
           <div>
-            <SocialLogin />
+            <SocialLogin googleLogin={googleLogin} />
           </div>
 
           <p className="text-center text-gray-500 text-sm">

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { FormFieldWithIcon } from "./FormFieldIcon";
 import { Button } from "../atoms/Button";
 import { motion } from "framer-motion";
-import { Input } from "../atoms/Input";
 
 interface RegisterFormProps {
   onSubmit: (data: { name: string; email: string; password: string }) => void;

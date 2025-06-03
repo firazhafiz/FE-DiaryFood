@@ -9,6 +9,9 @@ import useSWR from "swr";
 import ProfileSkeleton from "@/components/skeletons/ProfileSkeleton";
 import { FaCheck } from "react-icons/fa";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Suspense } from "react";
 
 interface UserProfile {
   id: number;
@@ -41,7 +44,7 @@ const fetcher = async (url: string) => {
   return response.json();
 };
 
-const ProfilePage = () => {
+function ProfileContent() {
   const [isEditing, setIsEditing] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [form, setForm] = useState<UserProfile>({
@@ -58,7 +61,11 @@ const ProfilePage = () => {
   const { data, error, isLoading } = useSWR("http://localhost:4000/v1/profile", fetcher, {
     onError: (error) => {
       if (error.message === "No token found" || error.message.includes("401")) {
+        toast.error("Session expired. Please log in again.");
+        Cookies.remove("token");
         router.push("/login");
+      } else {
+        toast.error(error.message);
       }
     },
     revalidateOnFocus: false,
@@ -92,6 +99,8 @@ const ProfilePage = () => {
     try {
       const token = Cookies.get("token");
       if (!token) {
+        toast.error("Session expired. Please log in again.");
+        Cookies.remove("token");
         router.push("/login");
         return;
       }
@@ -119,10 +128,11 @@ const ProfilePage = () => {
       }
 
       setIsEditing(false);
-      setShowSuccessModal(true); // Show modal on success
+      setShowSuccessModal(true);
+      toast.success("Profile updated successfully!");
     } catch (error) {
       console.error("Save error:", error);
-      alert(`Failed to save profile: ${error.message}`);
+      toast.error(error instanceof Error ? error.message : "Failed to update profile.");
     }
   };
 
@@ -146,11 +156,13 @@ const ProfilePage = () => {
     <ProfileTemplate>
       {/* Success Modal */}
       {showSuccessModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center ">
-          <div className="bg-white rounded-xl p-6 max-w-60 w-full mx-4 shadow-xl">
-            <FaCheck />
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">Profile Updated</h2>
-            <p className="text-gray-600 mb-6 text-sm">Your profile has been successfully updated!</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-xl">
+            <div className="flex justify-center mb-4">
+              <FaCheck className="text-green-500 text-2xl" />
+            </div>
+            <h2 className="text-lg font-semibold text-gray-800 mb-4 text-center">Profile Updated</h2>
+            <p className="text-gray-600 mb-6 text-sm text-center">Your profile has been successfully updated!</p>
             <button ref={modalButtonRef} onClick={closeModal} className="w-full bg-[#FF7A5C] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-[#ff6b4a] transition-colors focus:outline-none focus:ring-2 focus:ring-orange-200">
               Continue
             </button>
@@ -174,7 +186,7 @@ const ProfilePage = () => {
       <div className="flex flex-col gap-8">
         <div className="flex gap-4 items-center justify-between">
           <div className="flex items-center gap-4">
-            <Image src={form.photo || DefaultProfile} alt="profile" width={100} height={100} priority={true} className="rounded-full object-cover border-4 border-white shadow-lg w-36 h-36" />
+            <Image src={form.photo || DefaultProfile} alt="profile" width={144} height={144} priority={true} className="rounded-full object-cover border-4 border-white shadow-lg w-36 h-36" />
           </div>
           <div className="pr-8">
             <button className="bg-[#FF7A5C] text-white px-6 py-2 rounded-md text-sm font-medium hover:bg-[#ff6b4a] transition-colors cursor-pointer" onClick={() => setIsEditing(true)}>
@@ -202,7 +214,7 @@ const ProfilePage = () => {
               name="email"
               value={form.email}
               onChange={handleChange}
-              disabled={!isEditing}
+              disabled={true} // Email typically not editable
               className="block w-full rounded-md border-0 bg-white/50 backdrop-blur-sm py-2 px-3 text-gray-900 focus:ring-2 focus:ring-orange-200 disabled:opacity-70 placeholder-gray-400"
               placeholder="Your Email"
             />
@@ -251,6 +263,12 @@ const ProfilePage = () => {
       </div>
     </ProfileTemplate>
   );
-};
+}
 
-export default ProfilePage;
+export default function ProfilePage() {
+  return (
+    <Suspense fallback={<ProfileSkeleton />}>
+      <ProfileContent />
+    </Suspense>
+  );
+}

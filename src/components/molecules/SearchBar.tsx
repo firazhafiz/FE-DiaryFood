@@ -33,10 +33,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
     };
@@ -77,24 +74,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <form onSubmit={handleSearch} className="w-full max-w-2xl">
-      <div
-        className={`flex items-stretch w-full h-10 rounded-full overflow-visible ${getBgColor()}`}
-      >
+      <div className={`flex items-stretch w-full h-10 rounded-full overflow-visible ${getBgColor()}`}>
         {/* Search Input */}
-        <InputSearch
-          placeholder="Search for recipes..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className={isPath ? "text-gray-800 " : " placeholder:text-white"}
-        />
+        <InputSearch placeholder="Search for recipes..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className={isPath ? "text-gray-800 " : " placeholder:text-white"} />
 
         {/* Search Button */}
-        <SearchButton
-          type="submit"
-          loading={isLoading}
-          disabled={!searchQuery.trim()}
-          className="h-full rounded-full"
-        />
+        <SearchButton type="submit" loading={isLoading} disabled={!searchQuery.trim()} className="h-full rounded-full" />
       </div>
     </form>
   );

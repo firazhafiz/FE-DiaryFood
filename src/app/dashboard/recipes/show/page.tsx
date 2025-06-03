@@ -5,42 +5,11 @@ import IngredientsSection from "@/components/molecules/IngredientsSection";
 import InstructionsSection from "@/components/molecules/InstructionsSection";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-
-interface Recipe {
-  id: number;
-  nama: string;
-  photoResep: string;
-  user: {
-    name: string;
-    photo: string;
-  };
-  date: string;
-  category: string;
-  isApproved: string;
-  image: string;
-  description: string;
-  bahanList: Array<{
-    id: number;
-    nama: string;
-    jumlah: string;
-  }>;
-  langkahList: Array<{
-    id: number;
-    resepId:number;
-    urutan: number;
-    deskripsi: string;
-  }>;
-  tanggalUnggahan: string;
-  notes: string;
-  cookingTime: string;
-  servings: number;
-  difficulty: string;
-  isFree: boolean;
-  price: number;
-}
+import Cookies from "js-cookie";
+import { RecipeDetail } from "@/types/recipe-detail";
 
 const DetailMyRecipe = () => {
-  const [recipe, setRecipe] = useState<Recipe | null>(null);
+  const [recipe, setRecipe] = useState<RecipeDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams();
@@ -55,7 +24,7 @@ const DetailMyRecipe = () => {
       }
 
       try {
-        const token =  Coo;
+        const token = Cookies.get("token");
         const response = await fetch(`http://localhost:4000/v1/admin/dashboard/recipes/${id}`, {
           headers: {
             "Content-Type": "application/json",
@@ -90,10 +59,10 @@ const DetailMyRecipe = () => {
 
   return (
     <div className="p-8">
-      <DetailHeader recipe={recipe} />
+      <DetailHeader recipe={recipe} loading={loading} />
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-        <IngredientsSection ingredients={recipe.bahanList} />
-        <InstructionsSection instructions={recipe.langkahList} notes={recipe.notes} />
+        <IngredientsSection recipe={recipe} loading={loading} />
+        <InstructionsSection recipe={recipe} loading={loading} />
       </div>
     </div>
   );

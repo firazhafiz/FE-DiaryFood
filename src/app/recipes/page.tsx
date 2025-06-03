@@ -9,6 +9,7 @@ import SelectedFilters from "@/components/atoms/SelectedFilters";
 import FilterControlModal from "@/components/molecules/FilterControlModal";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Recipe } from "@/types/recipe";
+import { Suspense } from "react";
 
 const Resep = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -179,59 +180,51 @@ const Resep = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <Navbar />
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 flex flex-col md:flex-row gap-6 mb-12 mt-6 pt-[120px]">
-        {/* Mobile Filter Button */}
-        <div className="md:hidden w-full mb-4">
-          <button onClick={() => setIsModalOpen(true)} className="w-full py-3 px-4 bg-gradient-to-r from-[color:var(--custom-orange)] to-orange-400 text-white rounded-xl flex items-center justify-center gap-2 font-medium">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm1 5a1 1 0 100 2h12a1 1 0 100-2H4z" clipRule="evenodd" />
-            </svg>
-            Filter Resep
-          </button>
-        </div>
+      <Suspense fallback={null}>
+        <Navbar />
 
-        {/* Sidebar - hidden on mobile */}
-        <div className="hidden md:block md:w-1/4">
-          <FilterSidebar selectedFilters={selectedFilters} onFilterChange={handleFilterChange} />
-        </div>
+        <main className="flex-1 max-w-7xl mx-auto w-full px-4 flex flex-col md:flex-row gap-6 mb-12 mt-6 pt-[120px]">
+          {/* Mobile Filter Button */}
+          <div className="md:hidden w-full mb-4">
+            <button onClick={() => setIsModalOpen(true)} className="w-full py-3 px-4 bg-gradient-to-r from-[color:var(--custom-orange)] to-orange-400 text-white rounded-xl flex items-center justify-center gap-2 font-medium">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm1 5a1 1 0 100 2h12a1 1 0 100-2H4z" clipRule="evenodd" />
+              </svg>
+              Filter Resep
+            </button>
+          </div>
 
-        {/* Main content */}
-        <div className="w-full md:w-3/4">
-          {error ? (
-            <div className="text-center py-8">
-              <div className="text-red-500 mb-2">
-                <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
+          {/* Sidebar - hidden on mobile */}
+          <div className="hidden md:block md:w-1/4">
+            <FilterSidebar selectedFilters={selectedFilters} onFilterChange={handleFilterChange} />
+          </div>
+
+          {/* Main content */}
+          <div className="w-full md:w-3/4">
+            {error ? (
+              <div className="text-center py-8">
+                <div className="text-red-500 mb-2">
+                  <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Data</h3>
+                <p className="text-gray-600">{error}</p>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Data</h3>
-              <p className="text-gray-600">{error}</p>
-            </div>
-          ) : (
-            <>
-              <SelectedFilters
-                selectedFilters={selectedFilters}
-                totalRecipes={recipes.length}
-                onRemoveFilter={handleRemoveFilter}
-                onClearAll={handleClearAllFilters}
-              />
-              <RecipeCardGrid
-                recipes={filteredRecipes}
-                isLoading={isLoading}
-                initialRecipeCount={
-                  allRecipes.length > 0 ? allRecipes.length : 6
-                }
-              />
-            </>
-          )}
-        </div>
-      </main>
+            ) : (
+              <>
+                <SelectedFilters selectedFilters={selectedFilters} totalRecipes={recipes.length} onRemoveFilter={handleRemoveFilter} onClearAll={handleClearAllFilters} />
+                <RecipeCardGrid recipes={filteredRecipes} isLoading={isLoading} initialRecipeCount={allRecipes.length > 0 ? allRecipes.length : 6} />
+              </>
+            )}
+          </div>
+        </main>
 
-      {/* Filter Modal */}
-      <FilterControlModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} selectedFilters={selectedFilters} onFilterChange={handleFilterChange} />
+        {/* Filter Modal */}
+        <FilterControlModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} selectedFilters={selectedFilters} onFilterChange={handleFilterChange} />
 
-      <Footer />
+        <Footer />
+      </Suspense>
     </div>
   );
 };

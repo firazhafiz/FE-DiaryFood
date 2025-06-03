@@ -17,7 +17,8 @@ export default function Home() {
         }
         const data = await response.json();
         setRecipes(Array.isArray(data.data.reseps) ? data.data.reseps : []);
-      } catch (error) {   
+      } catch (error) {
+        console.log(error);
         setRecipes([]);
       }
     };
@@ -27,7 +28,7 @@ export default function Home() {
 
   useEffect(() => {
     setMounted(true);
-  }, []); 
+  }, []);
 
   if (!mounted) {
     return null; // or a loading spinner if needed globally

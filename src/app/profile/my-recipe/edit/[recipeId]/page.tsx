@@ -36,6 +36,7 @@ interface FormData {
   note: string | undefined;
   ingredients: Ingredient[];
   steps: Step[];
+  isApproved: string;
 }
 
 const fetcher = async (url: string) => {
@@ -135,7 +136,6 @@ export default function EditRecipePage() {
   } = useSWR(resepId && !isNaN(resepId) ? `http://localhost:4000/v1/profile/recipe/${resepId}` : null, fetcher, {
     onError: (error) => {
       if (error.message === "No token found" || error.message.includes("401")) {
-        
         router.push("/login");
       }
     },

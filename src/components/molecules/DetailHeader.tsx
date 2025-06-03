@@ -195,7 +195,7 @@ const DetailHeader = ({ recipe, loading }: DetailHeaderProps) => {
           </div>
           <span>•</span>
           <span className="flex items-center gap-1">
-            {new Date(recipe.tanggalUnggahan).toLocaleDateString("en-US", {
+            {new Date(recipe.tanggalUnggah).toLocaleDateString("en-US", {
               weekday: "short",
               day: "2-digit",
               month: "short",

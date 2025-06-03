@@ -8,6 +8,7 @@ import { FcGoogle } from "react-icons/fc";
 import { config } from "@/config";
 import { useAuth } from "@/context/AuthContext";
 import Loading from "./loading";
+import { Suspense } from "react";
 
 interface Tokens {
   access: { token: string; expires: string };
@@ -33,11 +34,13 @@ export default function LoginPage() {
       try {
         const tokens: Tokens = JSON.parse(tokensParam);
         if (tokens?.access?.token) {
-          login(tokens.access.token).then(() => {
-            router.push("/");
-          }).catch(() => {
-            setError("Failed to process authentication tokens.");
-          });
+          login(tokens.access.token)
+            .then(() => {
+              router.push("/");
+            })
+            .catch(() => {
+              setError("Failed to process authentication tokens.");
+            });
         } else {
           setError("Invalid token structure received.");
         }
@@ -90,7 +93,10 @@ export default function LoginPage() {
   return (
     <AuthTemplate>
       <div className="space-y-4">
-        <LoginContent googleLogin={handleGoogleLogin} onSubmit={handleLogin} />
+        <Suspense fallback={null}>
+          <LoginContent googleLogin={handleGoogleLogin} onSubmit={handleLogin} />
+        </Suspense>
       </div>
     </AuthTemplate>
   );
+}

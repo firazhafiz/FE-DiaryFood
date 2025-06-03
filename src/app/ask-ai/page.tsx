@@ -27,13 +27,6 @@ interface Thread {
   messagesCount: number;
 }
 
-interface CurrentUser {
-  id: number;
-  name: string;
-  email: string;
-  photo: string | null | undefined;
-}
-
 export default function TanyaAIPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [threads, setThreads] = useState<Thread[]>([]);
@@ -42,7 +35,6 @@ export default function TanyaAIPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [mounted, setMounted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { currentUser, isLoggedIn, loading } = useAuth();
@@ -76,7 +68,6 @@ export default function TanyaAIPage() {
       );
     } catch (err) {
       console.error("Error fetching threads:", err);
-      setError("Failed to load threads");
     }
   };
 
@@ -96,8 +87,7 @@ export default function TanyaAIPage() {
       setMessages(data.data);
       setCurrentThreadId(threadId);
     } catch (err) {
-      console.error("Error fetching messages:", err);
-      setError("Failed to load messages");
+      console.log(err);
     }
   };
 
@@ -121,7 +111,6 @@ export default function TanyaAIPage() {
       }
     } catch (err) {
       console.error("Error deleting thread:", err);
-      setError("Failed to delete thread");
     }
   };
 
@@ -184,7 +173,6 @@ export default function TanyaAIPage() {
       }
     } catch (error: any) {
       console.error("Error:", error);
-      setError(error.message || "Failed to send message");
     } finally {
       setIsLoading(false);
     }
@@ -193,7 +181,6 @@ export default function TanyaAIPage() {
   const startNewChat = () => {
     setMessages([]);
     setCurrentThreadId(null);
-    setError(null);
   };
 
   const selectThread = (threadId: number) => {

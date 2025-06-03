@@ -1,21 +1,16 @@
+"use client";
+
 import React from "react";
 import Card from "../atoms/Card";
+import { Recipe } from "@/types/recipe";
 
 interface RecipeCardProps {
-  title: string;
-  image: string;
-  time: string;
-  category: string;
-  isFree?: boolean;
-  rating?: number;
-  author?: {
-    name: string;
-    avatar: string;
-  };
+  recipe: Recipe;
+  loading?: boolean; // Optional loading prop
 }
 
-const RecipeCard: React.FC<RecipeCardProps> = (props) => {
-  return <Card {...props} />;
+const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, loading }) => {
+  return <Card recipe={recipe} loading={loading} />;
 };
 
 export default RecipeCard;

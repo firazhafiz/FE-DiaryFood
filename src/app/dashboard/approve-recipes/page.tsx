@@ -265,7 +265,11 @@ export default function ApproveRecipesPage() {
                   <div className="text-sm text-gray-500 flex items-center">{new Date(recipe.tanggalUnggahan).toLocaleDateString()}</div>
 
                   {/* Actions */}
-                  <div className="relative flex justify-end" ref={(el) => (dropdownRefs.current[recipe.id] = el)}>
+                  <div
+                    className="relative flex justify-end"
+                    ref={(el) => {
+                      dropdownRefs.current[recipe.id] = el;
+                    }}>
                     <button className="cursor-pointer text-slate-500 p-2 rounded-full hover:bg-slate-100 transition-colors" onClick={() => toggleDropdown(recipe.id)} aria-label="Recipe actions" disabled={isLoading}>
                       <FaEllipsis />
                     </button>

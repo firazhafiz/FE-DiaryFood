@@ -1,5 +1,4 @@
 import React from "react";
-import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface AuthTemplateProps {
@@ -7,9 +6,6 @@ interface AuthTemplateProps {
 }
 
 export const AuthTemplate: React.FC<AuthTemplateProps> = ({ children }) => {
-  const pathname = usePathname();
-  const isLogin = pathname === "/login";
-
   // Variants untuk animasi
   const containerVariants = {
     visible: {
@@ -47,21 +43,11 @@ export const AuthTemplate: React.FC<AuthTemplateProps> = ({ children }) => {
         backgroundRepeat: "no-repeat",
         height: "100vh",
         width: "100vw",
-      }}
-    >
-      <motion.div
-        className="h-screen flex items-center px-4 sm:px-6 lg:px-8"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
+      }}>
+      <motion.div className="h-screen flex items-center px-4 sm:px-6 lg:px-8" variants={containerVariants} initial="hidden" animate="visible">
         <div className="w-full max-w-7xl mx-auto">
           <AnimatePresence mode="wait">
-            <motion.div
-              key="content"
-              variants={contentVariants}
-              className="w-full max-w-md ml-0 lg:ml-20"
-            >
+            <motion.div key="content" variants={contentVariants} className="w-full max-w-md ml-0 lg:ml-20">
               {children}
             </motion.div>
           </AnimatePresence>

@@ -1,10 +1,23 @@
-import { Comment } from "./comments";
+export interface Comment {
+  id: string;
+  content: string;
+  rating: number;
+  createdAt: string;
+  resepId: number;
+  user: {
+    id: number;
+    name: string;
+    photo: string;
+  };
+}
 
-interface RecipeDetail {
+export interface RecipeDetail {
   id: number;
   nama: string;
   photoResep: string;
-  tanggalUnggahan: string;
+  kategoriId?: number;
+  tanggalUnggah: string;
+  description: string;
   user?: {
     name: string;
     photo: string;
@@ -13,25 +26,22 @@ interface RecipeDetail {
     nama: string;
     jumlah: string;
   }[];
-  comment: Comment[];
-  langkahList: { deskripsi: string }[];
-  description: string;
+  langkahList: {
+    id: number;
+    urutan: number;
+    deskripsi: string;
+  }[];
   cookingTime: string;
   preparationTime: string;
   servingTime: string;
   note: string;
-  catatan?: string;
-  rating?: number;
-  reviewers?: number;
-  savesCount: number;
   totalComments: number;
+  savesCount: number;
   totalReviews: number;
   averageRating: number;
   isSavedByCurrentUser: boolean;
   kategori?: {
     nama: string;
   };
-  kategoriId?: number; // Added to support kategoriId
+  comment?: Comment[]; // Allow undefined to handle initial state
 }
-
-export type { RecipeDetail };

@@ -72,7 +72,6 @@ const SavedPage = () => {
       setLoading(false);
     } catch (error) {
       console.error("Error fetching saved recipes:", error);
-      setError("Failed to load saved recipes. Please try again.");
       setLoading(false);
     }
   };
@@ -106,22 +105,17 @@ const SavedPage = () => {
       if (!token) {
         throw new Error("No authentication token.");
       }
-      const response = await fetch(
-        `http://localhost:4000/v1/resep/${selectedRecipeId}/unsave`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`http://localhost:4000/v1/resep/${selectedRecipeId}/unsave`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      setRecipes((prev) =>
-        prev.filter((recipe) => recipe.id !== selectedRecipeId)
-      );
+      setRecipes((prev) => prev.filter((recipe) => recipe.id !== selectedRecipeId));
       setShowConfirmModal(false);
       setSelectedRecipeId(null);
       window.dispatchEvent(
@@ -130,8 +124,6 @@ const SavedPage = () => {
         })
       );
     } catch (error) {
-      console.error("Error unsaving recipe:", error);
-      setError("Failed to unsave recipe. Please try again.");
       setShowConfirmModal(false);
       setSelectedRecipeId(null);
     }
@@ -144,10 +136,7 @@ const SavedPage = () => {
           <div className="h-8 bg-gray-200 rounded w-1/4 mb-6" />
           <div className="space-y-4">
             {[...Array(3)].map((_, index) => (
-              <div
-                key={index}
-                className="bg-white/60 rounded-3xl shadow-sm border-2 border-white/60 p-4"
-              >
+              <div key={index} className="bg-white/60 rounded-3xl shadow-sm border-2 border-white/60 p-4">
                 <div className="flex gap-4">
                   <div className="w-48 h-32 bg-gray-200 rounded-2xl" />
                   <div className="flex-grow">
@@ -191,43 +180,25 @@ const SavedPage = () => {
             const prepTime = extractNumber(recipe.preparationTime);
             const cookTime = extractNumber(recipe.cookingTime);
             const servingTime = extractNumber(recipe.servingTime);
-            const totalTime =
-              Number(prepTime) + Number(cookTime) + Number(servingTime);
+            const totalTime = Number(prepTime) + Number(cookTime) + Number(servingTime);
             return (
-              <div
-                key={recipe.id}
-                className="bg-white/60 rounded-3xl shadow-sm border-2 border-white/60 p-4 hover:shadow-md transition-shadow"
-              >
+              <div key={recipe.id} className="bg-white/60 rounded-3xl shadow-sm border-2 border-white/60 p-4 hover:shadow-md transition-shadow">
                 <div className="flex gap-4">
                   <div className="relative w-48 h-32 rounded-2xl overflow-hidden flex-shrink-0">
-                    <Image
-                      src={recipe.photoResep}
-                      alt={recipe.nama}
-                      fill
-                      className="object-cover"
-                    />
+                    <Image src={recipe.photoResep} alt={recipe.nama} fill className="object-cover" />
                   </div>
                   <div className="flex-grow">
                     <div className="flex justify-between items-start">
                       <div>
-                        <h3 className="text-lg font-semibold text-slate-900 mb-1">
-                          {recipe.nama}
-                        </h3>
-                        <p className="text-sm text-gray-600 mb-2">
-                          {recipe.kategori?.nama || "Unknown Category"}
-                        </p>
+                        <h3 className="text-lg font-semibold text-slate-900 mb-1">{recipe.nama}</h3>
+                        <p className="text-sm text-gray-600 mb-2">{recipe.kategori?.nama || "Unknown Category"}</p>
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="flex items-center gap-1 text-yellow-500">
                           <FaStar className="w-4 h-4" />
-                          <span className="text-sm font-medium">
-                            {recipe.averageRating || 0}
-                          </span>
+                          <span className="text-sm font-medium">{recipe.averageRating || 0}</span>
                         </div>
-                        <button
-                          onClick={() => handleRemoveSave(recipe.id)}
-                          className="text-[#FF7a5C] hover:text-[#ff6b4a] transition-colors cursor-pointer"
-                        >
+                        <button onClick={() => handleRemoveSave(recipe.id)} className="text-[#FF7a5C] hover:text-[#ff6b4a] transition-colors cursor-pointer">
                           <FaBookmark className="w-5 h-5" />
                         </button>
                       </div>
@@ -238,24 +209,12 @@ const SavedPage = () => {
                         <span>{formatTime(totalTime)}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Image
-                          src={
-                            recipe.user?.photo ||
-                            "/assets/images/image_login.jpg"
-                          }
-                          alt={recipe.user?.name || "Unknown User"}
-                          width={20}
-                          height={20}
-                          className="rounded-full"
-                        />
+                        <Image src={recipe.user?.photo || "/assets/images/image_login.jpg"} alt={recipe.user?.name || "Unknown User"} width={20} height={20} className="rounded-full" />
                         <span>{recipe.user?.name || "Unknown User"}</span>
                       </div>
                     </div>
                     <div className="flex justify-between items-center">
-                      <Link
-                        href={`/detail_resep?recipe=${recipe.id}`}
-                        className="text-[#FF7A5C] hover:text-[#ff6b4a] font-medium text-sm"
-                      >
+                      <Link href={`/detail_resep?recipe=${recipe.id}`} className="text-[#FF7A5C] hover:text-[#ff6b4a] font-medium text-sm">
                         View Recipe →
                       </Link>
                     </div>
@@ -269,23 +228,13 @@ const SavedPage = () => {
       {showConfirmModal && (
         <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <h3 className="font-semibold text-lg text-gray-900 mb-4">
-              Remove from Saved
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Are you sure you want to remove this recipe from your saved list?
-            </p>
+            <h3 className="font-semibold text-lg text-gray-900 mb-4">Remove from Saved</h3>
+            <p className="text-gray-600 mb-6">Are you sure you want to remove this recipe from your saved list?</p>
             <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setShowConfirmModal(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg"
-              >
+              <button onClick={() => setShowConfirmModal(false)} className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
                 Cancel
               </button>
-              <button
-                onClick={confirmRemove}
-                className="px-4 py-2 text-sm font-medium text-white bg-[#FF7A5C] hover:bg-[#ff6b4a] rounded-lg"
-              >
+              <button onClick={confirmRemove} className="px-4 py-2 text-sm font-medium text-white bg-[#FF7A5C] hover:bg-[#ff6b4a] rounded-lg">
                 Remove
               </button>
             </div>

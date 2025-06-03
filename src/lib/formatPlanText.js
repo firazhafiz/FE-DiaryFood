@@ -5,7 +5,6 @@ export const formatPlanText = (text) => {
 
   // Variabel untuk menyimpan elemen JSX
   const formattedElements = [];
-  let currentSection = null;
   let currentList = [];
 
   // Fungsi untuk menutup list jika ada

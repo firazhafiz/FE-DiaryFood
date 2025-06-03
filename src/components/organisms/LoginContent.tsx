@@ -10,22 +10,15 @@ interface LoginContentProps {
   googleLogin: () => Promise<void>;
 }
 
-export const LoginContent: React.FC<LoginContentProps> = ({
-  onSubmit,
-  googleLogin,
-}) => {
+export const LoginContent: React.FC<LoginContentProps> = ({ onSubmit, googleLogin }) => {
   return (
     <div className="w-full max-w-md box-border" style={{ marginLeft: "100px" }}>
       <GlassmorphismCard className="mt-8 p-4">
         <Title />
         <div className="space-y-6">
           <div>
-            <h3 className="text-slate-800 font-bold text-2xl">
-              Log in to your Account
-            </h3>
-            <p className="mt-2 text-sm text-slate-400">
-              Welcome back! Please enter your details
-            </p>
+            <h3 className="text-slate-800 font-bold text-2xl">Log in to your Account</h3>
+            <p className="mt-2 text-sm text-slate-400">Welcome back! Please enter your details</p>
           </div>
 
           <div>
@@ -37,11 +30,8 @@ export const LoginContent: React.FC<LoginContentProps> = ({
           </div>
 
           <p className="text-center text-gray-500 text-sm">
-            Don't have an account?{" "}
-            <Link
-              href="/register"
-              className="text-[color:var(--custom-orange)] hover:text-[color:var(--custom-orange)]/80"
-            >
+            Don&apos;t have an account?{" "}
+            <Link href="/register" className="text-[color:var(--custom-orange)] hover:text-[color:var(--custom-orange)]/80">
               Create an account
             </Link>
           </p>

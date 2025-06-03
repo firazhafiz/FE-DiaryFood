@@ -7,13 +7,6 @@ import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
 import { DefaultProfile } from "../../../public/assets";
 
-interface CurrentUser {
-  id: number;
-  name: string;
-  email: string;
-  photo: string | null | undefined;
-}
-
 const NavbarHome: React.FC = () => {
   const [isSticky, setIsSticky] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
