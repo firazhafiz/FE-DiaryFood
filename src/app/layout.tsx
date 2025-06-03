@@ -30,28 +30,17 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"), // Dynamic base URL
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+function RootLayoutContent({ children }: { children: React.ReactNode }) {
+  return <AuthProvider>{children}</AuthProvider>;
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${poppins.variable} ${workSans.variable}`}>
-      <body suppressHydrationWarning className="font-poppins">
-        <AuthProvider>
-          <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
-          <Suspense
-            fallback={
-              <div className="min-h-screen flex items-center justify-center bg-gray-100">
-                <div className="text-center">
-                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#FF7A5C] mx-auto mb-4"></div>
-                  <p className="text-gray-600">Loading...</p>
-                </div>
-              </div>
-            }>
-            {children}
-          </Suspense>
-        </AuthProvider>
+    <html lang="en">
+      <body>
+        <Suspense fallback={<div>Loading...</div>}>
+          <RootLayoutContent>{children}</RootLayoutContent>
+        </Suspense>
       </body>
     </html>
   );

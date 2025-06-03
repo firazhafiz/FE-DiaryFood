@@ -3,7 +3,7 @@
 import DetailHeader from "@/components/molecules/DetailHeader";
 import IngredientsSection from "@/components/molecules/IngredientsSection";
 import InstructionsSection from "@/components/molecules/InstructionsSection";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { RecipeDetail } from "@/types/recipe-detail";
@@ -58,13 +58,15 @@ const DetailMyRecipe = () => {
   console.log(recipe);
 
   return (
-    <div className="p-8">
-      <DetailHeader recipe={recipe} loading={loading} />
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-        <IngredientsSection recipe={recipe} loading={loading} />
-        <InstructionsSection recipe={recipe} loading={loading} />
+    <Suspense fallback={null}>
+      <div className="p-8">
+        <DetailHeader recipe={recipe} loading={loading} />
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <IngredientsSection recipe={recipe} loading={loading} />
+          <InstructionsSection recipe={recipe} loading={loading} />
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 };
 

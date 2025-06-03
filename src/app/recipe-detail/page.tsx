@@ -7,7 +7,7 @@ import CommentsSection from "@/components/molecules/CommentsSection";
 import RecipeSidebar from "@/components/molecules/RecipeSidebar";
 import Footer from "@/components/organisms/Footer";
 import Navbar from "@/components/organisms/Navbar";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Recipe } from "@/types/recipe";
 import { RecipeDetail, Comment } from "@/types/recipe-detail";
@@ -139,6 +139,8 @@ export default function DetailResep() {
   }
 
   return (
+    <Suspense fallback={null}>
+
     <div className="bg-gray-100">
       <Navbar />
       <div className="max-w-7xl mx-auto w-full px-4 py-8 flex flex-col md:flex-row gap-8 pt-[136px]">
@@ -156,5 +158,6 @@ export default function DetailResep() {
       </div>
       <Footer />
     </div>
+    </Suspense>
   );
 }

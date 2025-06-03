@@ -1,7 +1,7 @@
 "use client";
 
 import CategoryManagement from "@/components/organisms/CategoryManagement";
-import { useDeferredValue, useEffect, useState } from "react";
+import { Suspense, useDeferredValue, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 
 interface Category {
@@ -47,12 +47,14 @@ const CategoriesPage = () => {
   }, []);
 
   return (
-    <div className="space-y-6 p-8 min-h-screen">
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl font-semibold text-slate-900">Manajemen Kategori</h1>
+    <Suspense fallback={null}>
+      <div className="space-y-6 p-8 min-h-screen">
+        <div className="flex justify-between items-center">
+          <h1 className="text-xl font-semibold text-slate-900">Manajemen Kategori</h1>
+        </div>
+        <CategoryManagement categories={deferredCategories} setCategories={setCategories} />
       </div>
-      <CategoryManagement categories={deferredCategories} setCategories={setCategories} />
-    </div>
+    </Suspense>
   );
 };
 

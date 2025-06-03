@@ -5,6 +5,8 @@ import { RecipeTable } from "../molecules/RecipeTable";
 import { DashboardCard } from "../molecules/DashboardCard";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { Suspense } from "react";
+
 interface Recipe {
   id: number;
   nama: string;
@@ -111,5 +113,9 @@ export const RecipeManagement: React.FC<RecipeManagementProps> = ({ searchQuery 
     return result;
   }, [recipes, searchQuery, sortBy]);
 
-  return <DashboardCard>{loading ? <div className="text-center py-4">Loading...</div> : <RecipeTable recipes={filteredAndSortedRecipes} onShow={handleShow} onDelete={handleDelete} />}</DashboardCard>;
+  return (
+    <Suspense>
+      <DashboardCard>{loading ? <div className="text-center py-4">Loading...</div> : <RecipeTable recipes={filteredAndSortedRecipes} onShow={handleShow} onDelete={handleDelete} />}</DashboardCard>;
+    </Suspense>
+  );
 };

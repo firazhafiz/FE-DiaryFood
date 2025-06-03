@@ -23,9 +23,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -41,9 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         },
       });
       if (!response.ok) {
-        throw new Error(
-          `Gagal mengambil data pengguna: ${response.status} ${response.statusText}`
-        );
+        throw new Error(`Gagal mengambil data pengguna: ${response.status} ${response.statusText}`);
       }
       const data = await response.json();
       console.log("fetchUser response:", data);
@@ -55,10 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         id: user.id,
         name: user.name || "Anonymous",
         email: user.email,
-        photo:
-          user.photo && user.photo.trim() !== ""
-            ? user.photo
-            : DefaultProfile.src,
+        photo: user.photo && user.photo.trim() !== "" ? user.photo : DefaultProfile.src,
       };
       setCurrentUser(userData);
       setIsLoggedIn(true);
@@ -117,8 +110,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         login,
         logout,
         loading,
-      }}
-    >
+      }}>
       {children}
     </AuthContext.Provider>
   );

@@ -50,12 +50,14 @@ function AuthCallbackContent() {
   }, [router, searchParams, login]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h2 className="text-xl font-semibold mb-2 text-slate-800">Memproses login...</h2>
-        <p className="text-gray-600">Harap tunggu saat kami menyelesaikan autentikasi Anda.</p>
+    <Suspense>
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold mb-2 text-slate-800">Memproses login...</h2>
+          <p className="text-gray-600">Harap tunggu saat kami menyelesaikan autentikasi Anda.</p>
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 }
 

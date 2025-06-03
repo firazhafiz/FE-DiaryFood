@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { toast } from "react-toastify"; // For error/success notifications
 import Cookies from "js-cookie";
 
@@ -43,35 +43,37 @@ const CategoryManagement: React.FC<CategoryManagementProps> = ({ categories, set
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-      <div className="grid grid-cols-4 gap-4 py-2 px-4 bg-slate-50 rounded-md">
-        <p className="text-slate-700 font-medium text-sm">Name</p>
-        <p className="text-slate-700 font-medium text-sm">Description</p>
-        <p className="text-slate-700 font-medium text-sm">Total Recipes</p>
-        <p className="text-slate-700 font-medium text-sm text-right">Actions</p>
-      </div>
-      <div className="divide-y divide-slate-100">
-        {categories.length === 0 ? (
-          <p className="text-slate-500 text-sm py-4 text-center">No categories found.</p>
-        ) : (
-          categories.map((category) => (
-            <div key={category.id} className="grid grid-cols-4 gap-4 py-3 px-4 items-center hover:bg-slate-50">
-              <p className="text-slate-700 font-medium text-sm">{category.nama}</p>
-              <p className="text-slate-600 text-sm truncate">{category.description}</p>
-              <p className="text-slate-600 text-sm">{category.totalRecipes}</p>
-              <div className="flex justify-end">
-                <button onClick={() => handleDelete(category.id)} className="text-red-500 hover:text-red-600 text-sm font-medium flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                  Delete
-                </button>
+    <Suspense fallback={null}>
+      <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+        <div className="grid grid-cols-4 gap-4 py-2 px-4 bg-slate-50 rounded-md">
+          <p className="text-slate-700 font-medium text-sm">Name</p>
+          <p className="text-slate-700 font-medium text-sm">Description</p>
+          <p className="text-slate-700 font-medium text-sm">Total Recipes</p>
+          <p className="text-slate-700 font-medium text-sm text-right">Actions</p>
+        </div>
+        <div className="divide-y divide-slate-100">
+          {categories.length === 0 ? (
+            <p className="text-slate-500 text-sm py-4 text-center">No categories found.</p>
+          ) : (
+            categories.map((category) => (
+              <div key={category.id} className="grid grid-cols-4 gap-4 py-3 px-4 items-center hover:bg-slate-50">
+                <p className="text-slate-700 font-medium text-sm">{category.nama}</p>
+                <p className="text-slate-600 text-sm truncate">{category.description}</p>
+                <p className="text-slate-600 text-sm">{category.totalRecipes}</p>
+                <div className="flex justify-end">
+                  <button onClick={() => handleDelete(category.id)} className="text-red-500 hover:text-red-600 text-sm font-medium flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 };
 

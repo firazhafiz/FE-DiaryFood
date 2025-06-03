@@ -8,9 +8,6 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
 
-  turbo: {
-    enabled: false, // Nonaktifkan Turbopack
-  },
   images: {
     remotePatterns: [
       {

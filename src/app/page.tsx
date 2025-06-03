@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import MainTemplate from "../components/templates/MainTemplate";
 import type { Recipe } from "@/types/recipe";
 
@@ -34,5 +34,9 @@ export default function Home() {
     return null; // or a loading spinner if needed globally
   }
 
-  return <MainTemplate recipes={recipes} />;
+  return (
+    <Suspense fallback={null}>
+      <MainTemplate recipes={recipes} />
+    </Suspense>
+  );
 }

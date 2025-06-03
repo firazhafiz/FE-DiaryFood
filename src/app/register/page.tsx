@@ -59,10 +59,9 @@ export default function RegisterPage() {
 
   return (
     <AuthTemplate>
-<Suspense fallback={null}>
-
-      <RegisterContent onSubmit={handleRegister} googleLogin={handleGoogleLogin} />
-</Suspense>
+      <Suspense fallback={null}>
+        <RegisterContent onSubmit={handleRegister} googleLogin={handleGoogleLogin} />
+      </Suspense>
     </AuthTemplate>
   );
 }
