@@ -1,23 +1,10 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
-import { Poppins, Work_Sans } from "next/font/google";
 import { AuthProvider } from "@/context/AuthContext";
 import { Suspense } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
-
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-});
-
-const workSans = Work_Sans({
-  variable: "--font-work-sans",
-  subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-});
 
 export const metadata: Metadata = {
   title: "Diary Food - Your Recipe Platform",
@@ -42,7 +29,7 @@ function RootLayoutContent({ children }: { children: React.ReactNode }) {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${poppins.variable} ${workSans.variable}`}>
+    <html lang="en" className="font-poppins">
       <body className="font-poppins">
         <Suspense fallback={<div>Loading...</div>}>
           <RootLayoutContent>{children}</RootLayoutContent>
