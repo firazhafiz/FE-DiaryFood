@@ -4,7 +4,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { LoginContent } from "@/components/organisms/LoginContent";
 import { AuthTemplate } from "@/components/templates/AuthTemplate";
-import { FcGoogle } from "react-icons/fc";
 import { config } from "@/config";
 import { useAuth } from "@/context/AuthContext";
 import Loading from "./loading";
