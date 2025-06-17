@@ -79,7 +79,7 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
-      window.location.href = `${config.apiUrl}/auth/google`;
+     window.location.href = "https://be-diary-food.vercel.app/v1/auth/google";
       console.log(`${config.apiUrl}/auth/google`);
     } catch (err) {
       setError("An error occurred during Google login.");
