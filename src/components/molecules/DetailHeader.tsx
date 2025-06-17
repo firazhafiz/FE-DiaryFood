@@ -95,7 +95,7 @@ const DetailHeader = ({ recipe, loading }: DetailHeaderProps) => {
       setTotalSaved((prev) => prev - 1);
       const token = Cookies.get("token");
       if (!token) throw new Error("No authentication token found");
-      const response = await fetch(`http://localhost:4000/v1/resep/${recipe.id}/unsave`, {
+      const response = await fetch(`${config.apiUrl}/resep/${recipe.id}/unsave`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

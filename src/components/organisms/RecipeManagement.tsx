@@ -6,6 +6,7 @@ import { DashboardCard } from "../molecules/DashboardCard";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { Suspense } from "react";
+import { config } from "@/config";
 
 interface Recipe {
   id: number;
@@ -38,7 +39,7 @@ export const RecipeManagement: React.FC<RecipeManagementProps> = ({ searchQuery 
     const fetchRecipes = async () => {
       try {
         const token = Cookies.get("token");
-        const res = await fetch("http://localhost:4000/v1/admin/dashboard/recipes", {
+        const res = await fetch(`${config.apiUrl}/admin/dashboard/recipes`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -63,7 +64,7 @@ export const RecipeManagement: React.FC<RecipeManagementProps> = ({ searchQuery 
   const handleDelete = async (id: number) => {
     try {
       const token = Cookies.get("token");
-      const response = await fetch(`http://localhost:4000/v1/admin/dashboard/recipes/${id}`, {
+      const response = await fetch(`${config.apiUrl}/admin/dashboard/recipes/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

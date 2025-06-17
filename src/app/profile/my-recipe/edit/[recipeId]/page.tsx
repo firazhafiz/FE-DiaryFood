@@ -316,7 +316,7 @@ export default function EditRecipePage() {
     console.log("Request body:", body);
 
     try {
-      const response = await fetch(`http://localhost:4000/v1/profile/recipe/${resepId}`, {
+      const response = await fetch(`${config.apiUrl}/profile/recipe/${resepId}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -331,7 +331,7 @@ export default function EditRecipePage() {
       }
 
       mutate("/profile/my-recipe");
-      mutate(`http://localhost:4000/v1/recipe/${resepId}`);
+      mutate(`${config.apiUrl}/recipe/${resepId}`);
       setShowSuccessModal(true);
     } catch (error: any) {
       console.error("Error submitting recipe:", error);

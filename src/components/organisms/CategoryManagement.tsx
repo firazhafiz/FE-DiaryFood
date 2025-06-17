@@ -3,6 +3,7 @@
 import React, { Suspense } from "react";
 import { toast } from "react-toastify"; // For error/success notifications
 import Cookies from "js-cookie";
+import { config } from "@/config";
 
 interface Category {
   id: number;
@@ -20,7 +21,7 @@ interface CategoryManagementProps {
 const CategoryManagement: React.FC<CategoryManagementProps> = ({ categories, setCategories }) => {
   const handleDelete = async (id: number) => {
     try {
-      const response = await fetch(`http://localhost:4000/v1/admin/dashboard/categories/${id}`, {
+      const response = await fetch(`${config.apiUrl}/admin/dashboard/categories/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

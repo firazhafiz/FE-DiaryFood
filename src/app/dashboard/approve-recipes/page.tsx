@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { FaEllipsis } from "react-icons/fa6";
 import Cookies from "js-cookie";
+import { config } from "@/config";
 interface Recipe {
   id: string;
   nama: string;
@@ -43,7 +44,7 @@ export default function ApproveRecipesPage() {
         return;
       }
 
-      const response = await fetch("http://localhost:4000/v1/admin/dashboard/pending-recipes", {
+      const response = await fetch(`${config.apiUrl}/admin/dashboard/pending-recipes`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +67,7 @@ export default function ApproveRecipesPage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:4000/v1/admin/dashboard/pending-recipes/${id}/approve`, {
+      const response = await fetch(`${config.apiUrl}/admin/dashboard/pending-recipes/${id}/approve`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -108,7 +109,7 @@ export default function ApproveRecipesPage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:4000/v1/admin/dashboard/pending-recipes/${id}/reject`, {
+      const response = await fetch(`${config.apiUrl}/admin/dashboard/pending-recipes/${id}/reject`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

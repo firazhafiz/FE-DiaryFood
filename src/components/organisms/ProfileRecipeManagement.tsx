@@ -90,7 +90,7 @@ export const ProfileRecipeManagement: React.FC = () => {
         return;
       }
 
-      const response = await fetch(`http://localhost:4000/v1/profile/recipe/${id}`, {
+      const response = await fetch(`${config.apiUrl}/profile/recipe/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

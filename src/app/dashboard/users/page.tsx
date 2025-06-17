@@ -5,6 +5,7 @@ import { UserManagement } from "@/components/organisms/UserManagement";
 import { useRouter } from "next/navigation";
 import { FaSearch, FaSort } from "react-icons/fa";
 import Cookies from "js-cookie";
+import { config } from "@/config";
 interface User {
   id: number;
   email: string;
@@ -35,7 +36,7 @@ export default function UsersPage() {
     const getUsers = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("http://localhost:4000/v1/user", {
+        const response = await fetch(`${config.apiUrl}/user`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -58,8 +59,6 @@ export default function UsersPage() {
 
     getUsers();
   }, [router]); // DIUBAH: Tambahkan router sebagai dependency
-
- 
 
   return (
     <div className="p-4 md:p-8 min-h-screen">

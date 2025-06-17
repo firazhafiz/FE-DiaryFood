@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
+import { config } from "@/config";
 
 export const metadata: Metadata = {
   title: "Diary Food - Your Recipe Platform",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
     url: "/",
     images: ["/assets/images/og-image.jpg"],
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || config.apiUrl),
 };
 
 function RootLayoutContent({ children }: { children: React.ReactNode }) {

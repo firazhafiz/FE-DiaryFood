@@ -5,6 +5,7 @@ import { UserTable } from "../molecules/UserTable";
 import { DashboardCard } from "../molecules/DashboardCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Cookies from "js-cookie";
+import { config } from "@/config";
 
 interface User {
   id: number;
@@ -71,7 +72,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ users, onUserSel
         throw new Error("No authentication token found");
       }
 
-      const response = await fetch(`http://localhost:4000/v1/user/${id}`, {
+      const response = await fetch(`${config.apiUrl}/user/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

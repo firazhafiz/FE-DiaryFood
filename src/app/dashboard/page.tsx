@@ -9,6 +9,7 @@ import { Bar, Line } from "react-chartjs-2";
 import { useRouter } from "next/navigation";
 import getRelativeTime from "@/helper/relativeTime";
 import Cookies from "js-cookie";
+import { config } from "@/config";
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend);
 
 export default function DashboardPage() {
@@ -34,7 +35,7 @@ export default function DashboardPage() {
           return;
         }
 
-        const response = await fetch("http://localhost:4000/v1/admin/dashboard", {
+        const response = await fetch(`${config.apiUrl}/admin/dashboard`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

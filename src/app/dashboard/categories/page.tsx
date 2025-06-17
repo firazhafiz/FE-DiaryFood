@@ -3,6 +3,7 @@
 import CategoryManagement from "@/components/organisms/CategoryManagement";
 import { Suspense, useDeferredValue, useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { config } from "@/config";
 
 interface Category {
   id: number;
@@ -20,7 +21,7 @@ const CategoriesPage = () => {
   useEffect(() => {
     const getCategories = async () => {
       try {
-        const res = await fetch("http://localhost:4000/v1/admin/dashboard/categories", {
+        const res = await fetch(`${config.apiUrl}/admin/dashboard/categories`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

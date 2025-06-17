@@ -8,6 +8,7 @@ import FeedbackSkeleton from "@/components/skeletons/FeedbackSkeleton";
 import Image from "next/image";
 import Cookies from "js-cookie";
 import { Suspense } from "react";
+import { config } from "@/config";
 
 interface Feedback {
   id: string;
@@ -54,7 +55,7 @@ const FeedbackPage = () => {
     data: feedbacks,
     error,
     isLoading,
-  } = useSWR<Feedback[], Error>("http://localhost:4000/v1/feedbacks", fetcher, {
+  } = useSWR<Feedback[], Error>(`${config.apiUrl}/feedbacks`, fetcher, {
     revalidateOnFocus: false, // Optional: adjust based on your needs
     revalidateOnReconnect: true,
   });

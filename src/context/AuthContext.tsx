@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { DefaultProfile } from "../../public/assets";
 import Cookies from "js-cookie";
 import { useRouter, useSearchParams } from "next/navigation";
+import { config } from "@/config";
 
 interface User {
   id: number;
@@ -32,7 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUser = async (token: string) => {
     try {
-      const response = await fetch("http://localhost:4000/v1/profile", {
+      const response = await fetch(`${config.apiUrl}/profile`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
