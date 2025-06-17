@@ -80,6 +80,7 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     try {
       window.location.href = `${config.apiUrl}/auth/google`;
+      console.log(`${config.apiUrl}/auth/google`);
     } catch (err) {
       setError("An error occurred during Google login.");
     }
