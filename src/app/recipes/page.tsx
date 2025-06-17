@@ -30,7 +30,7 @@ const Resep = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(`${config.apiUrl}/category`
+        const response = await fetch(`${config.apiUrl}/category`);
         if (!response.ok) {
           throw new Error(`HTTP error ${response.status}: Gagal mengambil kategori`);
         }
