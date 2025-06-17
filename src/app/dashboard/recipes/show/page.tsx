@@ -7,6 +7,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { RecipeDetail } from "@/types/recipe-detail";
+import { config } from "@/config";
 
 const DetailMyRecipe = () => {
   const [recipe, setRecipe] = useState<RecipeDetail | null>(null);
@@ -25,7 +26,7 @@ const DetailMyRecipe = () => {
 
       try {
         const token = Cookies.get("token");
-        const response = await fetch(`http://localhost:4000/v1/admin/dashboard/recipes/${id}`, {
+        const response = await fetch(`${config.apiUrl}/admin/dashboard/recipes/${id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

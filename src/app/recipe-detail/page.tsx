@@ -11,6 +11,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Recipe } from "@/types/recipe";
 import { RecipeDetail, Comment } from "@/types/recipe-detail";
+import { config } from "@/config";
 
 export default function DetailResep() {
   const searchParams = useSearchParams();
@@ -37,7 +38,7 @@ export default function DetailResep() {
           throw new Error("ID resep tidak valid");
         }
 
-        const recipeResponse = await fetch(`http://localhost:4000/v1/resep/${parsedRecipeId}`);
+        const recipeResponse = await fetch(`${config.apiUrl}/resep/${parsedRecipeId}`);
         if (!recipeResponse.ok) {
           throw new Error("Resep tidak ditemukan di server");
         }
@@ -82,7 +83,7 @@ export default function DetailResep() {
         };
         setRecipe(mappedRecipe);
 
-        const recipesResponse = await fetch("http://localhost:4000/v1/resep");
+        const recipesResponse = await fetch(`${config.apiUrl}/resep`);
         if (!recipesResponse.ok) {
           throw new Error("Failed to fetch related recipes");
         }
@@ -140,24 +141,23 @@ export default function DetailResep() {
 
   return (
     <Suspense fallback={null}>
-
-    <div className="bg-gray-100">
-      <Navbar />
-      <div className="max-w-7xl mx-auto w-full px-4 py-8 flex flex-col md:flex-row gap-8 pt-[136px]">
-        <div className="flex-1 min-w-0">
-          <DetailHeader recipe={recipe!} loading={loading} />
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-            <IngredientsSection recipe={recipe!} loading={loading} />
-            <InstructionsSection recipe={recipe!} loading={loading} />
+      <div className="bg-gray-100">
+        <Navbar />
+        <div className="max-w-7xl mx-auto w-full px-4 py-8 flex flex-col md:flex-row gap-8 pt-[136px]">
+          <div className="flex-1 min-w-0">
+            <DetailHeader recipe={recipe!} loading={loading} />
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+              <IngredientsSection recipe={recipe!} loading={loading} />
+              <InstructionsSection recipe={recipe!} loading={loading} />
+            </div>
+            <CommentsSection recipeId={recipeId || ""} onCommentAdded={handleCommentAdded} />
           </div>
-          <CommentsSection recipeId={recipeId || ""} onCommentAdded={handleCommentAdded} />
+          <div className="w-full md:w-80 flex-shrink-0">
+            <RecipeSidebar recipes={recipes} loading={loading} />
+          </div>
         </div>
-        <div className="w-full md:w-80 flex-shrink-0">
-          <RecipeSidebar recipes={recipes} loading={loading} />
-        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
     </Suspense>
   );
 }

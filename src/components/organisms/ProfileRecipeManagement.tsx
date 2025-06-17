@@ -7,6 +7,7 @@ import { ProfileRecipeTable } from "../molecules/ProfileRecipeTable";
 import useSWR from "swr";
 import RecipeTableSkeleton from "@/components/skeletons/RecipeTableSkeleton";
 import Cookies from "js-cookie";
+import { config } from "@/config";
 
 interface Recipe {
   id: number;
@@ -59,7 +60,7 @@ export const ProfileRecipeManagement: React.FC = () => {
   const router = useRouter();
 
   // Use SWR to fetch recipes
-  const { data, error, isLoading } = useSWR("http://localhost:4000/v1/profile/recipes", fetcher, {
+  const { data, error, isLoading } = useSWR(`${config.apiUrl}/profile/recipes`, fetcher, {
     onError: (error) => {
       if (error.message === "No token found" || error.message.includes("401")) {
         Cookies.remove("token");

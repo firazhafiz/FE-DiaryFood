@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { config } from "./config";
 
 const protectedPaths = ["/dashboard", "/profile", "/ask-ai"];
 
@@ -20,7 +21,7 @@ export async function middleware(request: NextRequest) {
 
     // Validasi token dengan memanggil API
     try {
-      const response = await fetch("http://localhost:4000/v1/profile", {
+      const response = await fetch(`${config.apiUrl}/profile`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

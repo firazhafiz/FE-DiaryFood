@@ -5,6 +5,7 @@ import { Input } from "../atoms/Input";
 import { Label } from "../atoms/Label";
 import { Button } from "../atoms/Button";
 import Cookies from "js-cookie";
+import { config } from "@/config";
 interface FormState {
   fullname: string;
   email: string;
@@ -78,7 +79,7 @@ const ContactForm: React.FC = () => {
         throw new Error("Please log in to submit feedback");
       }
 
-      const response = await fetch("http://localhost:4000/v1/feedbacks", {
+      const response = await fetch(`${config.apiUrl}/feedbacks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

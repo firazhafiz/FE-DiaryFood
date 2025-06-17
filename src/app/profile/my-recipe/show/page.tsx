@@ -7,6 +7,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RecipeDetail } from "@/types/recipe-detail";
 import Cookies from "js-cookie";
+import { config } from "@/config";
 
 const DetailMyRecipe = () => {
   const [recipe, setRecipe] = useState<RecipeDetail | null>(null);
@@ -30,7 +31,7 @@ const DetailMyRecipe = () => {
           router.push("/login");
           return;
         }
-        const response = await fetch(`http://localhost:4000/v1/profile/recipe/${id}`, {
+        const response = await fetch(`${config.apiUrl}/profile/recipe/${id}`, {
           method: "Get",
           headers: {
             Authorization: `Bearer ${token}`,

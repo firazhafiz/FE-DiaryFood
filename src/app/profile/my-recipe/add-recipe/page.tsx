@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import Cookies from "js-cookie";
+import { config } from "@/config";
 
 interface Ingredient {
   id: number;
@@ -127,8 +128,8 @@ export default function AddRecipePage() {
   const mainCategoryDropdownRef = useRef<HTMLDivElement>(null);
   const subCategoryDropdownRef = useRef<HTMLDivElement>(null);
 
-  const { data: categoriesData } = useSWR("http://localhost:4000/v1/category", fetcher);
-  const { data: userData } = useSWR("http://localhost:4000/v1/profile", fetcher);
+  const { data: categoriesData } = useSWR(`${config.apiUrl}/category`, fetcher);
+  const { data: userData } = useSWR(`${config.apiUrl}/profile`, fetcher);
 
   useEffect(() => {
     if (userData) {
@@ -300,7 +301,7 @@ export default function AddRecipePage() {
     console.log("Request body:", body);
 
     try {
-      const response = await fetch("http://localhost:4000/v1/profile/recipes", {
+      const response = await fetch(`${config.apiUrl}/profile/recipes`, {
         method: "POST",
         credentials: "include",
         headers: {

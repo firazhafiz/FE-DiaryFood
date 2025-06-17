@@ -8,6 +8,7 @@ import { GoSearch } from "react-icons/go";
 import Cookies from "js-cookie";
 import { RecipeDetail } from "@/types/recipe-detail";
 import { Suspense } from "react";
+import { config } from "@/config";
 
 const extractNumber = (timeString: string | undefined): string => {
   if (!timeString) return "0";
@@ -35,7 +36,7 @@ const SavedPage = () => {
       if (!token) {
         throw new Error("No authentication token.");
       }
-      const response = await fetch("http://localhost:4000/v1/resep/saved", {
+      const response = await fetch(`${config.apiUrl}/resep/saved`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -106,7 +107,7 @@ const SavedPage = () => {
       if (!token) {
         throw new Error("No authentication token.");
       }
-      const response = await fetch(`http://localhost:4000/v1/resep/${selectedRecipeId}/unsave`, {
+      const response = await fetch(`${config.apiUrl}/resep/${selectedRecipeId}/unsave`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

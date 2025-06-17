@@ -7,6 +7,7 @@ import { useRouter, useParams } from "next/navigation";
 import useSWR, { mutate } from "swr";
 import EditRecipeSkeleton from "@/components/skeletons/EditRecipeSkeleton";
 import Cookies from "js-cookie";
+import { config } from "@/config";
 interface Ingredient {
   id: number;
   name: string;
@@ -127,13 +128,13 @@ export default function EditRecipePage() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const modalButtonRef = useRef<HTMLButtonElement>(null);
 
-  const { data: categoriesData, error: categoriesError } = useSWR("http://localhost:4000/v1/category", fetcher);
-  const { data: userData } = useSWR("http://localhost:4000/v1/profile", fetcher);
+  const { data: categoriesData, error: categoriesError } = useSWR(`${config.apiUrl}/category`, fetcher);
+  const { data: userData } = useSWR(`${config.apiUrl}/profile`, fetcher);
   const {
     data: recipeData,
     error: recipeError,
     isLoading,
-  } = useSWR(resepId && !isNaN(resepId) ? `http://localhost:4000/v1/profile/recipe/${resepId}` : null, fetcher, {
+  } = useSWR(resepId && !isNaN(resepId) ? `${config.apiUrl}/profile/recipe/${resepId}` : null, fetcher, {
     onError: (error) => {
       if (error.message === "No token found" || error.message.includes("401")) {
         router.push("/login");

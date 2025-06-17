@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 import "react-toastify/dist/ReactToastify.css";
 import getRelativeTime from "@/helper/relativeTime";
 import { DefaultProfile } from "../../../public/assets";
+import { config } from "@/config";
 
 interface CommentsSectionProps {
   recipeId: string;
@@ -36,7 +37,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ recipeId, onCommentAd
         if (!token) {
           throw new Error("Authentication token is missing");
         }
-        const response = await fetch(`http://localhost:4000/v1/resep/${recipeId}/comment`, {
+        const response = await fetch(`${config.apiUrl}/resep/${recipeId}/comment`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -135,7 +136,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ recipeId, onCommentAd
       if (!token) {
         throw new Error("Authentication token is missing");
       }
-      const response = await fetch(`http://localhost:4000/v1/resep/${recipeId}/comment`, {
+      const response = await fetch(`${config.apiUrl}/resep/${recipeId}/comment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

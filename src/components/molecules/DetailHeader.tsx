@@ -6,6 +6,7 @@ import { RecipeDetail } from "@/types/recipe-detail";
 import Image from "next/image";
 import { FaCommentAlt, FaSave } from "react-icons/fa";
 import Cookies from "js-cookie";
+import { config } from "@/config";
 
 interface DetailHeaderProps {
   recipe: RecipeDetail | null;
@@ -29,7 +30,7 @@ const DetailHeader = ({ recipe, loading }: DetailHeaderProps) => {
       try {
         const token = Cookies.get("token");
         if (!token) return;
-        const response = await fetch(`http://localhost:4000/v1/resep/${recipe.id}/saved-status`, {
+        const response = await fetch(`${config.apiUrl}/resep/${recipe.id}/saved-status`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -63,7 +64,7 @@ const DetailHeader = ({ recipe, loading }: DetailHeaderProps) => {
       setTotalSaved((prev) => prev + 1);
       const token = Cookies.get("token");
       if (!token) throw new Error("No authentication token found");
-      const response = await fetch(`http://localhost:4000/v1/resep/${recipe.id}/save`, {
+      const response = await fetch(`${config.apiUrl}/resep/${recipe.id}/save`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

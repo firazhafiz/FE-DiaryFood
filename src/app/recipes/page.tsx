@@ -10,6 +10,7 @@ import FilterControlModal from "@/components/molecules/FilterControlModal";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Recipe } from "@/types/recipe";
 import { Suspense } from "react";
+import { config } from "@/config";
 
 const Resep = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -29,7 +30,7 @@ const Resep = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("http://localhost:4000/v1/category");
+        const response = await fetch(`${config.apiUrl}/category`
         if (!response.ok) {
           throw new Error(`HTTP error ${response.status}: Gagal mengambil kategori`);
         }
@@ -55,7 +56,7 @@ const Resep = () => {
       try {
         setIsLoading(true);
         setError(null);
-        const response = await fetch("http://localhost:4000/v1/resep");
+        const response = await fetch(`${config.apiUrl}/resep`);
         if (!response.ok) {
           throw new Error(`HTTP error ${response.status}: Gagal mengambil resep`);
         }

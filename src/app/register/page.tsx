@@ -20,7 +20,7 @@ export default function RegisterPage() {
 
   const handleRegister = async (formData: { name: string; email: string; password: string }) => {
     try {
-      const response = await fetch("http://localhost:4000/v1/auth/register", {
+      const response = await fetch(`${config.apiUrl}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

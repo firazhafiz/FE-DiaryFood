@@ -12,6 +12,7 @@ import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Suspense } from "react";
+import { config } from "@/config";
 
 interface UserProfile {
   id: number;
@@ -58,7 +59,7 @@ function ProfileContent() {
   const router = useRouter();
   const modalButtonRef = useRef<HTMLButtonElement>(null);
 
-  const { data, error, isLoading } = useSWR("http://localhost:4000/v1/profile", fetcher, {
+  const { data, error, isLoading } = useSWR(`${config.apiUrl}/profile`, fetcher, {
     onError: (error) => {
       if (error.message === "No token found" || error.message.includes("401")) {
         toast.error("Session expired. Please log in again.");
@@ -113,7 +114,7 @@ function ProfileContent() {
         payload.phoneNumber = form.phoneNumber;
       }
 
-      const response = await fetch(`http://localhost:4000/v1/user/${form.id}`, {
+      const response = await fetch(`${config.apiUrl}/user/${form.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

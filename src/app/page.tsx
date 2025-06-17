@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import MainTemplate from "../components/templates/MainTemplate";
 import type { Recipe } from "@/types/recipe";
+import { config } from "@/config";
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -11,7 +12,7 @@ export default function Home() {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await fetch("http://localhost:4000/v1/resep");
+        const response = await fetch(`${config.apiUrl}/resep`);
         if (!response.ok) {
           throw new Error("Failed to fetch recipes");
         }

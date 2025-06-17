@@ -11,6 +11,7 @@ import { formatPlanText } from "../../lib/formatPlanText.js";
 import { DefaultProfile } from "../../../public/assets";
 import Cookies from "js-cookie";
 import { Suspense } from "react";
+import { config } from "@/config";
 
 interface Message {
   id: number;
@@ -53,7 +54,7 @@ export default function TanyaAIPage() {
         return;
       }
 
-      const response = await fetch("http://localhost:4000/v1/threads", {
+      const response = await fetch(`${config.apiUrl}/threads`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error("Failed to fetch threads");
@@ -80,7 +81,7 @@ export default function TanyaAIPage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:4000/v1/messages/${threadId}`, {
+      const response = await fetch(`${config.apiUrl}/messages/${threadId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error("Failed to fetch messages");
@@ -100,7 +101,7 @@ export default function TanyaAIPage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:4000/v1/threads/${threadId}`, {
+      const response = await fetch(`${config.apiUrl}/threads/${threadId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -148,7 +149,7 @@ export default function TanyaAIPage() {
     setIsLoading(true);
 
     try {
-      const endpoint = currentThreadId ? `http://localhost:4000/v1/messages/${currentThreadId}` : "http://localhost:4000/v1/messages/new";
+      const endpoint = currentThreadId ? `${config.apiUrl}/messages/${currentThreadId}` : `${config.apiUrl}/messages/new`;
 
       const response = await fetch(endpoint, {
         method: "POST",
