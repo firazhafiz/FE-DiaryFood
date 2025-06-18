@@ -12,12 +12,12 @@ interface LoginContentProps {
 
 export const LoginContent: React.FC<LoginContentProps> = ({ onSubmit, googleLogin }) => {
   return (
-    <div className="w-full max-w-md box-border" style={{ marginLeft: "100px" }}>
-      <GlassmorphismCard className="mt-8 p-4">
+    <div className="w-full max-w-md">
+      <GlassmorphismCard className="mt-8 p-4 sm:p-6">
         <Title />
         <div className="space-y-6">
           <div>
-            <h3 className="text-slate-800 font-bold text-2xl">Log in to your Account</h3>
+            <h3 className="text-slate-800 font-bold text-xl sm:text-2xl">Log in to your Account</h3>
             <p className="mt-2 text-sm text-slate-400">Welcome back! Please enter your details</p>
           </div>
 

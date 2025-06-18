@@ -49,7 +49,7 @@ export const AuthTemplate: React.FC<AuthTemplateProps> = ({ children }) => {
         <motion.div className="h-screen flex items-center px-4 sm:px-6 lg:px-8" variants={containerVariants} initial="hidden" animate="visible">
           <div className="w-full max-w-7xl mx-auto">
             <AnimatePresence mode="wait">
-              <motion.div key="content" variants={contentVariants} className="w-full max-w-md ml-0 lg:ml-20">
+              <motion.div key="content" variants={contentVariants} className="w-full max-w-md mx-auto lg:mx-0 lg:ml-20 px-4 sm:px-0">
                 {children}
               </motion.div>
             </AnimatePresence>

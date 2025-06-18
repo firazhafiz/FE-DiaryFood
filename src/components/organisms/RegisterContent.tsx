@@ -14,12 +14,12 @@ interface RegisterContentProps {
 
 export const RegisterContent: React.FC<RegisterContentProps> = ({ onSubmit, googleLogin }) => {
   return (
-    <div className="w-full max-w-md" style={{ marginLeft: "100px" }}>
-      <GlassmorphismCard className="mt-8">
+    <div className="w-full max-w-md">
+      <GlassmorphismCard className="mt-8 p-4 sm:p-6">
         <Title />
         <div className="space-y-6">
           <div>
-            <h3 className="text-slate-800 font-bold text-2xl">Create your Account</h3>
+            <h3 className="text-slate-800 font-bold text-xl sm:text-2xl">Create your Account</h3>
             <p className="mt-2 text-sm text-slate-400">Join us! Select method to create your account</p>
           </div>
 
