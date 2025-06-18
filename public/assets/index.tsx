@@ -21,7 +21,7 @@ import IlustrasiUsers from "./icons/users.png";
 import IlustrasiRecipes from "./icons/recipes.png";
 import IlustrasiCategories from "./icons/category.png";
 import HeroImage from "./images/hero.jpg";
-import HeroImage2 from "./images/hero2.jpg";
+import HeroImage2 from "./images/hero2.webp";
 import ArrowLeft from "./images/arrow_left.png";
 import DefaultProfile from "./images/defaultProfile.jpg";
 

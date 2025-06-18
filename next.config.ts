@@ -10,7 +10,14 @@ const nextConfig: NextConfig = {
   },
 
   images: {
+    formats: ["image/webp", "image/avif"], // Enable WebP and AVIF
+
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "diary-food1222.vercel.app",
+        pathname: "/_next/image/**",
+      },
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
