@@ -34,9 +34,6 @@ const NavbarHome: React.FC = () => {
   const altText = currentUser?.name && currentUser.name.trim() !== "" ? currentUser.name : "Profile";
 
   const renderAuthSection = () => {
-    if (loading) {
-      return <div className="w-10 h-10 rounded-full bg-gray-300 animate-pulse"></div>;
-    }
     if (isLoggedIn && currentUser) {
       return (
         <Link href="/profile" className="hidden md:flex">
@@ -61,14 +58,14 @@ const NavbarHome: React.FC = () => {
   };
 
   return (
-    <nav className={`py-2 px-6 transition-all duration-300 w-full shadow-none fixed top-0 left-0 z-30 ${isSticky ? "bg-white border-b-gray-300" : "text-white"}`}>
+    <nav className={`py-2 px-6 transition-all duration-300 w-full shadow-none fixed top-0 left-0 z-30 ${isMobileMenuOpen ? "bg-white text-black " : "text-white"} ${isSticky ? "bg-white border-b-gray-300" : "text-white"}`}>
       <div className="max-w-7xl mx-auto flex flex-col gap-2">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Link href="/">
               <h1 className="font-bold text-2xl text-[color:var(--custom-orange)]">
                 Diary
-                <span className={`font-bold text-2xl ${isSticky ? "text-gray-800" : "text-white"}`}>Food</span>
+                <span className={`font-bold text-2xl  ${isSticky ? "text-gray-800" : `${isMobileMenuOpen ? "text-black" : "text-white"}`}`}>Food</span>
               </h1>
             </Link>
           </div>
@@ -91,9 +88,9 @@ const NavbarHome: React.FC = () => {
           {/* Mobile Menu Button */}
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-2" aria-label="Toggle menu">
             <div className="w-6 h-5 flex flex-col justify-between">
-              <span className={`w-full h-0.5 ${isSticky ? "bg-gray-800" : "bg-white"} transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-2" : ""}`}></span>
-              <span className={`w-full h-0.5 ${isSticky ? "bg-gray-800" : "bg-white"} transition-all duration-300 ${isMobileMenuOpen ? "opacity-0" : ""}`}></span>
-              <span className={`w-full h-0.5 ${isSticky ? "bg-gray-800" : "bg-white"} transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}></span>
+              <span className={`w-full h-0.5 ${isSticky ? "bg-gray-800" : "bg-white"}  transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-2 bg-black" : ""}`}></span>
+              <span className={`w-full h-0.5 ${isSticky ? "bg-gray-800" : "bg-white"} transition-all duration-300 ${isMobileMenuOpen ? "opacity-0 " : ""}`}></span>
+              <span className={`w-full h-0.5 ${isSticky ? "bg-gray-800" : "bg-white"} transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 -translate-y-2 bg-black" : ""}`}></span>
             </div>
           </button>
         </div>
