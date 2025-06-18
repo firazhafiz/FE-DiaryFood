@@ -39,7 +39,7 @@ const NavbarHome: React.FC = () => {
     }
     if (isLoggedIn && currentUser) {
       return (
-        <Link href="/profile">
+        <Link href="/profile" className="hidden md:flex">
           <Image src={photoSrc} alt={altText} height={40} width={40} className="rounded-full border-2 border-white" />
         </Link>
       );
