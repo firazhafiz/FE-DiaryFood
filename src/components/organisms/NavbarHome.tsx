@@ -9,18 +9,8 @@ import { DefaultProfile } from "../../../public/assets";
 
 const NavbarHome: React.FC = () => {
   const [isSticky, setIsSticky] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { currentUser, isLoggedIn, loading } = useAuth();
-
-  const staticCategories = [
-    { id: 1, nama: "Breakfast" },
-    { id: 2, nama: "Lunch" },
-    { id: 3, nama: "Dinner" },
-    { id: 4, nama: "Dessert" },
-    { id: 5, nama: "Snacks" },
-    { id: 6, nama: "Drinks" },
-  ];
+  const { currentUser, isLoggedIn } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -88,56 +78,48 @@ const NavbarHome: React.FC = () => {
           {/* Mobile Menu Button */}
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-2" aria-label="Toggle menu">
             <div className="w-6 h-5 flex flex-col justify-between">
-              <span className={`w-full h-0.5 ${isSticky ? "bg-gray-800" : "bg-white"}  transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-2 bg-black" : ""}`}></span>
-              <span className={`w-full h-0.5 ${isSticky ? "bg-gray-800" : "bg-white"} transition-all duration-300 ${isMobileMenuOpen ? "opacity-0 " : ""}`}></span>
-              <span className={`w-full h-0.5 ${isSticky ? "bg-gray-800" : "bg-white"} transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 -translate-y-2 bg-black" : ""}`}></span>
+              <span className={`w-full h-0.5 ${isSticky ? "bg-gray-800" : `${isMobileMenuOpen ? "bg-black" : "bg-white"}`}  transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-2 bg-black" : ""}`}></span>
+              <span className={`w-full h-0.5 ${isSticky ? "bg-gray-800" : `${isMobileMenuOpen ? "bg-black" : "bg-white"}`} transition-all duration-300 ${isMobileMenuOpen ? "opacity-0 " : ""}`}></span>
+              <span className={`w-full h-0.5 ${isSticky ? "bg-gray-800" : `${isMobileMenuOpen ? "bg-black" : "bg-white"}`} transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 -translate-y-2 bg-black" : ""}`}></span>
             </div>
           </button>
         </div>
 
         {/* Mobile Menu */}
-        <div className={`md:hidden absolute top-full min-h-screen left-0 w-full bg-white shadow-lg transition-all duration-300 ${isMobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}>
-          <div className="px-6 py-4 space-y-4">
-            <div className="pt-8  border-gray-200">
+        <div className={`md:hidden absolute top-full left-0 w-full bg-white shadow-lg transition-all duration-300 ${isMobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}>
+          <div className="px-6 py-8 space-y-6">
+            {/* SearchBar in mobile menu */}
+            <div className="block md:hidden mb-6">
+              <SearchBar isSticky={true} isPath={false} />
+            </div>
+
+            {/* Auth Buttons */}
+            <div className="pt-4">
               {!isLoggedIn && (
-                <div className="flex  justify-evenly">
-                  <Link href="/login" className="w-[100px] py-2  text-center font-semibold border border-[var(--custom-orange)] rounded-sm text-gray-800 hover:bg-gray-100">
+                <div className="flex justify-center gap-4">
+                  <Link href="/login" className="w-[120px] py-2.5 text-center font-medium border-2 border-[var(--custom-orange)] rounded-lg text-gray-800 hover:bg-gray-50 transition-colors duration-200">
                     Login
                   </Link>
-                  <Link href="/register" className="w-[100px] py-2 text-center bg-[var(--custom-orange)] text-white rounded-sm hover:opacity-90">
+                  <Link href="/register" className="w-[120px] py-2.5 text-center font-medium bg-[var(--custom-orange)] text-white rounded-lg hover:bg-[var(--custom-orange)]/90 transition-colors duration-200">
                     Sign Up
                   </Link>
                 </div>
               )}
             </div>
-            <div className="flex flex-col gap-8 pt-8">
-              <Link href="/" className={`text-gray-800 hover:text-[var(--custom-orange)] font-medium`}>
+
+            {/* Navigation Links */}
+            <div className="flex flex-col gap-6 pt-6">
+              <Link href="/" className={`text-gray-800 hover:text-[var(--custom-orange)] font-medium text-lg transition-colors duration-200`}>
                 Home
               </Link>
-              <Link href="/recipes" className={`text-gray-800 hover:text-[var(--custom-orange)] font-medium`}>
+              <Link href="/recipes" className={`text-gray-800 hover:text-[var(--custom-orange)] font-medium text-lg transition-colors duration-200`}>
                 Recipes
               </Link>
-              <Link href="/ask-ai" className={`text-gray-800 hover:text-[var(--custom-orange)] font-medium`}>
+              <Link href="/ask-ai" className={`text-gray-800 hover:text-[var(--custom-orange)] font-medium text-lg transition-colors duration-200`}>
                 Ask AI
               </Link>
             </div>
           </div>
-        </div>
-
-        <div className={`hidden md:flex justify-start gap-12 overflow-x-auto bg-cover py-2 ${isSticky ? "text-gray-600" : "text-white"}`}>
-          {staticCategories.length > 0 ? (
-            staticCategories.map((category) => (
-              <Link
-                key={category.id}
-                href={`/recipes?category=${category.nama}`}
-                onClick={() => setActiveCategory(category.nama)}
-                className={`transition-all rounded text-sm flex items-center justify-center h-8 ${activeCategory === category.nama && !isSticky ? "" : "hover:text-[var(--custom-orange)]"}`}>
-                {category.nama}
-              </Link>
-            ))
-          ) : (
-            <span className="text-gray-500 text-sm">No categories available</span>
-          )}
         </div>
       </div>
     </nav>
