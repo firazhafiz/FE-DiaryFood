@@ -15,12 +15,7 @@ import Link from "next/link";
 function CommentsWrapper({ recipeId, initialComments, totalComments }: { recipeId: string; initialComments: Comment[]; totalComments: number }) {
   "use client";
 
-  const handleCommentAdded = (newComment: Comment, newTotal: number) => {
-    // Handle comment addition logic here
-    console.log("Comment added:", newComment, "Total comments:", newTotal);
-  };
-
-  return <CommentsSection recipeId={recipeId} initialComments={initialComments} totalComments={totalComments} onCommentAdded={handleCommentAdded} />;
+  return <CommentsSection recipeId={recipeId} initialComments={initialComments} totalComments={totalComments} />;
 }
 
 async function getRecipeData(recipeId: string): Promise<{
