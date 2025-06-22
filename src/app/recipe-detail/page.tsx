@@ -11,6 +11,18 @@ import { RecipeDetail, Comment } from "@/types/recipe-detail";
 import { config } from "@/config";
 import Link from "next/link";
 
+// Client Component wrapper for CommentsSection
+function CommentsWrapper({ recipeId, initialComments, totalComments }: { recipeId: string; initialComments: Comment[]; totalComments: number }) {
+  "use client";
+
+  const handleCommentAdded = (newComment: Comment, newTotal: number) => {
+    // Handle comment addition logic here
+    console.log("Comment added:", newComment, "Total comments:", newTotal);
+  };
+
+  return <CommentsSection recipeId={recipeId} initialComments={initialComments} totalComments={totalComments} onCommentAdded={handleCommentAdded} />;
+}
+
 async function getRecipeData(recipeId: string): Promise<{
   recipe: RecipeDetail | null;
   recipes: Recipe[];
@@ -152,12 +164,7 @@ export default async function DetailResep({ searchParams }: { searchParams: Prom
               <IngredientsSection recipe={recipe} loading={false} />
               <InstructionsSection recipe={recipe} loading={false} />
             </div>
-            <CommentsSection
-              recipeId={recipe.id.toString()}
-              initialComments={recipe.comment || []}
-              totalComments={recipe.totalComments}
-              onCommentAdded={() => {}} // Empty function for SSR
-            />
+            <CommentsWrapper recipeId={recipe.id.toString()} initialComments={recipe.comment || []} totalComments={recipe.totalComments} />
           </div>
           <div className="w-full md:w-80 flex-shrink-0">
             <RecipeSidebar recipes={recipes} loading={false} />
