@@ -2,7 +2,7 @@ export interface Comment {
   id: string;
   content: string;
   rating: number;
-  createdAt: string;
+  createdAt: Date;
   resepId: number;
   user: {
     id: number;
