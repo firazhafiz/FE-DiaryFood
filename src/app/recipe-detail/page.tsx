@@ -55,13 +55,18 @@ async function getRecipeData(recipeId: string): Promise<{
       };
     }
 
-    // Fetch detail resep
-    const recipeResponse = await fetch(
-      `${config.apiUrl}/resep/${parsedRecipeId}`,
-      {
-        cache: "no-store", // Disable caching for dynamic SSR
-      }
-    );
+    // Fetch paralel untuk detail resep dan resep terkait
+    const [recipeResponse, recipesResponse] = await Promise.all([
+      fetch(`${config.apiUrl}/resep/${parsedRecipeId}`, {
+        cache: "force-cache", // Gunakan cache untuk data statis
+        next: { revalidate: 3600 }, // Revalidasi setiap 1 jam
+      }),
+      fetch(`${config.apiUrl}/resep`, {
+        cache: "force-cache",
+        next: { revalidate: 3600 },
+      }),
+    ]);
+
     if (!recipeResponse.ok) {
       return {
         recipe: null,
@@ -69,11 +74,16 @@ async function getRecipeData(recipeId: string): Promise<{
         error: "Resep tidak ditemukan di server",
       };
     }
-    const recipeData = await recipeResponse.json();
+
+    const [recipeData, recipesData] = await Promise.all([
+      recipeResponse.json(),
+      recipesResponse.json(),
+    ]);
+
     const mappedRecipe: RecipeDetail = {
       id: recipeData.data.id,
       nama: recipeData.data.nama,
-      photoResep: recipeData.data.photoResep,
+      photoResep: recipeData.data.photoResep || null,
       kategoriId: recipeData.data.kategoriId,
       tanggalUnggah: recipeData.data.createdAt,
       user: {
@@ -124,20 +134,11 @@ async function getRecipeData(recipeId: string): Promise<{
         : [],
     };
 
-    console.log(recipeData.langkahList);
-
-    // Fetch resep terkait
-    const recipesResponse = await fetch(`${config.apiUrl}/resep`, {
-      cache: "no-store",
-    });
     let relatedRecipes: Recipe[] = [];
-    if (recipesResponse.ok) {
-      const recipesData = await recipesResponse.json();
-      if (Array.isArray(recipesData.data.reseps)) {
-        relatedRecipes = recipesData.data.reseps
-          .filter((r: Recipe) => r.id !== parsedRecipeId)
-          .slice(0, 2);
-      }
+    if (recipesResponse.ok && Array.isArray(recipesData.data.reseps)) {
+      relatedRecipes = recipesData.data.reseps
+        .filter((r: Recipe) => r.id !== parsedRecipeId)
+        .slice(0, 2);
     }
 
     return {
@@ -184,7 +185,13 @@ export default async function DetailResep({
   }
 
   return (
-    <Suspense fallback={null}>
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[color:var(--custom-orange)]" />
+        </div>
+      }
+    >
       <div className="bg-gray-100">
         <Navbar />
         <div className="max-w-7xl mx-auto w-full px-4 py-8 flex flex-col md:flex-row gap-8 pt-[136px]">
