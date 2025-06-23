@@ -1,5 +1,7 @@
+"use client";
+
 import { RecipeDetail } from "@/types/recipe-detail";
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 
 interface IngredientsSectionProps {
   recipe: RecipeDetail;
@@ -7,6 +9,18 @@ interface IngredientsSectionProps {
 }
 
 const IngredientsSection = ({ recipe, loading }: IngredientsSectionProps) => {
+  // State untuk melacak status checked setiap bahan
+  const [checkedIngredients, setCheckedIngredients] = useState<boolean[]>(
+    Array(recipe.bahanList?.length || 0).fill(false)
+  );
+
+  // Handler untuk mengubah status checked
+  const handleCheckboxChange = (index: number) => {
+    setCheckedIngredients((prev) =>
+      prev.map((checked, i) => (i === index ? !checked : checked))
+    );
+  };
+
   if (loading) {
     return (
       <div className="min-h-auto w-full animate-pulse">
@@ -27,8 +41,8 @@ const IngredientsSection = ({ recipe, loading }: IngredientsSectionProps) => {
 
   return (
     <Suspense fallback={null}>
-      <div className="min-h-auto w-full">
-        <div className="rounded-2xl p-6">
+      <div className="min-h- w-full">
+        <div className="rounded-2xl pt-0 pb-6 pr-3 pl-0">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Ingredients</h2>
           <ul className="space-y-3">
             {Array.isArray(recipe.bahanList) && recipe.bahanList.length > 0 ? (
@@ -36,10 +50,25 @@ const IngredientsSection = ({ recipe, loading }: IngredientsSectionProps) => {
                 <li key={idx} className="flex items-start gap-3">
                   <label className="flex items-center gap-3 cursor-pointer group">
                     <div className="relative flex items-center justify-center">
-                      <input type="checkbox" checked={false} readOnly className="sr-only peer" />
-                      <div className="w-5 h-5 border-1 border-slate-700/75 rounded-md peer-checked:border-[color:var(--custom-orange)] peer-checked:bg-[color:var(--custom-orange)] transition-colors"></div>
+                      <input
+                        type="checkbox"
+                        checked={checkedIngredients[idx]}
+                        onChange={() => handleCheckboxChange(idx)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-5 h-5 border border-slate-700/75 rounded-md peer-checked:border-[color:var(--custom-orange)] peer-checked:bg-[color:var(--custom-orange)] transition-colors relative">
+                        <span className="absolute inset-0 flex items-center justify-center text-white text-xs peer-checked:opacity-100 opacity-0 transition-opacity">
+                          ✓
+                        </span>
+                      </div>
                     </div>
-                    <span className="text-gray-700 text-sm">
+                    <span
+                      className={`text-gray-700 text-sm ${
+                        checkedIngredients[idx]
+                          ? "line-through text-gray-400"
+                          : ""
+                      }`}
+                    >
                       {ingredient.nama} - {ingredient.jumlah}
                     </span>
                   </label>
