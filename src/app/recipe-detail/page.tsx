@@ -10,8 +10,13 @@ import { Recipe } from "@/types/recipe";
 import { RecipeDetail, Comment } from "@/types/recipe-detail";
 import { config } from "@/config";
 import Link from "next/link";
+import React from "react";
 
-// Client Component wrapper for CommentsSection
+// [Penambahan] Optimalkan komponen dengan memoization
+const MemoizedIngredientsSection = React.memo(IngredientsSection);
+const MemoizedInstructionsSection = React.memo(InstructionsSection);
+
+// Client Component wrapper for CommentsSection (Tidak Diubah)
 function CommentsWrapper({
   recipeId,
   initialComments,
@@ -55,15 +60,18 @@ async function getRecipeData(recipeId: string): Promise<{
       };
     }
 
-    // Fetch paralel untuk detail resep dan resep terkait
+    // [Penambahan] Batasi data dengan query parameter
     const [recipeResponse, recipesResponse] = await Promise.all([
-      fetch(`${config.apiUrl}/resep/${parsedRecipeId}`, {
-        cache: "force-cache", // Gunakan cache untuk data statis
-        next: { revalidate: 3600 }, // Revalidasi setiap 1 jam
-      }),
-      fetch(`${config.apiUrl}/resep`, {
+      fetch(
+        `${config.apiUrl}/resep/${parsedRecipeId}?fields=id,nama,photoResep,bahanList,langkahList,description,cookingTime,preparationTime,servingTime,totalComments,savesCount,averageRating,totalReviews,isSavedByCurrentUser,comments,user.name,user.photo,kategori.nama,createdAt`,
+        {
+          cache: "force-cache",
+          next: { revalidate: 1800 }, // Revalidasi setiap 30 menit
+        }
+      ),
+      fetch(`${config.apiUrl}/resep?limit=2&exclude=${parsedRecipeId}`, {
         cache: "force-cache",
-        next: { revalidate: 3600 },
+        next: { revalidate: 1800 },
       }),
     ]);
 
@@ -113,11 +121,7 @@ async function getRecipeData(recipeId: string): Promise<{
               rating: number;
               createdAt: Date;
               resepId: number;
-              user: {
-                id: number;
-                name: string;
-                photo: string;
-              };
+              user: { id: number; name: string; photo: string };
             }): Comment => ({
               id: c.id.toString(),
               content: c.content,
@@ -136,9 +140,7 @@ async function getRecipeData(recipeId: string): Promise<{
 
     let relatedRecipes: Recipe[] = [];
     if (recipesResponse.ok && Array.isArray(recipesData.data.reseps)) {
-      relatedRecipes = recipesData.data.reseps
-        .filter((r: Recipe) => r.id !== parsedRecipeId)
-        .slice(0, 2);
+      relatedRecipes = recipesData.data.reseps;
     }
 
     return {
@@ -156,6 +158,10 @@ async function getRecipeData(recipeId: string): Promise<{
     };
   }
 }
+
+// [Penambahan] Aktifkan ISR dengan dynamic
+export const dynamic = "force-static";
+export const revalidate = 1800; // Revalidasi setiap 30 menit
 
 export default async function DetailResep({
   searchParams,
@@ -198,8 +204,13 @@ export default async function DetailResep({
           <div className="flex-1 min-w-0">
             <DetailHeader recipe={recipe} loading={false} />
             <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
-              <IngredientsSection recipe={recipe} loading={false} />
-              <InstructionsSection recipe={recipe} loading={false} />
+              <MemoizedIngredientsSection recipe={recipe} loading={false} />{" "}
+              {/* [Penambahan] Memoization */}
+              <MemoizedInstructionsSection
+                recipe={recipe}
+                loading={false}
+              />{" "}
+              {/* [Penambahan] Memoization */}
             </div>
             <CommentsWrapper
               recipeId={recipe.id.toString()}
