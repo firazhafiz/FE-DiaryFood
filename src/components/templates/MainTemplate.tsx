@@ -17,7 +17,9 @@ const MainTemplate = ({ recipes }: MainTemplateProps) => (
   <div className="min-h-screen bg-gray-100" suppressHydrationWarning>
     <div suppressHydrationWarning>
       <div className="relative w-full">
-        <Header />
+        <Suspense fallback={null}>
+          <Header />
+        </Suspense>
       </div>
       <main className="max-w-5xl mx-auto px-4">
         <section suppressHydrationWarning className="mb-10">
@@ -93,7 +95,9 @@ const MainTemplate = ({ recipes }: MainTemplateProps) => (
         </section>
       </main>
       <div suppressHydrationWarning>
-        <Footer />
+        <Suspense fallback={null}>
+          <Footer />
+        </Suspense>
       </div>
     </div>
   </div>
