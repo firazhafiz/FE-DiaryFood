@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, AuthProvider } from "@/context/AuthContext";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { Suspense } from "react";
@@ -24,7 +24,9 @@ function AuthCallbackContent() {
           login(parsedTokens.access.token)
             .then(() => {
               if (parsedTokens.refresh?.token) {
-                Cookies.set("refreshToken", parsedTokens.refresh.token, { expires: 7 }); // Set expiry for refresh token
+                Cookies.set("refreshToken", parsedTokens.refresh.token, {
+                  expires: 7,
+                }); // Set expiry for refresh token
               }
               toast.success("Login successful!");
               router.push("/");
@@ -53,8 +55,12 @@ function AuthCallbackContent() {
     <Suspense>
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2 text-slate-800">Memproses login...</h2>
-          <p className="text-gray-600">Harap tunggu saat kami menyelesaikan autentikasi Anda.</p>
+          <h2 className="text-xl font-semibold mb-2 text-slate-800">
+            Memproses login...
+          </h2>
+          <p className="text-gray-600">
+            Harap tunggu saat kami menyelesaikan autentikasi Anda.
+          </p>
         </div>
       </div>
     </Suspense>
@@ -63,16 +69,8 @@ function AuthCallbackContent() {
 
 export default function AuthCallback() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-          <div className="text-center">
-            <h2 className="text-xl font-semibold mb-2 text-slate-800">Loading...</h2>
-            <p className="text-gray-600">Processing authentication...</p>
-          </div>
-        </div>
-      }>
+    <AuthProvider>
       <AuthCallbackContent />
-    </Suspense>
+    </AuthProvider>
   );
 }

@@ -7,7 +7,17 @@ import ContactForm from "@/components/molecules/ContactForm";
 import ContactInfoCard from "@/components/molecules/ContactInfoCard";
 import FaqSite from "@/components/molecules/FaqSite";
 import { Suspense } from "react";
+import { AuthProvider } from "@/context/AuthContext";
+
 export default function Contact() {
+  return (
+    <AuthProvider>
+      <ContactContent />
+    </AuthProvider>
+  );
+}
+
+function ContactContent() {
   const [activeTab, setActiveTab] = useState("customer");
 
   return (
@@ -16,14 +26,32 @@ export default function Contact() {
         <Navbar />
         <main className="bg-gray-100 flex-1 w-full pt-[115px] pb-16 px-2 mt-6">
           <div className="w-full max-w-4xl mx-auto backdrop-blur-sm rounded-lg">
-            <h1 className="text-2xl md:text-3xl font-bold text-center mb-2 text-[color:var(--custom-orange)]">Contact</h1>
-            <p className="text-center text-gray-500 mb-8 text-sm max-w-xl mx-auto">Wherever you are, we are here to help you.</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-center mb-2 text-[color:var(--custom-orange)]">
+              Contact
+            </h1>
+            <p className="text-center text-gray-500 mb-8 text-sm max-w-xl mx-auto">
+              Wherever you are, we are here to help you.
+            </p>
             {/* Tabs */}
             <div className="flex justify-center mb-8">
-              <button className={`px-6 py-2 font-semibold focus:outline-none transition-colors ${activeTab === "customer" ? "text-blue-600 border-b-2 border-blue-500" : "text-gray-500"}`} onClick={() => setActiveTab("customer")}>
+              <button
+                className={`px-6 py-2 font-semibold focus:outline-none transition-colors ${
+                  activeTab === "customer"
+                    ? "text-blue-600 border-b-2 border-blue-500"
+                    : "text-gray-500"
+                }`}
+                onClick={() => setActiveTab("customer")}
+              >
                 Feedback & FAQ
               </button>
-              <button className={`px-6 py-2 font-semibold focus:outline-none transition-colors ${activeTab === "career" ? "text-blue-600 border-b-2 border-blue-500" : "text-gray-500"}`} onClick={() => setActiveTab("career")}>
+              <button
+                className={`px-6 py-2 font-semibold focus:outline-none transition-colors ${
+                  activeTab === "career"
+                    ? "text-blue-600 border-b-2 border-blue-500"
+                    : "text-gray-500"
+                }`}
+                onClick={() => setActiveTab("career")}
+              >
                 Contact & Location
               </button>
             </div>
