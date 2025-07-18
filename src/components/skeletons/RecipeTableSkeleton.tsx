@@ -23,7 +23,10 @@ const RecipeTableSkeleton = () => {
         </div>
         {/* Table Rows */}
         {[...Array(3)].map((_, index) => (
-          <div key={index} className="grid grid-cols-5 gap-4 p-4  rounded-2xl bg-white border-b animate-pulse">
+          <div
+            key={index}
+            className="grid grid-cols-5 gap-4 p-4  rounded-2xl bg-white border-b animate-pulse"
+          >
             <div className="h-24 w-full  rounded-2xl animate-pulse"></div>
             <div className="h-24 w-full  rounded-2xl animate-pulse"></div>
             <div className="h-24 w-full  rounded-2xl animate-pulse"></div>
