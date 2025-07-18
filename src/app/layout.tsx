@@ -1,7 +1,5 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
-import { AuthProvider } from "@/context/AuthContext";
-import { Suspense } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
@@ -21,27 +19,6 @@ export const metadata: Metadata = {
   ),
 };
 
-function RootLayoutContent({ children }: { children: React.ReactNode }) {
-  return (
-    <AuthProvider>
-      {children}
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        aria-label="Notifications"
-      />
-    </AuthProvider>
-  );
-}
-
 export default function RootLayout({
   children,
 }: {
@@ -50,7 +27,20 @@ export default function RootLayout({
   return (
     <html lang="en" className="font-poppins">
       <body className="font-poppins">
-        <RootLayoutContent>{children}</RootLayoutContent>
+        {children}
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          aria-label="Notifications"
+        />
       </body>
     </html>
   );
