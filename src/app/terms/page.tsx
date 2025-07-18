@@ -1,14 +1,21 @@
-"use client";
-
-import Navbar from "@/components/organisms/Navbar";
-import Footer from "@/components/organisms/Footer";
+import Link from "next/link";
 import { terms } from "@/data/terms";
 
 export default function TermsConditions() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Navbar />
-      <main className="bg-gray-100 flex w-full pt-[115px] pb-16 px-2 mt-6">
+      {/* Navbar statis */}
+      <nav className="py-2 px-6 w-full shadow-none fixed top-0 left-0 z-30 bg-white text-gray-800">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <Link href="/">
+            <h1 className="font-bold text-2xl text-[color:var(--custom-orange)]">
+              Diary
+              <span className="font-bold text-2xl text-gray-800">Food</span>
+            </h1>
+          </Link>
+        </div>
+      </nav>
+      <main className="bg-gray-100 flex-1 w-full pt-[115px] pb-16 px-2 mt-6">
         <div className="w-full max-w-4xl mx-auto backdrop-blur-sm rounded-lg">
           <h1 className="text-2xl md:text-3xl font-bold text-center mb-2 text-[color:var(--custom-orange)]">
             Terms & Conditions
@@ -31,7 +38,10 @@ export default function TermsConditions() {
           </div>
         </div>
       </main>
-      <Footer />
+      {/* Footer statis */}
+      <footer className="bg-white text-gray-600 py-6 text-center border-t mt-8">
+        &copy; {new Date().getFullYear()} Diary Food. All rights reserved.
+      </footer>
     </div>
   );
 }
