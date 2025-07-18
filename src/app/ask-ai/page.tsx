@@ -5,7 +5,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaPaperPlane, FaPlus, FaBars, FaTrash } from "react-icons/fa";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, AuthProvider } from "@/context/AuthContext";
 import Loading from "./loading";
 import { formatPlanText } from "../../lib/formatPlanText.js";
 import { DefaultProfile } from "../../../public/assets";
@@ -30,6 +30,14 @@ interface Thread {
 }
 
 export default function TanyaAIPage() {
+  return (
+    <AuthProvider>
+      <TanyaAIContent />
+    </AuthProvider>
+  );
+}
+
+function TanyaAIContent() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [threads, setThreads] = useState<Thread[]>([]);
   const [currentThreadId, setCurrentThreadId] = useState<number | null>(null);
@@ -149,7 +157,9 @@ export default function TanyaAIPage() {
     setIsLoading(true);
 
     try {
-      const endpoint = currentThreadId ? `${config.apiUrl}/messages/${currentThreadId}` : `${config.apiUrl}/messages/new`;
+      const endpoint = currentThreadId
+        ? `${config.apiUrl}/messages/${currentThreadId}`
+        : `${config.apiUrl}/messages/new`;
 
       const response = await fetch(endpoint, {
         method: "POST",
@@ -168,7 +178,10 @@ export default function TanyaAIPage() {
       const data = await response.json();
       const { threadId, messages: newMessages } = data.data;
 
-      setMessages((prev) => [...prev.filter((m) => m.id !== userMessage.id), ...newMessages]);
+      setMessages((prev) => [
+        ...prev.filter((m) => m.id !== userMessage.id),
+        ...newMessages,
+      ]);
       if (!currentThreadId) {
         setCurrentThreadId(threadId);
         fetchThreads();
@@ -190,27 +203,47 @@ export default function TanyaAIPage() {
     setIsSidebarOpen(false);
   };
 
-  const photoSrc = currentUser?.photo && currentUser.photo.trim() !== "" ? currentUser.photo : DefaultProfile;
+  const photoSrc =
+    currentUser?.photo && currentUser.photo.trim() !== ""
+      ? currentUser.photo
+      : DefaultProfile;
 
-  const altText = currentUser?.name && currentUser.name.trim() !== "" ? currentUser.name : "Profile";
+  const altText =
+    currentUser?.name && currentUser.name.trim() !== ""
+      ? currentUser.name
+      : "Profile";
 
   const renderAuthSection = () => {
     if (loading) {
-      return <div className="w-10 h-10 rounded-full bg-gray-300 animate-pulse"></div>;
+      return (
+        <div className="w-10 h-10 rounded-full bg-gray-300 animate-pulse"></div>
+      );
     }
     if (isLoggedIn && currentUser) {
       return (
         <Link href="/profile">
-          <Image src={photoSrc} alt={altText} height={40} width={40} className="rounded-full border-2 border-white" />
+          <Image
+            src={photoSrc}
+            alt={altText}
+            height={40}
+            width={40}
+            className="rounded-full border-2 border-white"
+          />
         </Link>
       );
     }
     return (
       <div className="hidden md:flex items-center gap-4">
-        <Link href="/login" className="px-4 py-2 text-sm font-semibold border border-white rounded-lg hover:bg-[var(--custom-orange)] hover:text-white hover:border-transparent transition-colors">
+        <Link
+          href="/login"
+          className="px-4 py-2 text-sm font-semibold border border-white rounded-lg hover:bg-[var(--custom-orange)] hover:text-white hover:border-transparent transition-colors"
+        >
           Login
         </Link>
-        <Link href="/register" className="px-4 py-2 text-sm font-semibold bg-[var(--custom-orange)] text-white rounded-lg hover:bg-orange-600 transition-colors">
+        <Link
+          href="/register"
+          className="px-4 py-2 text-sm font-semibold bg-[var(--custom-orange)] text-white rounded-lg hover:bg-orange-600 transition-colors"
+        >
           Sign Up
         </Link>
       </div>
@@ -231,18 +264,31 @@ export default function TanyaAIPage() {
                 </h1>
               </div>
               <div className="hidden md:flex items-center gap-8">
-                <Link href="/" className="text-sm font-medium hover:text-[var(--custom-orange)] transition-colors">
+                <Link
+                  href="/"
+                  className="text-sm font-medium hover:text-[var(--custom-orange)] transition-colors"
+                >
                   Home
                 </Link>
-                <Link href="/resep" className="text-sm font-medium hover:text-[var(--custom-orange)] transition-colors">
+                <Link
+                  href="/resep"
+                  className="text-sm font-medium hover:text-[var(--custom-orange)] transition-colors"
+                >
                   Resep
                 </Link>
-                <Link href="/tanya-ai" className="text-sm font-medium hover:text-[var(--custom-orange)] transition-colors">
+                <Link
+                  href="/tanya-ai"
+                  className="text-sm font-medium hover:text-[var(--custom-orange)] transition-colors"
+                >
                   Tanya AI
                 </Link>
               </div>
               {renderAuthSection()}
-              <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="md:hidden p-2 rounded-lg hover:bg-slate-800 transition-colors" aria-label="Toggle sidebar">
+              <button
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="md:hidden p-2 rounded-lg hover:bg-slate-800 transition-colors"
+                aria-label="Toggle sidebar"
+              >
                 <FaBars className="w-5 h-5 text-white" />
               </button>
             </div>
@@ -255,28 +301,38 @@ export default function TanyaAIPage() {
           <div
             className={`${
               isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-            } fixed md:static md:translate-x-0 w-72 bg-white text-slate-700 shadow-lg flex flex-col transition-transform duration-300 ease-in-out z-40 border-r border-slate-200`}>
+            } fixed md:static md:translate-x-0 w-72 bg-white text-slate-700 shadow-lg flex flex-col transition-transform duration-300 ease-in-out z-40 border-r border-slate-200`}
+          >
             <div className="p-4 border-b border-slate-200">
               <button
                 onClick={startNewChat}
                 className="flex items-center justify-center gap-2 w-full py-2 text-sm font-semibold rounded-lg border border-[var(--custom-orange)] text-slate-700 hover:bg-[var(--custom-orange)] hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)]"
-                aria-label="Start new chat">
+                aria-label="Start new chat"
+              >
                 <FaPlus className="w-4 h-4" />
                 New Chat
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {threads.length === 0 ? (
-                <p className="text-sm text-slate-500 text-center py-4">No threads yet</p>
+                <p className="text-sm text-slate-500 text-center py-4">
+                  No threads yet
+                </p>
               ) : (
                 threads.map((thread) => (
-                  <div key={thread.id} className="flex items-center gap-2 group">
+                  <div
+                    key={thread.id}
+                    className="flex items-center gap-2 group"
+                  >
                     <button
                       onClick={() => selectThread(thread.id)}
                       className={`flex-1 flex items-center gap-3 px-2 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                        currentThreadId === thread.id ? "bg-[var(--custom-orange)] text-white" : "hover:bg-slate-100 text-slate-700"
+                        currentThreadId === thread.id
+                          ? "bg-[var(--custom-orange)] text-white"
+                          : "hover:bg-slate-100 text-slate-700"
                       }`}
-                      aria-label={`Select thread ${thread.title}`}>
+                      aria-label={`Select thread ${thread.title}`}
+                    >
                       <div className="flex-1 text-left">
                         <p className="truncate">
                           {thread.title.split(" ").slice(0, 3).join(" ")}
@@ -284,7 +340,11 @@ export default function TanyaAIPage() {
                         </p>
                       </div>
                     </button>
-                    <button onClick={() => deleteThread(thread.id)} className="p-2 text-slate-500 cursor-pointer transition-opacity" aria-label={`Delete thread ${thread.title}`}>
+                    <button
+                      onClick={() => deleteThread(thread.id)}
+                      className="p-2 text-slate-500 cursor-pointer transition-opacity"
+                      aria-label={`Delete thread ${thread.title}`}
+                    >
                       <FaTrash className="w-4 h-4" />
                     </button>
                   </div>
@@ -294,9 +354,13 @@ export default function TanyaAIPage() {
             <div className="p-4 border-t border-slate-200">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-[var(--custom-orange)] text-white flex items-center justify-center">
-                  <span className="text-sm font-semibold">{currentUser?.name?.charAt(0) || "U"}</span>
+                  <span className="text-sm font-semibold">
+                    {currentUser?.name?.charAt(0) || "U"}
+                  </span>
                 </div>
-                <span className="text-sm font-semibold text-slate-700">{currentUser?.name || "User"}</span>
+                <span className="text-sm font-semibold text-slate-700">
+                  {currentUser?.name || "User"}
+                </span>
               </div>
             </div>
           </div>
@@ -308,16 +372,37 @@ export default function TanyaAIPage() {
                 <div className="h-full flex items-center justify-center">
                   <div className="text-center text-slate-600 max-w-md mx-auto">
                     <h2 className="text-2xl font-semibold mb-2">Tanya AI</h2>
-                    <p className="text-sm text-slate-500">Ask me anything about recipes!</p>
+                    <p className="text-sm text-slate-500">
+                      Ask me anything about recipes!
+                    </p>
                   </div>
                 </div>
               )}
               {messages.map((message) => (
-                <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[80%] rounded-xl py-3 px-4 shadow-sm ${message.role === "user" ? "bg-[var(--custom-orange)] text-white" : "bg-slate-50 text-slate-800 border border-slate-200"}`}>
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
-                    {message.thought && message.role === "assistant" && <p className="text-sm text-slate-700 mt-2">Thought: {formatPlanText(message.thought)}</p>}
-                    <p className="text-xs text-slate-700 mt-1">{new Date(message.createdAt).toLocaleTimeString()}</p>
+                <div
+                  key={message.id}
+                  className={`flex ${
+                    message.role === "user" ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  <div
+                    className={`max-w-[80%] rounded-xl py-3 px-4 shadow-sm ${
+                      message.role === "user"
+                        ? "bg-[var(--custom-orange)] text-white"
+                        : "bg-slate-50 text-slate-800 border border-slate-200"
+                    }`}
+                  >
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                      {message.content}
+                    </p>
+                    {message.thought && message.role === "assistant" && (
+                      <p className="text-sm text-slate-700 mt-2">
+                        Thought: {formatPlanText(message.thought)}
+                      </p>
+                    )}
+                    <p className="text-xs text-slate-700 mt-1">
+                      {new Date(message.createdAt).toLocaleTimeString()}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -335,7 +420,10 @@ export default function TanyaAIPage() {
               <div ref={messagesEndRef} />
             </div>
             <div className="border-t border-slate-200 p-4 bg-white shadow-sm">
-              <form onSubmit={handleSubmit} className="flex gap-3 max-w-3xl mx-auto">
+              <form
+                onSubmit={handleSubmit}
+                className="flex gap-3 max-w-3xl mx-auto"
+              >
                 <input
                   type="text"
                   value={input}
@@ -349,7 +437,8 @@ export default function TanyaAIPage() {
                   type="submit"
                   disabled={isLoading || !input.trim()}
                   className="px-4 py-2 bg-[var(--custom-orange)] text-white rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[var(--custom-orange)]"
-                  aria-label="Send message">
+                  aria-label="Send message"
+                >
                   <FaPaperPlane className="w-4 h-4" />
                 </button>
               </form>
