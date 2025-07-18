@@ -54,7 +54,9 @@ const MainTemplate = ({ recipes }: MainTemplateProps) => (
         </section>
       </main>
       <div suppressHydrationWarning className="my-10">
-        <InfoSection />
+        <Suspense fallback={null}>
+          <InfoSection />
+        </Suspense>
       </div>
       <main className="max-w-5xl mx-auto px-4 mb-12">
         <section className="mb-10">
@@ -73,7 +75,9 @@ const MainTemplate = ({ recipes }: MainTemplateProps) => (
           </Suspense>
         </section>
         <div suppressHydrationWarning className="my-8">
-          <ShareSection />
+          <Suspense fallback={null}>
+            <ShareSection />
+          </Suspense>
         </div>
         <section className="mb-10">
           <div className="flex justify-between items-center">
@@ -91,7 +95,9 @@ const MainTemplate = ({ recipes }: MainTemplateProps) => (
           </Suspense>
         </section>
         <section suppressHydrationWarning>
-          <MoreButton />
+          <Suspense fallback={null}>
+            <MoreButton />
+          </Suspense>
         </section>
       </main>
       <div suppressHydrationWarning>
